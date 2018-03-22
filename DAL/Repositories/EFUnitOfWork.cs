@@ -1,31 +1,49 @@
 ﻿using System;
-
+using System.Threading.Tasks;
 using DAL.EF;
 using DAL.Entities;
+using DAL.Identity;
 using DAL.Interfaces;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DAL.Repositories
 {
     public class EFUnitOfWork : IUnitOfWork
     {
         private DataContext db;
-        private UserRepository userRepository;
         private AlbumRepository albumRepository;
         private PictureRepository pictureRepository;
+
+        private ApplicationUserManager appUserManager;
+        private ApplicationRoleManager roleManager;
+        private IUserManager userProfileManager;
 
         public EFUnitOfWork(string connectionString)
         {
             db = new DataContext(connectionString);
+            appUserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+            roleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(db));
+            userProfileManager = new UserManager(db);
         }
 
-        public IRepository<User> Users
+        public ApplicationUserManager AppUserManager
         {
-            get
-            {
-                if (userRepository == null)
-                    userRepository = new UserRepository(db);
-                return userRepository;
-            }
+            get { return appUserManager; }
+        }
+
+        public IUserManager UserProfileManager
+        {
+            get { return userProfileManager; }
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+            get { return roleManager; }
+        }
+
+        public async Task SaveAsync()
+        {
+            await db.SaveChangesAsync();
         }
 
         public IRepository<Album> Albums

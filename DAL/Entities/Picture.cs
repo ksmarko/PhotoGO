@@ -10,7 +10,7 @@ namespace DAL.Entities
 
         public byte[] Img { get; set; }
 
-        public IEnumerable<User> FavouritedBy { get; set; }
+        public IEnumerable<UserProfile> FavouritedBy { get; set; }
 
         public IEnumerable<string> Tags { get; set; }
     }

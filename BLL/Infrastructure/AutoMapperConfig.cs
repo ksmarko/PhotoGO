@@ -11,7 +11,7 @@ namespace BLL.Infrastructure
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<User, UserDTO>();
+                cfg.CreateMap<UserProfile, UserDTO>();
                 cfg.CreateMap<Album, AlbumDTO>();
                 cfg.CreateMap<Picture, PictureDTO>();
             });

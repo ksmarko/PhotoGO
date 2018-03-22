@@ -1,12 +1,13 @@
 ﻿using System.Data.Entity;
 
 using DAL.Entities;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DAL.EF
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Picture> Pictures { get; set; }
 
