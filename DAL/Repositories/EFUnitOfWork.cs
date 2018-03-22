@@ -1,0 +1,76 @@
+﻿using System;
+
+using DAL.EF;
+using DAL.Entities;
+using DAL.Interfaces;
+
+namespace DAL.Repositories
+{
+    public class EFUnitOfWork : IUnitOfWork
+    {
+        private DataContext db;
+        private UserRepository userRepository;
+        private AlbumRepository albumRepository;
+        private PictureRepository pictureRepository;
+
+        public EFUnitOfWork(string connectionString)
+        {
+            db = new DataContext(connectionString);
+        }
+
+        public IRepository<User> Users
+        {
+            get
+            {
+                if (userRepository == null)
+                    userRepository = new UserRepository(db);
+                return userRepository;
+            }
+        }
+
+        public IRepository<Album> Albums
+        {
+            get
+            {
+                if (albumRepository == null)
+                    albumRepository = new AlbumRepository(db);
+                return albumRepository;
+            }
+        }
+
+        public IRepository<Picture> Pictures
+        {
+            get
+            {
+                if (pictureRepository == null)
+                    pictureRepository = new PictureRepository(db);
+                return pictureRepository;
+            }
+        }
+
+        public void Save()
+        {
+            db.SaveChanges();
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    db.Dispose();
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+    }
+}
