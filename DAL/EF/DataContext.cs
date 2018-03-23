@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 
 using DAL.Entities;
 using Microsoft.AspNet.Identity.EntityFramework;

@@ -8,7 +8,7 @@ namespace DAL.Entities
     {
         [Key]
         [ForeignKey("ApplicationUser")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [MaxLength(50)]
         public string Name { get; set; }
