@@ -16,13 +16,7 @@ namespace Web.Controllers
 {
     public class AccountController : Controller
     {
-        private IUserService UserService
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
-        }
+        private IUserService UserService;
 
         private IAuthenticationManager AuthenticationManager
         {
@@ -31,10 +25,14 @@ namespace Web.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
+        public AccountController(IUserService UserService)
+        {
+            this.UserService = UserService;
 
+        }
         public ActionResult Login()
         {
-            return View();
+            return View("Login");
         }
 
         [HttpPost]
@@ -101,10 +99,11 @@ namespace Web.Controllers
         {
             await UserService.SetInitialData(new UserDTO
             {
-                Email = "ksunia.sergienko@gmail.com",
-                UserName = "ks_marko",
-                Password = "password", //todo: initialize administrator in db using password hash instead a password string
-                Name = "Ksenia Marko",
+                Email = "admin@ukr.net",
+                UserName = "admin@ukr.net",
+                Password = "igorgr",
+                Name = "Garry",
+                Address = "ул. Спортивная",
                 Role = "admin",
             }, new List<string> { "user", "admin" });
         }

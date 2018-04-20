@@ -1,4 +1,5 @@
 ﻿using BLL.Interfaces;
+using DAL.Identity;
 using DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class ServiceCreator : IServiceCreator
-    {
-        public IUserService CreateUserService(string connection)
-        {
-            return new UserService(new EFUnitOfWork(connection));
-        }
-    }
+    //public class ServiceCreator : IServiceCreator
+    //{
+    //    public IUserService CreateUserService(string connection)
+    //    {
+    //        return new UserService(new UnitOfWorkIdentity(connection), new EFUnitOfWork(connection));
+    //    }
+    //}
 }

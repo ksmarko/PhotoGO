@@ -13,9 +13,12 @@ namespace BLL.DTO
         public string Password { get; set; }
         public string UserName { get; set; }
         public string Name { get; set; }
-        //public string Address { get; set; } unnecessary
         public string Role { get; set; }
 
         //add fields for albums and photos
+
+        public IEnumerable<UserDTO> Followings { get; set; }
+        public IEnumerable<AlbumDTO> Albums { get; set; }
+        public IEnumerable<PictureDTO> Pictures { get; set; }
     }
 }

@@ -15,9 +15,9 @@ namespace BLL.Services
 {
     public class UserService : IUserService
     {
-        IUnitOfWork Database { get; set; }
+        IUnitOfWorkIdentity Database { get; set; }
 
-        public UserService(IUnitOfWork uow)
+        public UserService(IUnitOfWorkIdentity uow)
         {
             Database = uow;
         }
@@ -34,8 +34,9 @@ namespace BLL.Services
                 // добавляем роль
                 await Database.AppUserManager.AddToRoleAsync(user.Id, userDto.Role);
                 // создаем профиль клиента
-                UserProfile clientProfile = new UserProfile { Id = user.Id, Name = userDto.Name }; //CONVERT? I NEED INT
-                Database.UserProfileManager.Create(clientProfile);
+                UserProfile clientProfile = new UserProfile { Id = user.Id, Name = userDto.Name };
+                
+                Database.ClientManager.Create(clientProfile);
                 await Database.SaveAsync();
                 return new OperationDetails(true, "Регистрация успешно пройдена", "");
             }
@@ -52,8 +53,7 @@ namespace BLL.Services
             ApplicationUser user = await Database.AppUserManager.FindAsync(userDto.Email, userDto.Password);
             // авторизуем его и возвращаем объект ClaimsIdentity
             if (user != null)
-                claim = await Database.AppUserManager.CreateIdentityAsync(user,
-                                            DefaultAuthenticationTypes.ApplicationCookie);
+                claim = await Database.AppUserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             return claim;
         }
 

@@ -9,11 +9,7 @@ namespace DAL.Interfaces
     {
         IRepository<Album> Albums { get; }
         IRepository<Picture> Pictures { get; }
+        IRepository<UserProfile> Users { get; }
         void Save();
-
-        ApplicationUserManager AppUserManager { get; }
-        IUserManager UserProfileManager { get; }
-        ApplicationRoleManager RoleManager { get; }
-        Task SaveAsync();
     }
 }

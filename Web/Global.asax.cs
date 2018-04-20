@@ -22,16 +22,12 @@ namespace Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //BLL.Infrastructure.AutoMapperConfig.Initialize();
+            BLL.Infrastructure.AutoMapperConfig.Initialize();
+            NinjectModule orderModule = new ServiceModule();
+            NinjectModule serviceModule = new ConnectionModule("DefaultConnection");
 
-            ////for quest and reserv services binding
-            //NinjectModule orderModule = new ServiceModule();
-
-            ////for binding unit of work
-            //NinjectModule serviceModule = new ConnectionModule("DefaultConnection");
-
-            //var kernel = new StandardKernel(orderModule, serviceModule);
-            //DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            var kernel = new StandardKernel(orderModule, serviceModule);
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }
     }
 }

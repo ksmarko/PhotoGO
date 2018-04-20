@@ -7,27 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Repositories
+namespace DAL.Identity
 {
-    class UserManager : IUserManager
+    public class ClientManager : IClientManager
     {
-        //set private?
-        private DataContext db { get; set; }
-
-        public UserManager(DataContext context)
+        public DataContext Database { get; set; }
+        public ClientManager(DataContext db)
         {
-            this.db = context;
+            Database = db;
         }
 
         public void Create(UserProfile item)
         {
-            db.UserProfiles.Add(item);
-            db.SaveChanges();
+            Database.UserProfiles.Add(item);
+            Database.SaveChanges();
         }
 
         public void Dispose()
         {
-            db.Dispose();
+            Database.Dispose();
         }
     }
 }

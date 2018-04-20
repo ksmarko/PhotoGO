@@ -10,12 +10,11 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
-        private IUserService UserService
+        private IUserService UserService;
+
+        public HomeController(IUserService userService)
         {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
+            UserService = userService;
         }
 
         public ActionResult Index()

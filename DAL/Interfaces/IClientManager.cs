@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Interfaces
 {
-    public interface IUserManager : IDisposable
+    public interface IClientManager : IDisposable
     {
         void Create(UserProfile item);
     }

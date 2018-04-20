@@ -13,37 +13,11 @@ namespace DAL.Repositories
         private DataContext db;
         private AlbumRepository albumRepository;
         private PictureRepository pictureRepository;
-
-        private ApplicationUserManager appUserManager;
-        private ApplicationRoleManager roleManager;
-        private IUserManager userProfileManager;
+        private UserRepository userRepository;
 
         public EFUnitOfWork(string connectionString)
         {
             db = new DataContext(connectionString);
-            appUserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
-            roleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(db));
-            userProfileManager = new UserManager(db);
-        }
-
-        public ApplicationUserManager AppUserManager
-        {
-            get { return appUserManager; }
-        }
-
-        public IUserManager UserProfileManager
-        {
-            get { return userProfileManager; }
-        }
-
-        public ApplicationRoleManager RoleManager
-        {
-            get { return roleManager; }
-        }
-
-        public async Task SaveAsync()
-        {
-            await db.SaveChangesAsync();
         }
 
         public IRepository<Album> Albums
@@ -63,6 +37,16 @@ namespace DAL.Repositories
                 if (pictureRepository == null)
                     pictureRepository = new PictureRepository(db);
                 return pictureRepository;
+            }
+        }
+
+        public IRepository<UserProfile> Users
+        {
+            get
+            {
+                if (userRepository == null)
+                    userRepository = new UserRepository(db);
+                return userRepository;
             }
         }
 
