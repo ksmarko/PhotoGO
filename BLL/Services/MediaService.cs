@@ -116,7 +116,7 @@ namespace BLL.Services
             Database.Save();
         }
 
-        public void LikeImage(int id, int userId) //maybe edit (remove userId)
+        public void LikeImage(int id, string userId) //maybe edit (remove userId)
         {
             var img = Database.Pictures.Get(id);
             var user = Database.Users.Get(userId);

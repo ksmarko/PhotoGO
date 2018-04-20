@@ -19,7 +19,7 @@ namespace BLL.Interfaces
         void AddImage(PictureDTO image, int albumId);
         void RemoveImage(int id);
         void AddTags(int imgId, params string [] tags);
-        void LikeImage(int id, int userId);
+        void LikeImage(int id, string userId);
         PictureDTO GetImageById(int id);
 
         void Dispose();

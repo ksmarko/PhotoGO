@@ -1,4 +1,5 @@
 ﻿using BLL.DTO;
+using BLL.Infrastructure;
 using BLL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,47 +19,59 @@ namespace Tests
             Run();
         }
 
-        public void Run()
+        public async void Run()
         {
-            var user = new UserDTO() { Name = "Ksenia", Id = 1 };
-            um.AddUser(user);
+            //var user = new UserDTO() { Name = "Ksenia"};
+            //um.Create(user);
 
-            var album1 = new AlbumDTO()
+            await um.SetInitialData(new UserDTO
             {
-                
-                Name = "My first album",
-                Description = "Album1 for testing my awesome app",
-                UserId = user.Id
-            };
+                Email = "somemail@mail.ru",
+                UserName = "somemail@mail.ru",
+                Password = "ad46D_ewr3",
+                Name = "Семен Семенович Горбунков",
+                Role = "admin",
+            }, new List<string> { "user", "admin" });
 
-            var album2 = new AlbumDTO()
-            {
-                Name = "My second album",
-                Description = "Album2 for testing my awesome app",
-                UserId = user.Id
-            };
+            //var res = um.Create(userDto);
 
-            ms.AddAlbum(album1);
-            ms.AddAlbum(album2);
+            #region ...
+            //var album1 = new AlbumDTO()
+            //{
 
-            foreach (var el in ms.GetAlbums())
-                Console.WriteLine(string.Join(" ", el.Id, el.Name, el.Description));
+            //    Name = "My first album",
+            //    Description = "Album1 for testing my awesome app",
+            //    UserId = user.Id
+            //};
 
-            ms.AddImage(new PictureDTO() {Img = new byte[] { Convert.ToByte(12) }}, 1);
-            ms.AddImage(new PictureDTO() { Img = new byte[] { Convert.ToByte(4) } }, 1);
-            ms.AddImage(new PictureDTO() { Img = new byte[] { Convert.ToByte(66) } }, 1);
+            //var album2 = new AlbumDTO()
+            //{
+            //    Name = "My second album",
+            //    Description = "Album2 for testing my awesome app",
+            //    UserId = user.Id
+            //};
 
-            ms.LikeImage(1, 1);
-            Console.WriteLine("Edited");
+            //ms.AddAlbum(album1);
+            //ms.AddAlbum(album2);
 
-            var e = ms.GetAlbumById(1);
-            e.Name = "Edited name";
+            //foreach (var el in ms.GetAlbums())
+            //    Console.WriteLine(string.Join(" ", el.Id, el.Name, el.Description));
 
-            ms.EditAlbum(e);
+            //ms.AddImage(new PictureDTO() { Img = new byte[] { Convert.ToByte(12) } }, 1);
+            //ms.AddImage(new PictureDTO() { Img = new byte[] { Convert.ToByte(4) } }, 1);
+            //ms.AddImage(new PictureDTO() { Img = new byte[] { Convert.ToByte(66) } }, 1);
 
-            foreach (var el in ms.GetAlbums())
-                Console.WriteLine(string.Join(" ", el.Id, el.Name, el.Description));
+            //ms.LikeImage(1, "1");
+            //Console.WriteLine("Edited");
 
+            //var e = ms.GetAlbumById(1);
+            //e.Name = "Edited name";
+
+            //ms.EditAlbum(e);
+
+            //foreach (var el in ms.GetAlbums())
+            //    Console.WriteLine(string.Join(" ", el.Id, el.Name, el.Description));
+            #endregion
             Console.ReadKey();
         }
     }

@@ -36,6 +36,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -50,12 +56,22 @@
     <Compile Include="EF\DataContext.cs" />
     <Compile Include="Entities\Album.cs" />
     <Compile Include="Entities\Picture.cs" />
-    <Compile Include="Entities\UserProfile.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Identity\Entities\ApplicationRole.cs" />
+    <Compile Include="Identity\Repositories\ApplicationRoleManager.cs" />
+    <Compile Include="Identity\Entities\ApplicationUser.cs" />
+    <Compile Include="Identity\Repositories\ClientManager.cs" />
+    <Compile Include="Identity\Interfaces\IClientManager.cs" />
+    <Compile Include="Identity\Repositories\ApplicationUserManager.cs" />
+    <Compile Include="Identity\Repositories\IdentityUnitOfWork.cs" />
+    <Compile Include="Identity\Interfaces\IUnitOfWorkIdentity.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EFUnitOfWork.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

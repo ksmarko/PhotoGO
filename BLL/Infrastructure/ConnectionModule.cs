@@ -1,4 +1,7 @@
 ﻿using BLL.Interfaces;
+using DAL.Identity;
+using DAL.Identity.Interfaces;
+using DAL.Identity.Repositories;
 using DAL.Interfaces;
 using DAL.Repositories;
 
@@ -19,6 +22,7 @@ namespace BLL.Infrastructure
         public override void Load()
         {
             Bind<IUnitOfWork>().To<EFUnitOfWork>().WithConstructorArgument(connectionString);
+            Bind<IUnitOfWorkIdentity>().To<IdentityUnitOfWork>().WithConstructorArgument(connectionString);
         }
     }
 }

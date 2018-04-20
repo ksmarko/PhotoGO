@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entities
@@ -14,8 +15,8 @@ namespace DAL.Entities
         [MaxLength(200)]
         public string Description { get; set; }
 
-        public int? UserId { get; set; }
-        public virtual UserProfile User { get; set; }
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
 
         public virtual ICollection<Picture> Pictures { get; set; }
 

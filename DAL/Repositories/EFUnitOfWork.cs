@@ -11,7 +11,7 @@ namespace DAL.Repositories
         private DataContext db;
         private GenericRepository<Album> albumRepository;
         private GenericRepository<Picture> pictureRepository;
-        private GenericRepository<UserProfile> userRepository;
+        private UserRepository userRepository;
 
         public EFUnitOfWork(string connectionString)
         {
@@ -38,12 +38,12 @@ namespace DAL.Repositories
             }
         }
 
-        public IRepository<UserProfile> Users
+        public IUserRepository Users
         {
             get
             {
                 if (userRepository == null)
-                    userRepository = new GenericRepository<UserProfile>(db);
+                    userRepository = new UserRepository(db);
                 return userRepository;
             }
         }

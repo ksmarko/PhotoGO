@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DAL.Entities;
+using DAL.Repositories;
 
 namespace DAL.Interfaces
 {
@@ -8,7 +9,7 @@ namespace DAL.Interfaces
     {
         IRepository<Album> Albums { get; }
         IRepository<Picture> Pictures { get; }
-        IRepository<UserProfile> Users { get; }
+        IUserRepository Users { get; }
         void Save();
     }
 }

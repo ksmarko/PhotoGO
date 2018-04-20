@@ -13,7 +13,7 @@ namespace BLL.Infrastructure
             {
                 cfg.CreateMap<Album, AlbumDTO>();
                 cfg.CreateMap<Picture, PictureDTO>();
-                cfg.CreateMap<UserProfile, UserDTO>();
+                cfg.CreateMap<User, UserDTO>();
             });
         }
     }

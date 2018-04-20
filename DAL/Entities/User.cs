@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using DAL.Identity;
+using DAL.Identity.Entities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entities
 {
-    public class UserProfile
+    public class User
     {
         [Key]
-        public int Id { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string Id { get; set; }
 
         [MaxLength(50)]
         public string Name { get; set; }
@@ -16,7 +19,9 @@ namespace DAL.Entities
 
         public virtual ICollection<Picture> LikedPictures { get; set; }
 
-        public UserProfile()
+        public virtual ApplicationUser ApplicationUser { get; set; }
+
+        public User()
         {
             LikedPictures = new List<Picture>();
             Albums = new List<Album>();

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Web.App_Start;
 using Web.Util;
 
 namespace Web
@@ -21,13 +22,7 @@ namespace Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            BLL.Infrastructure.AutoMapperConfig.Initialize();
-            NinjectModule orderModule = new ServiceModule();
-            NinjectModule serviceModule = new ConnectionModule("DefaultConnection");
-
-            var kernel = new StandardKernel(orderModule, serviceModule);
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            Resolver.Configure();
         }
     }
 }

@@ -23,7 +23,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Home", "Contact", "Home")</li>
 
-                    @if (User.IsInRole("admin"))
+                    @if (User.IsInRole("user"))
                     {
                         <li>@Html.ActionLink("About", "About", "Home")</li>
                     }
