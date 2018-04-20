@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace DAL.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<TEntity> where TEntity : class
     {
-        IEnumerable<T> GetAll();
-        T Get(int id);
-        IEnumerable<T> Find(Func<T, Boolean> predicate);
-        void Create(T item);
-        void Update(T item);
+        IEnumerable<TEntity> GetAll();
+        TEntity Get(int id);
+        void Create(TEntity item);
+        void Update(TEntity item);
         void Delete(int id);
+        TEntity Find(Func<TEntity, bool> predicate);
     }
 }

@@ -2,18 +2,16 @@
 using System.Threading.Tasks;
 using DAL.EF;
 using DAL.Entities;
-using DAL.Identity;
 using DAL.Interfaces;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DAL.Repositories
 {
     public class EFUnitOfWork : IUnitOfWork
     {
         private DataContext db;
-        private AlbumRepository albumRepository;
-        private PictureRepository pictureRepository;
-        private UserRepository userRepository;
+        private GenericRepository<Album> albumRepository;
+        private GenericRepository<Picture> pictureRepository;
+        private GenericRepository<UserProfile> userRepository;
 
         public EFUnitOfWork(string connectionString)
         {
@@ -25,7 +23,7 @@ namespace DAL.Repositories
             get
             {
                 if (albumRepository == null)
-                    albumRepository = new AlbumRepository(db);
+                    albumRepository = new GenericRepository<Album>(db);
                 return albumRepository;
             }
         }
@@ -35,7 +33,7 @@ namespace DAL.Repositories
             get
             {
                 if (pictureRepository == null)
-                    pictureRepository = new PictureRepository(db);
+                    pictureRepository = new GenericRepository<Picture>(db);
                 return pictureRepository;
             }
         }
@@ -45,7 +43,7 @@ namespace DAL.Repositories
             get
             {
                 if (userRepository == null)
-                    userRepository = new UserRepository(db);
+                    userRepository = new GenericRepository<UserProfile>(db);
                 return userRepository;
             }
         }

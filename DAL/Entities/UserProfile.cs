@@ -7,7 +7,6 @@ namespace DAL.Entities
     public class UserProfile
     {
         [Key]
-        [ForeignKey("ApplicationUser")]
         public string Id { get; set; }
 
         [MaxLength(50)]
@@ -18,7 +17,5 @@ namespace DAL.Entities
         public IEnumerable<Album> Albums { get; set; }
 
         public IEnumerable<Picture> Pictures { get; set; }
-
-        public virtual ApplicationUser ApplicationUser { get; set; }
     }
 }
