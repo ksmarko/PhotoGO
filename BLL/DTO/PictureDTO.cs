@@ -10,7 +10,14 @@ namespace BLL.DTO
     {
         public int Id { get; set; }
         public byte[] Img { get; set; }
-        public IEnumerable<UserDTO> FavouritedBy { get; set; }
-        public IEnumerable<string> Tags { get; set; }
+        public AlbumDTO Album { get; set; }
+        public ICollection<UserDTO> FavouritedBy { get; set; }
+        public ICollection<string> Tags { get; set; }
+
+        public PictureDTO()
+        {
+            FavouritedBy = new List<UserDTO>();
+            Tags = new List<string>();
+        }
     }
 }

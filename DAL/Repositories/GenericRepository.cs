@@ -44,9 +44,9 @@ namespace DAL.Repositories
             context.SaveChanges();
         }
 
-        public TEntity Find(Func<TEntity, Boolean> predicate)
+        public IEnumerable<TEntity> Find(Func<TEntity, Boolean> predicate)
         {
-            return dbSet.Find(predicate);
+            return dbSet.Where(predicate);
         }
 
         public void Delete(int id)

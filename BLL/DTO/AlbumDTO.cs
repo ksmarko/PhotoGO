@@ -11,11 +11,17 @@ namespace BLL.DTO
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public IEnumerable<PictureDTO> Pictures { get; set; }
+        public int UserId { get; set; }
+        public ICollection<PictureDTO> Pictures { get; set; }
 
         public override string ToString()
         {
             return Name;
+        }
+
+        public AlbumDTO()
+        {
+            Pictures = new List<PictureDTO>();
         }
     }
 }

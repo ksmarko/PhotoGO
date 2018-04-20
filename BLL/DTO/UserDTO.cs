@@ -10,8 +10,13 @@ namespace BLL.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<UserDTO> Followings { get; set; }
-        public IEnumerable<AlbumDTO> Albums { get; set; }
-        public IEnumerable<PictureDTO> Pictures { get; set; }
+        public ICollection<AlbumDTO> Albums { get; set; }
+        public ICollection<PictureDTO> LikedPictures { get; set; }
+
+        public UserDTO()
+        {
+            Albums = new List<AlbumDTO>();
+            LikedPictures = new List<PictureDTO>();
+        }
     }
 }

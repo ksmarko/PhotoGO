@@ -12,8 +12,6 @@ namespace DAL.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
-        //public ICollection<UserProfile> Followings { get; set; }
-
         public ICollection<Album> Albums { get; set; }
 
         public virtual ICollection<Picture> LikedPictures { get; set; }
@@ -21,7 +19,6 @@ namespace DAL.Entities
         public UserProfile()
         {
             LikedPictures = new List<Picture>();
-            //Followings = new List<UserProfile>();
             Albums = new List<Album>();
         }
     }

@@ -13,7 +13,7 @@ namespace DAL.EF
 
         static DataContext()
         {
-            Database.SetInitializer((new DropCreateDatabaseIfModelChanges<DataContext>()));
+            Database.SetInitializer((new DropCreateDatabaseAlways<DataContext>()));
         }
 
         public DataContext(string connectionString) : base(connectionString) {}

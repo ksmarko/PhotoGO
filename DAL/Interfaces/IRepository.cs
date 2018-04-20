@@ -10,6 +10,6 @@ namespace DAL.Interfaces
         void Create(TEntity item);
         void Update(TEntity item);
         void Delete(int id);
-        TEntity Find(Func<TEntity, bool> predicate);
+        IEnumerable<TEntity> Find(Func<TEntity, bool> predicate);
     }
 }

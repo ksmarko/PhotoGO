@@ -10,15 +10,17 @@ namespace BLL.Interfaces
     public interface IMediaService
     {
         IEnumerable<AlbumDTO> GetAlbums();
-        void AddAlbum(AlbumDTO album);
-        void RemoveAlbum(AlbumDTO album);
-        void EditAlbum(AlbumDTO album);
+        AlbumDTO GetAlbumById(int id);
+        void AddAlbum(AlbumDTO item);
+        void RemoveAlbum(int id);
+        void EditAlbum(AlbumDTO item);
 
-        IEnumerable<PictureDTO> GetImages(AlbumDTO album);
-        void AddImage(PictureDTO image, AlbumDTO album);
-        void RemoveImage(PictureDTO image);
-        void AddTags(params string [] tags);
-        void LikeImage(PictureDTO picture);
+        IEnumerable<PictureDTO> GetImages(int albumId);
+        void AddImage(PictureDTO image, int albumId);
+        void RemoveImage(int id);
+        void AddTags(int imgId, params string [] tags);
+        void LikeImage(int id, int userId);
+        PictureDTO GetImageById(int id);
 
         void Dispose();
     }
