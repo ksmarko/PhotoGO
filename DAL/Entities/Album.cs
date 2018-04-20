@@ -14,6 +14,14 @@ namespace DAL.Entities
         [MaxLength(200)]
         public string Description { get; set; }
 
-        public IEnumerable<Picture> Pictures { get; set; }
+        public int? UserId { get; set; }
+        public virtual UserProfile User { get; set; }
+
+        public virtual ICollection<Picture> Pictures { get; set; }
+
+        public Album()
+        {
+            Pictures = new List<Picture>();
+        }
     }
 }

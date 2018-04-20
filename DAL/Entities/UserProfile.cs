@@ -7,15 +7,22 @@ namespace DAL.Entities
     public class UserProfile
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [MaxLength(50)]
         public string Name { get; set; }
 
-        public IEnumerable<UserProfile> Followings { get; set; }
+        //public ICollection<UserProfile> Followings { get; set; }
 
-        public IEnumerable<Album> Albums { get; set; }
+        public ICollection<Album> Albums { get; set; }
 
-        public IEnumerable<Picture> Pictures { get; set; }
+        public virtual ICollection<Picture> LikedPictures { get; set; }
+
+        public UserProfile()
+        {
+            LikedPictures = new List<Picture>();
+            //Followings = new List<UserProfile>();
+            Albums = new List<Album>();
+        }
     }
 }
