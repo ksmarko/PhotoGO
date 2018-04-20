@@ -13,6 +13,7 @@ namespace Web.Util
         public override void Load()
         {
             Bind<IMediaService>().To<MediaService>();
+            Bind<IUserManager>().To<UserManager>();
         }
     }
 }
