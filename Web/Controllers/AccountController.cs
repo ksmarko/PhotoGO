@@ -20,16 +20,10 @@ namespace Web.Controllers
 
         private IAuthenticationManager AuthenticationManager
         {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
+            get => HttpContext.GetOwinContext().Authentication;
         }
 
-        public AccountController(IUserManager userManager)
-        {
-            this.userManager = userManager;
-        }
+        public AccountController(IUserManager userManager) => this.userManager = userManager;
 
         public ActionResult Login()
         {
@@ -40,7 +34,6 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginModel model)
         {
-            await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
@@ -77,7 +70,6 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterModel model)
         {
-            await SetInitialDataAsync();
             if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO
@@ -94,18 +86,6 @@ namespace Web.Controllers
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
             return View(model);
-        }
-
-        private async Task SetInitialDataAsync()
-        {
-            await userManager.SetInitialData(new UserDTO
-            {
-                Email = "somemail@gmail.com",
-                UserName = "ksenia",
-                Password = "123456",
-                Name = "Ksenia Marko",
-                Role = "admin",
-            }, new List<string> { "user", "admin" });
         }
     }
 }
