@@ -30,7 +30,7 @@ namespace DAL.EF
         //}
     }
 
-    public class DbInitializaer : DropCreateDatabaseAlways<DataContext>
+    public class DbInitializaer : DropCreateDatabaseIfModelChanges<DataContext>
     {
         protected override void Seed(DataContext context)
         {

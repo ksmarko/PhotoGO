@@ -21,20 +21,6 @@ namespace Tests
 
         public async void Run()
         {
-            //var user = new UserDTO() { Name = "Ksenia"};
-            //um.Create(user);
-
-            await um.SetInitialData(new UserDTO
-            {
-                Email = "somemail@mail.ru",
-                UserName = "somemail@mail.ru",
-                Password = "ad46D_ewr3",
-                Name = "Семен Семенович Горбунков",
-                Role = "admin",
-            }, new List<string> { "user", "admin" });
-
-            //var res = um.Create(userDto);
-
             #region ...
             //var album1 = new AlbumDTO()
             //{
