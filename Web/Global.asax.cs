@@ -23,6 +23,7 @@ namespace Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Resolver.Configure();
+            ModelValidatorProviders.Providers.Clear();
         }
     }
 }

@@ -1,79 +1,37 @@
 ﻿@model Web.Models.LoginModel
 
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Log In";
 }
 
-<link rel="stylesheet" href="~/Content/MyStyle2.css" />
+<h2>Log In</h2>
 
-
-@*<img src="~/Media/IMG_477044.jpg" class="img-full"/>*@
-
-@*<div class="container">
-        <div id="loginbox" class="mainbox col-lg-5 col-lg-offset-3 col-md-5 col-md-offset-3 col-sm-5 col-sm-offset-1">
-            <div class="panel panel-default">
-                <img id="profile-img" class="profile-img-card img-circle" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-
-                <div class="panel-body">
-
-                    @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="input-group input-content">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "E-mail" } })
-                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="input-group input-content">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Password" } })
-                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Create" class="btn btn-success btn-group-justified" />
-                        </div>
-                    </div>
-                </div>
-    }
-                </div>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
-    </div>*@
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-<div class="container">
-    <div class="card card-container">
-        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-        <p id="profile-name" class="profile-name-card"></p>
-        @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        <span id="reauth-email" class="reauth-email"></span>
-        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control input-content",  placeholder = "E-mail", required = "required" } })
-        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-        @*<input type="email" id="inputEmail" class="form-control" placeholder="Usuario" required autofocus>*@
-        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control input-content", placeholder = "Password", required = "required" } })
-        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-        @*<input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>*@
-
-        <button class="btn btn-lg btn-success btn-block btn-signin" type="submit">Log In</button>
-}
-    </div><!-- /card-container -->
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Log In" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
 }

@@ -17,37 +17,28 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("PhotoGO", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-
-                    @if (User.IsInRole("user"))
-                    {
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                    }
-                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if (!User.Identity.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Войти", "Login", "Account")</li>
-                        <li>@Html.ActionLink("Регистрация", "Register", "Account")</li>
+                        <li>@Html.ActionLink("Log In", "Login", "Account")</li>
+                        <li>@Html.ActionLink("Sign In", "Register", "Account")</li>
                     }
                     else
                     {
                         <li>
-                            <a>Привет @User.Identity.Name</a>
+                            <a>@User.Identity.Name</a>
                         </li>
-                        <li>@Html.ActionLink("Выход", "Logout", "Account")</li>
+                        <li>@Html.ActionLink("Log Out", "Logout", "Account")</li>
                     }
 
                 </ul>
             </div>
         </div>
     </div>
-    <div class="body-content" style="background-image: url('../../Media/IMG_477044.jpg'); position: fixed; width: 100%; height: 100%">
+    <div class="body-content">
         @RenderBody()
     </div>
 

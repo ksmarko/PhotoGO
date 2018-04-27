@@ -61,7 +61,7 @@ namespace DAL.Identity.Repositories
                 {
                     userManager.Dispose();
                     roleManager.Dispose();
-                    //clientManager.Dispose();
+                    clientManager.Dispose();
                 }
                 this.disposed = true;
             }

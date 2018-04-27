@@ -23,17 +23,5 @@ namespace Web.Controllers
         {
             return View();
         }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            var userId = userManager.GetUsers().FirstOrDefault().Id;
-            var name = userManager.GetUsers().Where(x => x.Id == userId).FirstOrDefault().Name;
-
-            mediaService.AddAlbum(new BLL.DTO.AlbumDTO() { Name = "album", Description = "Desc", UserId = userId });
-
-            return View();
-        }
     }
 }
