@@ -16,20 +16,29 @@
 
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Role)
-                </td>
-                <td>
-                    @*@Html.ActionLink("Edit", "Reserv", new { id = item.Id }) |
-                        <button class="btn btn-link link" style="" data-link="/Home/Info/@item.Id">Details</button>*@
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            @using (Html.BeginForm("EditRoles", "Management", FormMethod.Post))
+            {
+            <td>
+                <input type="hidden" value="@item.Id" name="id" />
+                <select class="form-control" name="role">
+                @foreach (var el in ViewBag.Roles.Items)
+                {
+                    <option @(item.Role == el ? "selected" : "")>@el</option>
+                }
+                </select>
+            </td>
+            <td>
+                <button type="submit" class="btn btn-success">Save</button>
+            </td>
+            }
+        </tr>
         }
     </table>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <button type="reset" class="btn btn-default">Reset</button>
 </div>

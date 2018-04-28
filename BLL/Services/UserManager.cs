@@ -63,7 +63,18 @@ namespace BLL.Services
 
         public UserDTO GetUserById(string id)
         {
-            return GetUsers().Where(x => x.Id == id).Single();
+            var appUser = Database.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+
+            var user = new UserDTO()
+            {
+                Id = appUser.Id,
+                Email = appUser.Email,
+                UserName = appUser.UserName,
+                Name = appUser.User.Name,
+                Role = SelectRoleNameById(appUser.Roles.Where(x => x.UserId == appUser.Id).Single().RoleId)
+            };
+
+            return user;
         }
 
         public IEnumerable<UserDTO> GetUsers()
@@ -87,10 +98,31 @@ namespace BLL.Services
             return list;
         }
 
+        public void RemoveFromRole(string userId, string oldRoleName)
+        {
+            var user = Database.UserManager.FindById(userId);
+            Database.UserManager.RemoveFromRole(userId, oldRoleName);
+            Database.UserManager.Update(user);
+            //Database.SaveAsync();
+        }
+
+        public void AddToRole(string userId, string roleName)
+        {
+            var user = Database.UserManager.FindById(userId);
+            Database.UserManager.AddToRole(userId, roleName);
+            Database.UserManager.Update(user);
+            //Database.SaveAsync();
+        }
+
         private string SelectRoleNameById(string id)
         {
             var appRoles = Database.RoleManager.Roles;
             return appRoles.Where(r => r.Id == id).Single().Name;
+        }
+
+        public IEnumerable<string> GetRoles()
+        {
+            return Database.RoleManager.Roles.Select(z => z.Name);
         }
 
         public void Dispose()
