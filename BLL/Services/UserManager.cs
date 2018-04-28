@@ -63,13 +63,34 @@ namespace BLL.Services
 
         public UserDTO GetUserById(string id)
         {
-            var user = Data.Users.Get(id);
-            return Mapper.Map<User, UserDTO>(user);
+            return GetUsers().Where(x => x.Id == id).Single();
         }
 
         public IEnumerable<UserDTO> GetUsers()
         {
-            return Mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(Data.Users.GetAll());
+            var appUsers = Database.UserManager.Users;
+            var appRoles = Database.RoleManager.Roles;
+            var list = new List<UserDTO>();
+
+            foreach (var el in appUsers)
+            {
+                list.Add(new UserDTO()
+                {
+                    Id = el.Id,
+                    Email = el.Email,
+                    UserName = el.UserName,
+                    Name = el.User.Name,
+                    Role = SelectRoleNameById(el.Roles.Where(x => x.UserId == el.Id).Single().RoleId)
+                });
+            }
+
+            return list;
+        }
+
+        private string SelectRoleNameById(string id)
+        {
+            var appRoles = Database.RoleManager.Roles;
+            return appRoles.Where(r => r.Id == id).Single().Name;
         }
 
         public void Dispose()

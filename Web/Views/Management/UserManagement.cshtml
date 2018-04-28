@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Web.Models.UserModel>
+
+@{
+    ViewBag.Title = "UserManagement";
+}
+
+<h2>UserManagement</h2>
+
+<div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
+    <table class="table">
+        <tr>
+            <th>User name</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Reserv", new { id = item.Id }) |
+                        <button class="btn btn-link link" style="" data-link="/Home/Info/@item.Id">Details</button>*@
+                </td>
+            </tr>
+        }
+    </table>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="reset" class="btn btn-default">Reset</button>
+</div>

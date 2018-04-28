@@ -20,6 +20,12 @@
                 @Html.ActionLink("PhotoGO", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li>@Html.ActionLink("Manage", "Manage", "Management")</li>
+                    }
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if (!User.Identity.IsAuthenticated)
                     {
