@@ -1,13 +1,8 @@
-﻿@model PagedList.IPagedList<Web.Models.AlbumModel>
+﻿@model PagedList.IPagedList<Web.Models.ImageModel>
 @using PagedList.Mvc;
-
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="~/Content/Loader.css" />
-
 
 <div>
     <!-- Modal window-->
@@ -18,25 +13,22 @@
     <div class="loader" id="loader" style="display:none"></div>
 
 
-    <button class="btn btn-success modal-link" data-link="/Profile/CreateAlbum">Create album</button>
+    <button class="btn btn-success modal-link" data-link="/Profile/AddImg?albumId=@ViewBag.AlbumId">Add image</button>
 
     <div class="row">
-        @foreach (var album in Model)
+        @foreach (var img in Model)
         {
             <div class="col-md-2">
                 <div class="thumbnail">
-                    <a href="@Url.Action("Images", "Profile", new { albumId = album.Id })">
-                        <img src="data:image;base64,@System.Convert.ToBase64String(album.Img)" style="height:200px; width:200px">
+                    <a href="#">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)" style="height:200px; width:200px">
                     </a>
-                    <div>
-                        <p><h4>@album.Name</h4></p>
-                    </div>
                 </div>
             </div>
         }
     </div>
 
-    @Html.PagedListPager(Model, page => Url.Action("Albums", "Profile", new { page }))
+    @Html.PagedListPager(Model, page => Url.Action("Images", "Profile", new { page }))
 </div>
 
 <script type="text/javascript">

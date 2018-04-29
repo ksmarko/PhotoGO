@@ -220,11 +220,11 @@
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Media\0932EC789885-3.jpg" />
-    <Content Include="Media\8b1a60250b44f4f12766ebf100b5d78f.jpg" />
+    <Content Include="Media\roses.jpg" />
+    <Content Include="Media\lake.jpg" />
     <Content Include="Media\album-img.png" />
     <Content Include="Media\HOME-poster.png" />
-    <Content Include="Media\IMG_477044.jpg" />
+    <Content Include="Media\forest.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -255,12 +255,12 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\SuccessRegister.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Management\UserManagement.cshtml" />
-    <Content Include="Views\Profile\UserProfile.cshtml" />
     <Content Include="Views\Profile\Albums.cshtml" />
     <Content Include="Views\Profile\CreateAlbum.cshtml" />
+    <Content Include="Views\Profile\Images.cshtml" />
+    <Content Include="Views\Profile\AddImg.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

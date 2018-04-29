@@ -9,6 +9,7 @@ namespace Web.Models
 {
     public class AlbumModel
     {
+        public int Id { get; set; }
         public byte[] Img { get; set; }
 
         [Required(ErrorMessage = "Please enter album name")]

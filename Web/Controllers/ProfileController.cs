@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using Web.Models;
@@ -24,11 +25,6 @@ namespace Web.Controllers
             userManager = um;
         }
 
-        public ActionResult Index()
-        {
-            return View("UserProfile");
-        }
-
         public ActionResult Albums(int? page)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
@@ -39,15 +35,32 @@ namespace Web.Controllers
             foreach (var album in albums)
                 list.Add(new AlbumModel()
                 {
+                    Id = album.Id,
                     Name = album.Name,
                     Description = album.Description,
                     Img = album.Pictures.Count > 0 ? album.Pictures.ElementAt(new Random().Next(0, album.Pictures.Count)).Img : defaultImg
                 });
 
-            int pageSize = 8;
+            int pageSize = 12;
             int pageNumber = (page ?? 1);
 
-            return PartialView("Albums", list.ToPagedList(pageNumber, pageSize));
+            return View(list.ToPagedList(pageNumber, pageSize));
+        }
+
+        public ActionResult Images(int albumId, int? page)
+        {
+            var imgs = mediaService.GetImages(albumId).ToList();
+
+            var list = new List<ImageModel>();
+
+            foreach (var img in imgs)
+                list.Add(new ImageModel() { Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags });
+
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+
+            ViewBag.AlbumId = albumId;
+            return View(list.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult Favourites()
@@ -58,6 +71,37 @@ namespace Web.Controllers
         public ActionResult Settings()
         {
             return Content("this is settings");
+        }
+
+        public ActionResult AddImg(int albumId)
+        {
+            ViewBag.AlbumId = albumId;
+            return PartialView("AddImg");
+        }
+
+        [HttpPost]
+        public ActionResult AddImg(HttpPostedFileBase file, int albumId)
+        {
+            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+            byte[] array = null;
+
+            if (file != null)
+            {
+                string pic = System.IO.Path.GetFileName(file.FileName);
+                string path = System.IO.Path.Combine(Server.MapPath("~/Media"), pic);
+
+                file.SaveAs(path);
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    file.InputStream.CopyTo(ms);
+                    array = ms.GetBuffer();
+                }
+
+                mediaService.AddImage(new PictureDTO(){Img = array}, albumId);
+            }
+
+            return Redirect($"/Profile/Images?albumId={albumId}");
         }
 
         [HttpGet]
@@ -74,7 +118,7 @@ namespace Web.Controllers
             var album = new AlbumDTO() { Name = model.Name, Description = model.Description };
             mediaService.AddAlbum(album, user.Id);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Albums");
         }
     }
 }
