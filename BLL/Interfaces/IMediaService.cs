@@ -9,9 +9,9 @@ namespace BLL.Interfaces
 {
     public interface IMediaService
     {
-        IEnumerable<AlbumDTO> GetAlbums();
+        IEnumerable<AlbumDTO> GetAlbumsForUser(string userId);
         AlbumDTO GetAlbumById(int id);
-        void AddAlbum(AlbumDTO item);
+        void AddAlbum(AlbumDTO item, string userId);
         void RemoveAlbum(int id);
         void EditAlbum(AlbumDTO item);
 

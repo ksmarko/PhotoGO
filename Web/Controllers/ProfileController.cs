@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
+using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,10 +16,12 @@ namespace Web.Controllers
     public class ProfileController : Controller
     {
         readonly IMediaService mediaService;
+        readonly IUserManager userManager;
 
-        public ProfileController (IMediaService ms)
+        public ProfileController (IMediaService ms, IUserManager um)
         {
             mediaService = ms;
+            userManager = um;
         }
 
         public ActionResult Index()
@@ -24,18 +29,25 @@ namespace Web.Controllers
             return View("UserProfile");
         }
 
-        public ActionResult Albums()
+        public ActionResult Albums(int? page)
         {
-            var albums = new List<AlbumModel>()
-            {
-                new AlbumModel() {Name = "Name1", Description="Description1"},
-                new AlbumModel() {Name = "Name2", Description="Description2"},
-                new AlbumModel() {Name = "Name3", Description="Description3"},
-                new AlbumModel() {Name = "Name4", Description="Description4"},
-                new AlbumModel() {Name = "Name5", Description="Description5"}
-            };
+            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+            var albums = mediaService.GetAlbumsForUser(user.Id);
+            var list = new List<AlbumModel>();
+            byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "Media/album-img.png");
 
-            return PartialView("Albums", albums);
+            foreach (var album in albums)
+                list.Add(new AlbumModel()
+                {
+                    Name = album.Name,
+                    Description = album.Description,
+                    Img = album.Pictures.Count > 0 ? album.Pictures.ElementAt(new Random().Next(0, album.Pictures.Count)).Img : defaultImg
+                });
+
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+
+            return PartialView("Albums", list.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult Favourites()
@@ -46,6 +58,23 @@ namespace Web.Controllers
         public ActionResult Settings()
         {
             return Content("this is settings");
+        }
+
+        [HttpGet]
+        public ActionResult CreateAlbum()
+        {
+            return PartialView("CreateAlbum");
+        }
+
+        [HttpPost]
+        public ActionResult CreateAlbum(AlbumModel model)
+        {
+            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+
+            var album = new AlbumDTO() { Name = model.Name, Description = model.Description };
+            mediaService.AddAlbum(album, user.Id);
+
+            return RedirectToAction("Index");
         }
     }
 }

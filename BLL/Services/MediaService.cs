@@ -20,22 +20,29 @@ namespace BLL.Services
             Database = uow;
         }
 
-        public IEnumerable<AlbumDTO> GetAlbums()
+        public IEnumerable<AlbumDTO> GetAlbumsForUser(string userId)
         {
-            return Mapper.Map<IEnumerable<Album>, IEnumerable<AlbumDTO>>(Database.Albums.GetAll());
+            var user = Database.Users.Get(userId);
+
+            if (user == null)
+                throw new ArgumentNullException();
+
+            return Mapper.Map<IEnumerable<Album>, IEnumerable<AlbumDTO>>(Database.Albums.GetAll().Where(x => x.UserId == userId));
         }
 
-        public void AddAlbum(AlbumDTO item)
+        public void AddAlbum(AlbumDTO item, string userId)
         {
-            if (item == null)
+            var user = Database.Users.Get(userId);
+
+            if (item == null || user == null)
                 throw new ArgumentNullException();
 
             var album = new Album()
             {
                 Name = item.Name,
                 Description = item.Description,
-                UserId = item.UserId,
-                User = Database.Users.Get(item.UserId),
+                UserId = user.Id,
+                User = user,
                 Pictures = Mapper.Map<ICollection<PictureDTO>, ICollection<Picture>>(item.Pictures)
             };
 

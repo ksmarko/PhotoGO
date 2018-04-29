@@ -10,6 +10,11 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/Content/ItemsStyles.css" />
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -50,14 +55,15 @@
     </div>
 
     <script type="text/javascript">
-    $(document).ready(function () {
-        $(".link").click(function () {
-            var btn = $(this);
-            $.get(btn.data("link"), function (data) {
-                $("#body").html(data);
-            })
+        $(document).ready(function () {
+            $(".link").click(function () {
+                var btn = $(this);
+                $.get(btn.data("link"), function (data) {
+                    $("#body").html(data);
+                });
+                document.getElementById("loader").style.display = "block";
+            });
         });
-    });
     </script>
 </body>
 </html>

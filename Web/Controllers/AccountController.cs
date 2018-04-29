@@ -49,7 +49,7 @@ namespace Web.Controllers
                     {
                         IsPersistent = true
                     }, claim);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Profile");
                 }
             }
             return View(model);
@@ -81,7 +81,12 @@ namespace Web.Controllers
                 };
                 OperationDetails operationDetails = await userManager.Create(userDto);
                 if (operationDetails.Succedeed)
-                    return View("SuccessRegister");
+                //return View("SuccessRegister");
+                {
+                    ClaimsIdentity claim = await userManager.Authenticate(userDto);
+                    AuthenticationManager.SignIn(new AuthenticationProperties{ IsPersistent = true }, claim);
+                    return RedirectToAction("Index", "Profile");
+                }
                 else
                     ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
             }
