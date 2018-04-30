@@ -80,7 +80,21 @@ namespace BLL.Services
         public IEnumerable<PictureDTO> GetImages(int albumId)
         {
             var list = Database.Pictures.Find(x => x.AlbumId == albumId);
-            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(list);
+            var res = new List<PictureDTO>();
+            if (list == null)
+                throw new ArgumentNullException();
+
+            foreach (var el in list)
+                res.Add(new PictureDTO()
+                {
+                    Id = el.Id,
+                    Img = el.Img,
+                    Album = Mapper.Map<Album, AlbumDTO>(el.Album),
+                    FavouritedBy = Mapper.Map<ICollection<User>, ICollection<UserDTO>>(el.FavouritedBy),
+                    Tags = el.Tags
+                });
+
+            return res;
         }
 
         public void AddImage(PictureDTO item, int albumId) //edit? (albumId, tags)
@@ -117,10 +131,20 @@ namespace BLL.Services
             if (img == null)
                 throw new ArgumentNullException();
 
-            foreach (var tag in tags)
-                img.Tags.Add(tag);
+            var imgToSave = new Picture()
+            {
+                Id = img.Id, 
+                Album = img.Album,
+                AlbumId = img.AlbumId,
+                FavouritedBy = img.FavouritedBy,
+                Img = img.Img
+            };
 
-            Database.Pictures.Update(img);
+            foreach (var tag in tags)
+                imgToSave.Tags.Add(tag);
+
+            Database.Pictures.Delete(img.Id);
+            Database.Pictures.Create(imgToSave);
             Database.Save();
         }
 

@@ -86,7 +86,7 @@ namespace Web.Controllers
             var el = mediaService.GetImageById(id);
             var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags };
 
-            return View(img);
+            return PartialView(img);
         }
 
         [HttpPost, ActionName("Remove")]

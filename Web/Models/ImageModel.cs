@@ -11,5 +11,10 @@ namespace Web.Models
         public byte[] Img { get; set; }
         public int Likes { get; set; }
         public ICollection<string> Tags { get; set; }
+
+        public ImageModel()
+        {
+            Tags = new List<string>();
+        }
     }
 }
