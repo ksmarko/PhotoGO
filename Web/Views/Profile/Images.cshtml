@@ -2,7 +2,10 @@
 @using PagedList.Mvc;
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="~/Content/Loader.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/Loader.css" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/jquery.fancybox.css">
+<script type="text/javascript" src="~/Scripts/jquery.fancybox.js"></script>
 
 <!-- Modal window-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
@@ -19,7 +22,7 @@
         {
             <div class="col-md-2">
                 <div class="thumbnail">
-                    <a href="#">
+                    <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
                         <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)" style="height:200px; width:200px">
                     </a>
                 </div>
@@ -27,7 +30,7 @@
         }
     </div>
 
-    @Html.PagedListPager(Model, page => Url.Action("Images", "Profile", new {ViewBag.AlbumId, page }))
+    @Html.PagedListPager(Model, page => Url.Action("Images", "Profile", new { ViewBag.AlbumId, page }))
 </div>
 
 <script type="text/javascript">
