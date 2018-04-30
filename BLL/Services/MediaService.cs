@@ -91,7 +91,7 @@ namespace BLL.Services
                     Img = el.Img,
                     Album = Mapper.Map<Album, AlbumDTO>(el.Album),
                     FavouritedBy = Mapper.Map<ICollection<User>, ICollection<UserDTO>>(el.FavouritedBy),
-                    Tags = el.Tags
+                    Tags = Mapper.Map<ICollection<Tag>, ICollection<TagDTO>>(el.Tags)
                 });
 
             return res;
@@ -109,11 +109,24 @@ namespace BLL.Services
                 Album = album,
                 AlbumId = album.Id,
                 Img = item.Img,
-                Tags = item.Tags
             };
+
+            foreach (var tag in item.Tags)
+                img.Tags.Add(Database.Tags.Get(AddTag(tag)));
 
             Database.Pictures.Create(img);
             Database.Save();
+        }
+
+        private int AddTag(TagDTO entity)
+        {
+            var tag = Database.Tags.Find(x => x.Name == entity.Name).FirstOrDefault();
+
+            if (tag == null)
+                Database.Tags.Create(new Tag() { Name = entity.Name });
+
+            Database.Save();
+            return Database.Tags.Find(x => x.Name == entity.Name).FirstOrDefault().Id;
         }
 
         public void RemoveImage(int id)
@@ -131,20 +144,10 @@ namespace BLL.Services
             if (img == null)
                 throw new ArgumentNullException();
 
-            var imgToSave = new Picture()
-            {
-                Id = img.Id, 
-                Album = img.Album,
-                AlbumId = img.AlbumId,
-                FavouritedBy = img.FavouritedBy,
-                Img = img.Img
-            };
-
             foreach (var tag in tags)
-                imgToSave.Tags.Add(tag);
+                img.Tags.Add(Database.Tags.Get(AddTag(new TagDTO { Name = tag })));
 
-            Database.Pictures.Delete(img.Id);
-            Database.Pictures.Create(imgToSave);
+            Database.Pictures.Update(img);
             Database.Save();
         }
 
@@ -187,8 +190,8 @@ namespace BLL.Services
 
         public IEnumerable<PictureDTO> SearchImages(string tag)
         {
-            var list = Database.Pictures.Find(x => x.Tags.Contains(tag));
-            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(list);
+            var t = Database.Tags.Find(x => x.Name == tag).FirstOrDefault();
+            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(t.Pictures);
         }
 
         public IEnumerable<PictureDTO> GetImages()

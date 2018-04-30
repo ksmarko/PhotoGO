@@ -55,7 +55,9 @@ namespace Web.Controllers
             var list = new List<ImageModel>();
 
             foreach (var img in imgs)
-                list.Add(new ImageModel() {Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags });
+            {
+                list.Add(new ImageModel() { Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags.Select(x => x.Name).ToList() });
+            }
 
             int pageSize = 12;
             int pageNumber = (page ?? 1);
@@ -74,7 +76,14 @@ namespace Web.Controllers
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
             ViewBag.Tag = tag;
-            return View("Images", images.ToPagedList(pageNumber, pageSize));
+            var list = new List<ImageModel>();
+
+            foreach (var img in images)
+            {
+                list.Add(new ImageModel() { Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags.Select(x => x.Name).ToList() });
+            }
+
+            return View("Images", list.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult AddImg(int albumId)
@@ -84,7 +93,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddImg(HttpPostedFileBase [] files, int albumId)
+        public ActionResult AddImg(HttpPostedFileBase [] files, int albumId, string tags)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
             byte[] array = null;
@@ -95,6 +104,7 @@ namespace Web.Controllers
             {
                 string pic = System.IO.Path.GetFileName(file.FileName);
                 string path = System.IO.Path.Combine(Server.MapPath("~/Media"), pic);
+                var tagsDto = new List<TagDTO>();
 
                 file.SaveAs(path);
 
@@ -104,7 +114,10 @@ namespace Web.Controllers
                     array = ms.GetBuffer();
                 }
 
-                mediaService.AddImage(new PictureDTO(){Img = array}, albumId);
+                foreach (var el in tags.Split(' '))
+                    tagsDto.Add(new TagDTO() { Name = el });
+
+                mediaService.AddImage(new PictureDTO(){Img = array, Tags = tagsDto }, albumId);
             }
 
             return Redirect($"/Media/Images?albumId={albumId}");

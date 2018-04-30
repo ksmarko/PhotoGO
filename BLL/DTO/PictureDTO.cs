@@ -12,12 +12,12 @@ namespace BLL.DTO
         public byte[] Img { get; set; }
         public AlbumDTO Album { get; set; }
         public ICollection<UserDTO> FavouritedBy { get; set; }
-        public ICollection<string> Tags { get; set; }
+        public ICollection<TagDTO> Tags { get; set; }
 
         public PictureDTO()
         {
             FavouritedBy = new List<UserDTO>();
-            Tags = new List<string>();
+            Tags = new List<TagDTO>();
         }
     }
 }

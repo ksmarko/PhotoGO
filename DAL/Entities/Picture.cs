@@ -11,12 +11,12 @@ namespace DAL.Entities
         public int AlbumId { get; set; }
         public virtual Album Album { get; set; }
         public virtual ICollection<User> FavouritedBy { get; set; }
-        public ICollection<string> Tags { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
 
         public Picture()
         {
             FavouritedBy = new List<User>();
-            Tags = new List<string>();
+            Tags = new List<Tag>();
         }
     }
 }

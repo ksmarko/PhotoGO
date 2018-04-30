@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="DTO\AlbumDTO.cs" />
     <Compile Include="DTO\PictureDTO.cs" />
+    <Compile Include="DTO\TagDTO.cs" />
     <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Infrastructure\AutoMapperConfig.cs" />
     <Compile Include="Infrastructure\ConnectionModule.cs" />

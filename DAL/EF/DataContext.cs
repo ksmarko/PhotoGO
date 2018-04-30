@@ -14,6 +14,7 @@ namespace DAL.EF
         public DbSet<User> UserProfiles { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         static DataContext()
         {

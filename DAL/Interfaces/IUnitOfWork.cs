@@ -9,6 +9,7 @@ namespace DAL.Interfaces
     {
         IRepository<Album> Albums { get; }
         IRepository<Picture> Pictures { get; }
+        IRepository<Tag> Tags { get; }
         IUserRepository Users { get; }
         void Save();
     }

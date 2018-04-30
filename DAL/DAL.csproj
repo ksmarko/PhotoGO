@@ -56,6 +56,7 @@
     <Compile Include="EF\DataContext.cs" />
     <Compile Include="Entities\Album.cs" />
     <Compile Include="Entities\Picture.cs" />
+    <Compile Include="Entities\Tag.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Identity\Entities\ApplicationRole.cs" />
     <Compile Include="Identity\Repositories\ApplicationRoleManager.cs" />

@@ -55,7 +55,7 @@ namespace Web.Controllers
             var list = new List<ImageModel>();
 
             foreach (var img in images)
-                list.Add(new ImageModel() {Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags });
+                list.Add(new ImageModel() {Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags.Select(x => x.Name).ToList() });
 
             int pageSize = 12;
             int pageNumber = (page ?? 1);
@@ -84,7 +84,7 @@ namespace Web.Controllers
         public ActionResult Remove(int id)
         {
             var el = mediaService.GetImageById(id);
-            var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags };
+            var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags.Select(x => x.Name).ToList() };
 
             return PartialView(img);
         }
