@@ -9,7 +9,6 @@ namespace Web.Models
     {
         public int Id { get; set; }
         public byte[] Img { get; set; }
-        public string Path { get; set; }
         public int Likes { get; set; }
         public ICollection<string> Tags { get; set; }
     }

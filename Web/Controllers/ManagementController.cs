@@ -66,15 +66,34 @@ namespace Web.Controllers
             return View("MediaManagement", list.ToPagedList(pageNumber, pageSize));
         }
 
-        public ActionResult AddTag(int imgId)
+        public ActionResult AddTags(int imgId)
         {
-            return null;
+            ViewBag.ImgId = imgId;
+            return PartialView("AddTags");
         }
 
-        public ActionResult Remove(int imgId, int? page)
+        [HttpPost]
+        public ActionResult AddTags(string tags, int imgId)
         {
-            mediaService.RemoveImage(imgId);
-            return RedirectToAction("Media", page);
+            mediaService.AddTags(imgId, tags.Split(' ').ToArray());
+
+            return RedirectToAction("Media");
+        }
+
+        [HttpGet]
+        public ActionResult Remove(int id)
+        {
+            var el = mediaService.GetImageById(id);
+            var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags };
+
+            return View(img);
+        }
+
+        [HttpPost, ActionName("Remove")]
+        public ActionResult RemoveConfirmed(int id)
+        {
+            mediaService.RemoveImage(id);
+            return RedirectToAction("Media");
         }
     }
 }

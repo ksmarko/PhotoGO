@@ -118,8 +118,9 @@ namespace BLL.Services
                 throw new ArgumentNullException();
 
             foreach (var tag in tags)
-                img.Tags.Add(tag); 
+                img.Tags.Add(tag);
 
+            Database.Pictures.Update(img);
             Database.Save();
         }
 
