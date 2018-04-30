@@ -42,7 +42,7 @@
                 {
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"> @User.Identity.Name <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" id="dropdown">
                             <li>@Html.ActionLink("Albums", "Albums", "Profile")</li>
                             <li>@Html.ActionLink("Favourites", "Favourites", "Profile")</li>
                             <li>@Html.ActionLink("Settings", "Settings", "Profile")</li>
@@ -60,12 +60,9 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".link").click(function () {
-                var btn = $(this);
-                $.get(btn.data("link"), function (data) {
-                    $("#body").html(data);
-                });
+            $("#dropdown").click(function () {
                 document.getElementById("loader").style.display = "block";
+                document.getElementById("bodycontent").style.display = "none";
             });
         });
     </script>

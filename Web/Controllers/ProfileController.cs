@@ -44,6 +44,8 @@ namespace Web.Controllers
             int pageSize = 12;
             int pageNumber = (page ?? 1);
 
+            list.Reverse();
+
             return View(list.ToPagedList(pageNumber, pageSize));
         }
 
@@ -60,12 +62,14 @@ namespace Web.Controllers
             int pageNumber = (page ?? 1);
 
             ViewBag.AlbumId = albumId;
+            list.Reverse();
+
             return View(list.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult Favourites()
         {
-            return Content("likes are here");
+            return Content(@"@{Layout = '~/Views/Shared/_Layout.cshtml';}likes are here");
         }
 
         public ActionResult Settings()
@@ -80,11 +84,13 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddImg(HttpPostedFileBase file, int albumId)
+        public ActionResult AddImg(HttpPostedFileBase [] files, int albumId)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
             byte[] array = null;
 
+            if (files.Length > 0)
+            foreach (var file in files)
             if (file != null)
             {
                 string pic = System.IO.Path.GetFileName(file.FileName);

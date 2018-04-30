@@ -4,14 +4,13 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="~/Content/Loader.css" />
 
-<div>
-    <!-- Modal window-->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    </div>
-    <!--End modal-->
+<!-- Modal window-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+</div>
+<!--End modal-->
 
-    <div class="loader" id="loader" style="display:none"></div>
-
+<div class="loader" id="imgloader" style="display:block"></div>
+<div id="imgbodycontent" style="display:none">
 
     <button class="btn btn-success modal-link" data-link="/Profile/AddImg?albumId=@ViewBag.AlbumId">Add image</button>
 
@@ -28,7 +27,7 @@
         }
     </div>
 
-    @Html.PagedListPager(Model, page => Url.Action("Images", "Profile", new { page }))
+    @Html.PagedListPager(Model, page => Url.Action("Images", "Profile", new {ViewBag.AlbumId, page }))
 </div>
 
 <script type="text/javascript">
@@ -40,5 +39,10 @@
                 $("#myModal").modal();
             })
         });
-    });
+    }, ActivateLoader());
+
+    function ActivateLoader() {
+        document.getElementById("imgloader").style.display = "none";
+        document.getElementById("imgbodycontent").style.display = "block";
+    }
 </script>

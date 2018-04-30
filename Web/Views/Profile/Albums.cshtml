@@ -8,15 +8,13 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="~/Content/Loader.css" />
 
+<!-- Modal window-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+</div>
+<!--End modal-->
 
-<div>
-    <!-- Modal window-->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-    </div>
-    <!--End modal-->
-
-    <div class="loader" id="loader" style="display:none"></div>
-
+<div class="loader" id="loader" style="display:none"></div>
+<div id="bodycontent" style="display:block">
 
     <button class="btn btn-success modal-link" data-link="/Profile/CreateAlbum">Create album</button>
 
@@ -25,7 +23,7 @@
         {
             <div class="col-md-2">
                 <div class="thumbnail">
-                    <a href="@Url.Action("Images", "Profile", new { albumId = album.Id })">
+                    <a onclick="ActivateLoader()" href="@Url.Action("Images", "Profile", new { albumId = album.Id })">
                         <img src="data:image;base64,@System.Convert.ToBase64String(album.Img)" style="height:200px; width:200px">
                     </a>
                     <div>
@@ -49,4 +47,9 @@
             })
         });
     });
+
+    function ActivateLoader() {
+        document.getElementById("imgloader").style.display = "none";
+        document.getElementById("imgbodycontent").style.display = "block";
+    }
 </script>
