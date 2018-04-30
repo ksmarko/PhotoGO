@@ -1,0 +1,69 @@
+﻿@model PagedList.IPagedList<Web.Models.ImageModel>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/Content/Loader.css" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/jquery.fancybox.css">
+<script type="text/javascript" src="~/Scripts/jquery.fancybox.js"></script>
+
+<!-- Modal window-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+</div>
+<!--End modal-->
+
+<div class="loader" id="imgloader" style="display:block"></div>
+<div id="imgbodycontent" style="display:none">
+
+    @if (!ViewBag.IsSearchResult)
+    {
+        <button class="btn btn-success modal-link" data-link="/Media/AddImg?albumId=@ViewBag.AlbumId">Add image</button>
+    }
+
+    <div class="row">
+        @foreach (var img in Model)
+        {
+            <div class="col-md-2">
+                <div class="thumbnail">
+                    <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)" style="height:200px; width:200px">
+                    </a>
+                    <p>
+                        @foreach (var tag in img.Tags)
+                        {
+                            <a href="@Url.Action("Search", "Media", new { tag = tag })">#@tag</a>
+                        }
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!ViewBag.IsSearchResult)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Images", "Media", new { ViewBag.AlbumId, page }))
+    }
+    else
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Search", "Media", new { ViewBag.Tag, page }))
+
+    }
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".modal-link").click(function () {
+            var btn = $(this);
+            $.get(btn.data("link"), function (data) {
+                $("#myModal").html(data);
+                $("#myModal").modal();
+            })
+        });
+    }, ActivateLoader());
+
+    function ActivateLoader() {
+        document.getElementById("imgloader").style.display = "none";
+        document.getElementById("imgbodycontent").style.display = "block";
+    }
+</script>

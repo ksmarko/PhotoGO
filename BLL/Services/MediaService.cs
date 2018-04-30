@@ -159,5 +159,16 @@ namespace BLL.Services
 
             return Mapper.Map<Picture, PictureDTO>(img);
         }
+
+        public IEnumerable<PictureDTO> SearchImages(string tag)
+        {
+            var list = Database.Pictures.Find(x => x.Tags.Contains(tag));
+            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(list);
+        }
+
+        public IEnumerable<PictureDTO> GetImages()
+        {
+            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(Database.Pictures.GetAll());
+        }
     }
 }

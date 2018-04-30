@@ -199,7 +199,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManagementController.cs" />
-    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\MediaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -259,10 +259,11 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Management\UserManagement.cshtml" />
-    <Content Include="Views\Profile\Albums.cshtml" />
-    <Content Include="Views\Profile\CreateAlbum.cshtml" />
-    <Content Include="Views\Profile\Images.cshtml" />
-    <Content Include="Views\Profile\AddImg.cshtml" />
+    <Content Include="Views\Media\Albums.cshtml" />
+    <Content Include="Views\Media\CreateAlbum.cshtml" />
+    <Content Include="Views\Media\Images.cshtml" />
+    <Content Include="Views\Media\AddImg.cshtml" />
+    <Content Include="Views\Management\MediaManagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

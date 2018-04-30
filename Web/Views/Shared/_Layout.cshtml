@@ -28,7 +28,11 @@
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole("admin"))
                     {
-                        <li>@Html.ActionLink("Manage", "Manage", "Management")</li>
+                        <li class="loaded">@Html.ActionLink("Manage users", "Users", "Management")</li>
+                    }
+                    @if (User.IsInRole("moderator") || User.IsInRole("admin"))
+                    {
+                        <li class="loaded">@Html.ActionLink("Manage media", "Media", "Management")</li>
                     }
                 </ul>
 
@@ -43,8 +47,8 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"> @User.Identity.Name <span class="caret"></span></a>
                         <ul class="dropdown-menu" id="dropdown">
-                            <li>@Html.ActionLink("Albums", "Albums", "Profile")</li>
-                            <li>@Html.ActionLink("Favourites", "Favourites", "Profile")</li>
+                            <li class="loaded">@Html.ActionLink("Albums", "Albums", "Media")</li>
+                            <li class="loaded">@Html.ActionLink("Favourites", "Favourites", "Media")</li>
                             <li>@Html.ActionLink("Settings", "Settings", "Profile")</li>
                         </ul>
                     </li>
@@ -60,7 +64,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dropdown").click(function () {
+            $(".loaded").click(function () {
                 document.getElementById("loader").style.display = "block";
                 document.getElementById("bodycontent").style.display = "none";
             });

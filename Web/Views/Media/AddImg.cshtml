@@ -4,10 +4,10 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="content"><strong>Create album</strong></h4>
+            <h4 class="modal-title" id="content"><strong>Add images</strong></h4>
         </div>
         <div class="modal-body">
-            @using (Html.BeginForm("AddImg", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("AddImg", "Media", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="albumId" value="@ViewBag.AlbumId"/>

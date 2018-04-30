@@ -7,6 +7,7 @@ namespace Web.Models
 {
     public class ImageModel
     {
+        public int Id { get; set; }
         public byte[] Img { get; set; }
         public string Path { get; set; }
         public int Likes { get; set; }

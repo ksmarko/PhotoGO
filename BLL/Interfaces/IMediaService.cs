@@ -21,6 +21,8 @@ namespace BLL.Interfaces
         void AddTags(int imgId, params string [] tags);
         void LikeImage(int id, string userId);
         PictureDTO GetImageById(int id);
+        IEnumerable<PictureDTO> SearchImages(string tag);
+        IEnumerable<PictureDTO> GetImages();
 
         void Dispose();
     }

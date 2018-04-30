@@ -12,11 +12,9 @@
 </div>
 <!--End modal-->
 
-<div class="loader" id="imgloader" style="display:block"></div>
-<div id="imgbodycontent" style="display:none">
-
-    <button class="btn btn-success modal-link" data-link="/Profile/AddImg?albumId=@ViewBag.AlbumId">Add image</button>
-
+<div class="loader" id="loader" style="display:none"></div>
+<div id="bodycontent" style="display:block">
+    
     <div class="row">
         @foreach (var img in Model)
         {
@@ -25,12 +23,22 @@
                     <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
                         <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)" style="height:200px; width:200px">
                     </a>
+                    <p>
+                        @foreach (var tag in img.Tags)
+                        {
+                            <a href="@Url.Action("Search", "Media", new { tag = tag })">#@tag</a>
+                        }
+                    </p>
+                    <p>
+                        <button class="btn btn-success modal-link glyphicon-plus" data-link="/Management/AddTag?imgId=@img.Id"></button>
+                        <button class="btn btn-default" data-link="/Management/Remove?imgId=@img.Id&page=@ViewBag.Page">Remove</button>
+                    </p>
                 </div>
             </div>
         }
     </div>
 
-    @Html.PagedListPager(Model, page => Url.Action("Images", "Profile", new { ViewBag.AlbumId, page }))
+    @Html.PagedListPager(Model, page => Url.Action("Media", "Management", new { page }))
 </div>
 
 <script type="text/javascript">
@@ -42,10 +50,5 @@
                 $("#myModal").modal();
             })
         });
-    }, ActivateLoader());
-
-    function ActivateLoader() {
-        document.getElementById("imgloader").style.display = "none";
-        document.getElementById("imgbodycontent").style.display = "block";
-    }
+    });
 </script>

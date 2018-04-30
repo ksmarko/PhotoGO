@@ -14,12 +14,12 @@ using Web.Models;
 
 namespace Web.Controllers
 {
-    public class ProfileController : Controller
+    public class MediaController : Controller
     {
         readonly IMediaService mediaService;
         readonly IUserManager userManager;
 
-        public ProfileController (IMediaService ms, IUserManager um)
+        public MediaController (IMediaService ms, IUserManager um)
         {
             mediaService = ms;
             userManager = um;
@@ -52,29 +52,29 @@ namespace Web.Controllers
         public ActionResult Images(int albumId, int? page)
         {
             var imgs = mediaService.GetImages(albumId).ToList();
-
             var list = new List<ImageModel>();
 
             foreach (var img in imgs)
-                list.Add(new ImageModel() { Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags });
+                list.Add(new ImageModel() {Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags });
 
             int pageSize = 12;
             int pageNumber = (page ?? 1);
 
             ViewBag.AlbumId = albumId;
+            ViewBag.IsSearchResult = false;
             list.Reverse();
 
             return View(list.ToPagedList(pageNumber, pageSize));
         }
 
-        public ActionResult Favourites()
+        public ActionResult Search(string tag, int? page)
         {
-            return Content(@"@{Layout = '~/Views/Shared/_Layout.cshtml';}likes are here");
-        }
-
-        public ActionResult Settings()
-        {
-            return Content("this is settings");
+            var images = mediaService.SearchImages(tag);
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+            ViewBag.IsSearchResult = true;
+            ViewBag.Tag = tag;
+            return View("Images", images.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult AddImg(int albumId)
@@ -107,7 +107,7 @@ namespace Web.Controllers
                 mediaService.AddImage(new PictureDTO(){Img = array}, albumId);
             }
 
-            return Redirect($"/Profile/Images?albumId={albumId}");
+            return Redirect($"/Media/Images?albumId={albumId}");
         }
 
         [HttpGet]
