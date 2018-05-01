@@ -266,6 +266,8 @@
     <Content Include="Views\Management\MediaManagement.cshtml" />
     <Content Include="Views\Management\AddTags.cshtml" />
     <Content Include="Views\Management\Remove.cshtml" />
+    <Content Include="Views\Media\EditAlbum.cshtml" />
+    <Content Include="Views\Media\RemoveAlbum.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -25,30 +25,24 @@ namespace Web.Controllers
             userManager = um;
         }
 
-        public ActionResult Albums(int? page)
+        public ActionResult Search(string tag, int? page)
         {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-            var albums = mediaService.GetAlbumsForUser(user.Id);
-            var list = new List<AlbumModel>();
-            byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "Media/album-img.png");
-
-            foreach (var album in albums)
-                list.Add(new AlbumModel()
-                {
-                    Id = album.Id,
-                    Name = album.Name,
-                    Description = album.Description,
-                    Img = album.Pictures.Count > 0 ? album.Pictures.ElementAt(new Random().Next(0, album.Pictures.Count)).Img : defaultImg
-                });
-
+            var images = mediaService.SearchImages(tag);
             int pageSize = 12;
             int pageNumber = (page ?? 1);
+            ViewBag.IsSearchResult = true;
+            ViewBag.Tag = tag;
+            var list = new List<ImageModel>();
 
-            list.Reverse();
+            foreach (var img in images)
+            {
+                list.Add(new ImageModel() { Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags.Select(x => x.Name).ToList() });
+            }
 
-            return View(list.ToPagedList(pageNumber, pageSize));
+            return View("Images", list.ToPagedList(pageNumber, pageSize));
         }
 
+        #region Images
         public ActionResult Images(int albumId, int? page)
         {
             var imgs = mediaService.GetImages(albumId).ToList();
@@ -69,23 +63,7 @@ namespace Web.Controllers
             return View(list.ToPagedList(pageNumber, pageSize));
         }
 
-        public ActionResult Search(string tag, int? page)
-        {
-            var images = mediaService.SearchImages(tag);
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
-            ViewBag.IsSearchResult = true;
-            ViewBag.Tag = tag;
-            var list = new List<ImageModel>();
-
-            foreach (var img in images)
-            {
-                list.Add(new ImageModel() { Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags.Select(x => x.Name).ToList() });
-            }
-
-            return View("Images", list.ToPagedList(pageNumber, pageSize));
-        }
-
+        [HttpGet]
         public ActionResult AddImg(int albumId)
         {
             ViewBag.AlbumId = albumId;
@@ -123,13 +101,40 @@ namespace Web.Controllers
             return Redirect($"/Media/Images?albumId={albumId}");
         }
 
-        [HttpGet]
+        #endregion
+
+        #region Albums
+        public ActionResult Albums(int? page)
+        {
+            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+            var albums = mediaService.GetAlbumsForUser(user.Id);
+            var list = new List<AlbumModel>();
+            byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "Media/album-img.png");
+
+            foreach (var album in albums)
+                list.Add(new AlbumModel()
+                {
+                    Id = album.Id,
+                    Name = album.Name,
+                    Description = album.Description,
+                    Img = album.Pictures.Count > 0 ? album.Pictures.ElementAt(new Random().Next(0, album.Pictures.Count)).Img : defaultImg
+                });
+
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+
+            list.Reverse();
+
+            return View(list.ToPagedList(pageNumber, pageSize));
+        }
+
+        [HttpGet, ActionName("Create")]
         public ActionResult CreateAlbum()
         {
             return PartialView("CreateAlbum");
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Create")]
         public ActionResult CreateAlbum(AlbumModel model)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
@@ -139,5 +144,45 @@ namespace Web.Controllers
 
             return RedirectToAction("Albums");
         }
+
+        [HttpGet, ActionName("Edit")]
+        public ActionResult EditAlbum(int id)
+        {
+            var album = mediaService.GetAlbumById(id);
+
+            var model = new AlbumModel() { Id = album.Id, Name = album.Name, Description = album.Description };
+            return PartialView("EditAlbum", model);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditAlbumConfirmation(AlbumModel model)
+        {
+            var albumDto = new AlbumDTO()
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Description = model.Description
+            };
+
+            mediaService.EditAlbum(albumDto);
+
+            return RedirectToAction("Albums");
+        }
+
+        [HttpGet, ActionName("Remove")]
+        public ActionResult RemoveAlbum(int id)
+        {
+            var album = mediaService.GetAlbumById(id);
+            var model = new AlbumModel() { Id = album.Id, Name = album.Name, Description = album.Description };
+            return PartialView("RemoveAlbum", model);
+        }
+
+        [HttpPost, ActionName("Remove")]
+        public ActionResult RemoveAlbumConfirmation(int id)
+        {
+            mediaService.RemoveAlbum(id);
+            return RedirectToAction("Albums");
+        }
     }
+    #endregion
 }

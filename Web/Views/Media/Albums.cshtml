@@ -6,7 +6,6 @@
 }
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="~/Content/Loader.css" />
 
 <!-- Modal window-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
@@ -16,18 +15,22 @@
 <div class="loader" id="loader" style="display:none"></div>
 <div id="bodycontent" style="display:block">
 
-    <button class="btn btn-success modal-link" data-link="/Media/CreateAlbum">Create album</button>
+    <button class="btn btn-success modal-link" data-link="/Media/Create">Create album</button>
 
     <div class="row">
         @foreach (var album in Model)
         {
             <div class="col-md-2">
                 <div class="thumbnail">
-                    <a onclick="ActivateLoader()" href="@Url.Action("Images", "Media", new { albumId = album.Id })">
+                    <a href="@Url.Action("Images", "Media", new { albumId = album.Id })">
                         <img src="data:image;base64,@System.Convert.ToBase64String(album.Img)" style="height:200px; width:200px">
                     </a>
                     <div>
                         <p><h4>@album.Name</h4></p>
+                        <p>
+                            <button class="btn btn-success glyphicon-edit modal-link" data-link="/Media/Edit/@album.Id"></button>
+                            <button class="btn btn-default modal-link" data-link="/Media/Remove/@album.Id">Remove</button>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -48,8 +51,8 @@
         });
     });
 
-    function ActivateLoader() {
-        document.getElementById("imgloader").style.display = "none";
-        document.getElementById("imgbodycontent").style.display = "block";
-    }
+    window.onload = function () {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("bodycontent").style.display = "block";
+    };
 </script>

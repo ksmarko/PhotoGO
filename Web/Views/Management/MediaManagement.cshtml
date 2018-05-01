@@ -2,7 +2,6 @@
 @using PagedList.Mvc;
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="~/Content/Loader.css" />
 
 <link rel="stylesheet" type="text/css" href="~/Content/jquery.fancybox.css">
 <script type="text/javascript" src="~/Scripts/jquery.fancybox.js"></script>
@@ -12,8 +11,8 @@
 </div>
 <!--End modal-->
 
-<div class="loader" id="loader" style="display:none"></div>
-<div id="bodycontent" style="display:block">
+<div class="loader" id="loader" style="display:block"></div>
+<div id="bodycontent" style="display:none">
     
     <div class="row">
         @foreach (var img in Model)
@@ -26,7 +25,7 @@
                     <p>
                         @foreach (var tag in img.Tags)
                         {
-                            <a href="@Url.Action("Search", "Media", new { tag = tag })">#@tag</a>
+                            <a href="@Url.Action("Search", "Media", new { tag = tag })">@tag</a>
                         }
                     </p>
                     <p>
@@ -51,4 +50,9 @@
             })
         });
     });
+
+    window.onload = function () {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("bodycontent").style.display = "block";
+    };
 </script>

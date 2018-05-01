@@ -11,7 +11,6 @@ using Web.Models;
 
 namespace Web.Controllers
 {
-    [Authorize(Roles = "admin")]
     public class ManagementController : Controller
     {
         readonly IUserManager userManager;
@@ -23,6 +22,7 @@ namespace Web.Controllers
             this.mediaService = mediaService;
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Users()
         {
             ViewBag.Roles = new SelectList(userManager.GetRoles());
@@ -32,6 +32,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public virtual ActionResult EditRoles(string id, string role)
         {
             if (ModelState.IsValid)
@@ -49,6 +50,7 @@ namespace Web.Controllers
             return View();
         }
 
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Media(int? page)
         {
             var images = mediaService.GetImages();
@@ -66,13 +68,20 @@ namespace Web.Controllers
             return View("MediaManagement", list.ToPagedList(pageNumber, pageSize));
         }
 
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(int imgId)
         {
+            var tags = mediaService.GetImageById(imgId).Tags;
+            string res = "";
+            foreach (var el in tags)
+                res += el.Name + " ";
+
             ViewBag.ImgId = imgId;
-            return PartialView("AddTags");
+            return PartialView("AddTags", res);
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(string tags, int imgId)
         {
             mediaService.AddTags(imgId, tags.Split(' ').ToArray());
@@ -81,6 +90,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, moderator")]
         public ActionResult Remove(int id)
         {
             var el = mediaService.GetImageById(id);
@@ -90,6 +100,7 @@ namespace Web.Controllers
         }
 
         [HttpPost, ActionName("Remove")]
+        [Authorize(Roles = "admin, moderator")] 
         public ActionResult RemoveConfirmed(int id)
         {
             mediaService.RemoveImage(id);

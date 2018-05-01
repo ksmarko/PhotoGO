@@ -144,6 +144,8 @@ namespace BLL.Services
             if (img == null)
                 throw new ArgumentNullException();
 
+            img.Tags.Clear();
+
             foreach (var tag in tags)
                 img.Tags.Add(Database.Tags.Get(AddTag(new TagDTO { Name = tag })));
 
