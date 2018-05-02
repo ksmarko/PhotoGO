@@ -71,7 +71,8 @@ namespace BLL.Services
                 Email = appUser.Email,
                 UserName = appUser.UserName,
                 Name = appUser.User.Name,
-                Role = SelectRoleNameById(appUser.Roles.Where(x => x.UserId == appUser.Id).Single().RoleId)
+                Role = SelectRoleNameById(appUser.Roles.Where(x => x.UserId == appUser.Id).Single().RoleId),
+                Albums = new AlbumService(Data).GetAlbumsForUser(appUser.Id).ToList()
             };
 
             return user;
@@ -91,7 +92,8 @@ namespace BLL.Services
                     Email = el.Email,
                     UserName = el.UserName,
                     Name = el.User.Name,
-                    Role = SelectRoleNameById(el.Roles.Where(x => x.UserId == el.Id).Single().RoleId)
+                    Role = SelectRoleNameById(el.Roles.Where(x => x.UserId == el.Id).Single().RoleId),
+                    Albums = new AlbumService(Data).GetAlbumsForUser(el.Id).ToList()
                 });
             }
 
@@ -103,7 +105,6 @@ namespace BLL.Services
             var user = Database.UserManager.FindById(userId);
             Database.UserManager.RemoveFromRole(userId, oldRoleName);
             Database.UserManager.Update(user);
-            //Database.SaveAsync();
         }
 
         public void AddToRole(string userId, string roleName)
@@ -111,18 +112,17 @@ namespace BLL.Services
             var user = Database.UserManager.FindById(userId);
             Database.UserManager.AddToRole(userId, roleName);
             Database.UserManager.Update(user);
-            //Database.SaveAsync();
         }
 
         private string SelectRoleNameById(string id)
         {
             var appRoles = Database.RoleManager.Roles;
-            return appRoles.Where(r => r.Id == id).Single().Name;
+            return appRoles.Where(x => x.Id == id).Single().Name;
         }
 
         public IEnumerable<string> GetRoles()
         {
-            return Database.RoleManager.Roles.Select(z => z.Name);
+            return Database.RoleManager.Roles.Select(x => x.Name);
         }
 
         public void Dispose()

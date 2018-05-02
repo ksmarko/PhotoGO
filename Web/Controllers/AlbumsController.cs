@@ -25,6 +25,7 @@ namespace Web.Controllers
             this.userManager = userManager;
         }
 
+        [Authorize]
         public ActionResult Index(int? page)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
@@ -49,12 +50,14 @@ namespace Web.Controllers
             return View(list.ToPagedList(pageNumber, pageSize));
         }
 
+        [Authorize]
         [HttpGet, ActionName("Create")]
         public ActionResult CreateAlbum()
         {
             return PartialView("CreateAlbum");
         }
 
+        [Authorize]
         [HttpPost, ActionName("Create")]
         public ActionResult CreateAlbum(AlbumModel model)
         {
@@ -66,6 +69,7 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpGet, ActionName("Edit")]
         public ActionResult EditAlbum(int id)
         {
@@ -75,6 +79,7 @@ namespace Web.Controllers
             return PartialView("EditAlbum", model);
         }
 
+        [Authorize]
         [HttpPost, ActionName("Edit")]
         public ActionResult EditAlbumConfirmation(AlbumModel model)
         {
@@ -90,6 +95,7 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpGet, ActionName("Remove")]
         public ActionResult RemoveAlbum(int id)
         {
@@ -98,6 +104,7 @@ namespace Web.Controllers
             return PartialView("RemoveAlbum", model);
         }
 
+        [Authorize]
         [HttpPost, ActionName("Remove")]
         public ActionResult RemoveAlbumConfirmation(int id)
         {

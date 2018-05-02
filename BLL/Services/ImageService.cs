@@ -98,18 +98,6 @@ namespace BLL.Services
             Database.Save();
         }
 
-        public void LikeImage(int id, string userId) //maybe edit (remove userId)
-        {
-            var img = Database.Pictures.Get(id);
-            var user = Database.Users.Get(userId);
-
-            if (img == null | user == null)
-                throw new ArgumentNullException();
-
-            img.FavouritedBy.Add(user);
-            Database.Save();
-        }
-
         public PictureDTO GetImageById(int id)
         {
             var img = Database.Pictures.Get(id);
@@ -129,6 +117,43 @@ namespace BLL.Services
         public IEnumerable<PictureDTO> GetImages()
         {
             return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(Database.Pictures.GetAll());
+        }
+
+        public IEnumerable<PictureDTO> GetFavouritesForUser(string id)
+        {
+            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(Database.Users.Get(id).LikedPictures);
+        }
+
+        public bool IsLikedBy(string id, int imgId)
+        {
+            if (Database.Users.Get(id).LikedPictures.Any(x => x.Id == imgId))
+                return true;
+
+            return false;
+        }
+
+        public void LikeImage(int id, string userId) //maybe edit (remove userId)
+        {
+            var img = Database.Pictures.Get(id);
+            var user = Database.Users.Get(userId);
+
+            if (img == null | user == null)
+                throw new ArgumentNullException();
+
+            img.FavouritedBy.Add(user);
+            Database.Save();
+        }
+
+        public void DislikeImage(int id, string userId)
+        {
+            var img = Database.Pictures.Get(id);
+            var user = Database.Users.Get(userId);
+
+            if (img == null | user == null)
+                throw new ArgumentNullException();
+
+            img.FavouritedBy.Remove(user);
+            Database.Save();
         }
 
         public void Dispose()

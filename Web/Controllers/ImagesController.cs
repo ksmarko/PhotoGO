@@ -24,6 +24,8 @@ namespace Web.Controllers
 
         public ActionResult Search(string tag, int? page)
         {
+            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+
             var images = imageService.SearchImages(tag);
             int pageSize = 12;
             int pageNumber = (page ?? 1);
@@ -33,21 +35,40 @@ namespace Web.Controllers
 
             foreach (var img in images)
             {
-                list.Add(new ImageModel() { Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags.Select(x => x.Name).ToList() });
+                list.Add(new ImageModel()
+                {
+                    Id = img.Id,
+                    Img = img.Img,
+                    Likes = img.FavouritedBy.Count,
+                    IsLiked = imageService.IsLikedBy(user.Id, img.Id),
+                    Tags = img.Tags.Select(x => x.Name).ToList()
+                });
             }
 
             return View("Index", list.ToPagedList(pageNumber, pageSize));
         }
 
-        //last - Images
+        [Authorize]
         public ActionResult Index(int albumId, int? page)
         {
+            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+
+            if (!user.Albums.Any(x => x.Id == albumId))
+                return new HttpNotFoundResult();
+
             var imgs = imageService.GetImages(albumId).ToList();
             var list = new List<ImageModel>();
 
             foreach (var img in imgs)
             {
-                list.Add(new ImageModel() { Id = img.Id, Img = img.Img, Likes = img.FavouritedBy.Count, Tags = img.Tags.Select(x => x.Name).ToList() });
+                list.Add(new ImageModel()
+                {
+                    Id = img.Id,
+                    Img = img.Img,
+                    Likes = img.FavouritedBy.Count,
+                    IsLiked = imageService.IsLikedBy(user.Id, img.Id),
+                    Tags = img.Tags.Select(x => x.Name).ToList()
+                });
             }
 
             int pageSize = 12;
@@ -61,6 +82,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult AddImage(int albumId)
         {
             ViewBag.AlbumId = albumId;
@@ -68,6 +90,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult AddImage(HttpPostedFileBase[] files, int albumId, string tags)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
@@ -99,6 +122,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult RemoveImage(int id)
         {
             var el = imageService.GetImageById(id);
@@ -107,6 +131,7 @@ namespace Web.Controllers
             return PartialView(img);
         }
 
+        [Authorize]
         [HttpPost, ActionName("RemoveImage")]
         public ActionResult RemoveImageConfirmed(int id)
         {
