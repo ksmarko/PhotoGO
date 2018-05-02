@@ -139,5 +139,17 @@ namespace Web.Controllers
             imageService.RemoveImage(id);
             return Redirect($"/Images/Index?albumId={albumId}");
         }
+
+        public int Like(int id)
+        {
+            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+            var img = imageService.GetImageById(id);
+
+            if (img.FavouritedBy.Any(x => x.Id == user.Id))
+                imageService.DislikeImage(img.Id, user.Id);
+            else imageService.LikeImage(img.Id, user.Id);
+
+            return imageService.GetImageById(id).FavouritedBy.Count;
+        }
     }
 }

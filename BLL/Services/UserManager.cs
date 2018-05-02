@@ -64,6 +64,7 @@ namespace BLL.Services
         public UserDTO GetUserById(string id)
         {
             var appUser = Database.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+            var domainUser = Data.Users.Get(id);
 
             var user = new UserDTO()
             {
@@ -72,7 +73,8 @@ namespace BLL.Services
                 UserName = appUser.UserName,
                 Name = appUser.User.Name,
                 Role = SelectRoleNameById(appUser.Roles.Where(x => x.UserId == appUser.Id).Single().RoleId),
-                Albums = new AlbumService(Data).GetAlbumsForUser(appUser.Id).ToList()
+                Albums = Mapper.Map<ICollection<Album>, ICollection<AlbumDTO>>(domainUser.Albums), //new AlbumService(Data).GetAlbumsForUser(appUser.Id).ToList(),
+                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(domainUser.LikedPictures)
             };
 
             return user;

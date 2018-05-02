@@ -6,6 +6,10 @@
 <link rel="stylesheet" type="text/css" href="~/Content/jquery.fancybox.css">
 <script type="text/javascript" src="~/Scripts/jquery.fancybox.js"></script>
 
+<script src="~/Scripts/jquery.signalR-2.2.3.min.js"></script>
+<script src="/signalr/hubs"></script>
+<script src="/Scripts/likeButton.js"></script>
+
 <!-- Modal window-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
 </div>
@@ -29,13 +33,18 @@
                     </a>
                     <p>
                         @foreach (var tag in img.Tags)
-        {
-                <a href="@Url.Action("Search", "Images", new { tag = tag })">@tag</a>
-}
+                        {
+                            <a href="@Url.Action("Search", "Images", new { tag = tag })">@tag</a>
+                        }
                     </p>
                     <p>
                         <button class="btn btn-default modal-link" data-link="/Images/RemoveImage/@img.Id">Remove</button>
-                        <button class="btn btn-default link glyphicon-heart" data-link="/Images/Like/@img.Id"></button>
+
+                        <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
+                            @if (img.IsLiked) { <i class="fa fa-heart" style="color: #cf0020"></i> }
+                            else { <i class="fa fa-heart" style="color: #000000"></i> }
+                            <span>@img.Likes</span>
+                        </button>
                     </p>
                 </div>
             </div>

@@ -132,7 +132,7 @@ namespace BLL.Services
             return false;
         }
 
-        public void LikeImage(int id, string userId) //maybe edit (remove userId)
+        public void LikeImage(int id, string userId)
         {
             var img = Database.Pictures.Get(id);
             var user = Database.Users.Get(userId);
@@ -141,6 +141,7 @@ namespace BLL.Services
                 throw new ArgumentNullException();
 
             img.FavouritedBy.Add(user);
+            var x = user.LikedPictures;
             Database.Save();
         }
 
@@ -153,6 +154,7 @@ namespace BLL.Services
                 throw new ArgumentNullException();
 
             img.FavouritedBy.Remove(user);
+            var x = user.LikedPictures;
             Database.Save();
         }
 
