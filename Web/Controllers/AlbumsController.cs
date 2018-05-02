@@ -59,6 +59,7 @@ namespace Web.Controllers
 
         [Authorize]
         [HttpPost, ActionName("Create")]
+        [ValidateAntiForgeryToken]
         public ActionResult CreateAlbum(AlbumModel model)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();

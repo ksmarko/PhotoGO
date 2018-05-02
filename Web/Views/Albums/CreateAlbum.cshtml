@@ -7,7 +7,7 @@
             <h4 class="modal-title" id="content"><strong>Create album</strong></h4>
         </div>
         <div class="modal-body">
-            @using (Html.BeginForm())
+            @using (Html.BeginForm("Create", "Albums", FormMethod.Post, new {id = "inputForm" }))
             {
                 @Html.AntiForgeryToken()
 
@@ -40,3 +40,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse((document).getElementsByTagName("form"));
+    });
+</script>
