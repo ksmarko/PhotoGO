@@ -30,6 +30,13 @@
                     </p>
                     <p>
                         <button class="btn btn-success glyphicon-plus modal-link" data-link="/Management/AddTags?imgId=@img.Id"></button>
+                        <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
+                            @if (img.IsLiked)
+        {<i class="fa fa-heart" style="color: #cf0020"></i> }
+else
+{ <i class="fa fa-heart" style="color: #000000"></i>}
+                            <span>@img.Likes</span>
+                        </button>
                     </p>
                 </div>
             </div>
