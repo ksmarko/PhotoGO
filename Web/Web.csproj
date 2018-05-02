@@ -198,8 +198,9 @@
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImagesController.cs" />
     <Compile Include="Controllers\ManagementController.cs" />
-    <Compile Include="Controllers\MediaController.cs" />
+    <Compile Include="Controllers\AlbumsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -259,15 +260,15 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Management\UserManagement.cshtml" />
-    <Content Include="Views\Media\Albums.cshtml" />
-    <Content Include="Views\Media\CreateAlbum.cshtml" />
-    <Content Include="Views\Media\Images.cshtml" />
-    <Content Include="Views\Media\AddImage.cshtml" />
+    <Content Include="Views\Albums\Index.cshtml" />
+    <Content Include="Views\Albums\CreateAlbum.cshtml" />
+    <Content Include="Views\Images\Index.cshtml" />
+    <Content Include="Views\Images\AddImage.cshtml" />
     <Content Include="Views\Management\MediaManagement.cshtml" />
     <Content Include="Views\Management\AddTags.cshtml" />
-    <Content Include="Views\Media\RemoveImage.cshtml" />
-    <Content Include="Views\Media\EditAlbum.cshtml" />
-    <Content Include="Views\Media\RemoveAlbum.cshtml" />
+    <Content Include="Views\Images\RemoveImage.cshtml" />
+    <Content Include="Views\Albums\EditAlbum.cshtml" />
+    <Content Include="Views\Albums\RemoveAlbum.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

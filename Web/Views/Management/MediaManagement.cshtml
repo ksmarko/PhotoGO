@@ -25,7 +25,7 @@
                     <p>
                         @foreach (var tag in img.Tags)
                         {
-                            <a href="@Url.Action("Search", "Media", new { tag = tag })">@tag</a>
+                            <a href="@Url.Action("Search", "Images", new { tag = tag })">@tag</a>
                         }
                     </p>
                     <p>

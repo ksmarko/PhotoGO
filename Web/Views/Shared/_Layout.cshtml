@@ -36,7 +36,7 @@
             <li>@Html.ActionLink("Manage media", "Media", "Management")</li>
 }
                 </ul>
-                <form class="navbar-form navbar-left" action="/Media/Search" style="width: 300px">
+                <form class="navbar-form navbar-left" action="/Images/Search" style="width: 300px">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search" name="tag">
                         <div class="input-group-btn">
@@ -57,8 +57,8 @@ else
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#"> @User.Identity.Name <span class="caret"></span></a>
                 <ul class="dropdown-menu" id="dropdown">
-                    <li>@Html.ActionLink("Albums", "Albums", "Media")</li>
-                    <li>@Html.ActionLink("Favourites", "Favourites", "Media")</li>
+                    <li>@Html.ActionLink("Albums", "Index", "Albums")</li>
+                    <li>@Html.ActionLink("Favourites", "Favourites", "Images")</li>
                     <li>@Html.ActionLink("Settings", "Settings", "Profile")</li>
                 </ul>
             </li>
