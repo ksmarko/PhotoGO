@@ -262,10 +262,10 @@
     <Content Include="Views\Media\Albums.cshtml" />
     <Content Include="Views\Media\CreateAlbum.cshtml" />
     <Content Include="Views\Media\Images.cshtml" />
-    <Content Include="Views\Media\AddImg.cshtml" />
+    <Content Include="Views\Media\AddImage.cshtml" />
     <Content Include="Views\Management\MediaManagement.cshtml" />
     <Content Include="Views\Management\AddTags.cshtml" />
-    <Content Include="Views\Management\Remove.cshtml" />
+    <Content Include="Views\Media\RemoveImage.cshtml" />
     <Content Include="Views\Media\EditAlbum.cshtml" />
     <Content Include="Views\Media\RemoveAlbum.cshtml" />
   </ItemGroup>

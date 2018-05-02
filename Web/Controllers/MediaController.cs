@@ -16,18 +16,20 @@ namespace Web.Controllers
 {
     public class MediaController : Controller
     {
-        readonly IMediaService mediaService;
+        readonly IAlbumService albumService;
+        readonly IImageService imageService;
         readonly IUserManager userManager;
 
-        public MediaController (IMediaService ms, IUserManager um)
+        public MediaController (IAlbumService albumService, IImageService imageService, IUserManager userManager)
         {
-            mediaService = ms;
-            userManager = um;
+            this.albumService = albumService;
+            this.imageService = imageService;
+            this.userManager = userManager;
         }
 
         public ActionResult Search(string tag, int? page)
         {
-            var images = mediaService.SearchImages(tag);
+            var images = imageService.SearchImages(tag);
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
@@ -45,7 +47,7 @@ namespace Web.Controllers
         #region Images
         public ActionResult Images(int albumId, int? page)
         {
-            var imgs = mediaService.GetImages(albumId).ToList();
+            var imgs = imageService.GetImages(albumId).ToList();
             var list = new List<ImageModel>();
 
             foreach (var img in imgs)
@@ -64,14 +66,14 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddImg(int albumId)
+        public ActionResult AddImage(int albumId)
         {
             ViewBag.AlbumId = albumId;
-            return PartialView("AddImg");
+            return PartialView();
         }
 
         [HttpPost]
-        public ActionResult AddImg(HttpPostedFileBase [] files, int albumId, string tags)
+        public ActionResult AddImage(HttpPostedFileBase [] files, int albumId, string tags)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
             byte[] array = null;
@@ -95,9 +97,26 @@ namespace Web.Controllers
                 foreach (var el in tags.Split(' '))
                     tagsDto.Add(new TagDTO() { Name = el });
 
-                mediaService.AddImage(new PictureDTO(){Img = array, Tags = tagsDto }, albumId);
+                imageService.AddImage(new PictureDTO(){Img = array, Tags = tagsDto }, albumId);
             }
 
+            return Redirect($"/Media/Images?albumId={albumId}");
+        }
+
+        [HttpGet]
+        public ActionResult RemoveImage(int id)
+        {
+            var el = imageService.GetImageById(id);
+            var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags.Select(x => x.Name).ToList() };
+
+            return PartialView(img);
+        }
+
+        [HttpPost, ActionName("RemoveImage")]
+        public ActionResult RemoveImageConfirmed(int id)
+        {
+            var albumId = imageService.GetImageById(id).Album.Id;
+            imageService.RemoveImage(id);
             return Redirect($"/Media/Images?albumId={albumId}");
         }
 
@@ -107,7 +126,7 @@ namespace Web.Controllers
         public ActionResult Albums(int? page)
         {
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-            var albums = mediaService.GetAlbumsForUser(user.Id);
+            var albums = albumService.GetAlbumsForUser(user.Id);
             var list = new List<AlbumModel>();
             byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "Media/album-img.png");
 
@@ -140,7 +159,7 @@ namespace Web.Controllers
             var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
 
             var album = new AlbumDTO() { Name = model.Name, Description = model.Description };
-            mediaService.AddAlbum(album, user.Id);
+            albumService.AddAlbum(album, user.Id);
 
             return RedirectToAction("Albums");
         }
@@ -148,7 +167,7 @@ namespace Web.Controllers
         [HttpGet, ActionName("Edit")]
         public ActionResult EditAlbum(int id)
         {
-            var album = mediaService.GetAlbumById(id);
+            var album = albumService.GetAlbumById(id);
 
             var model = new AlbumModel() { Id = album.Id, Name = album.Name, Description = album.Description };
             return PartialView("EditAlbum", model);
@@ -164,7 +183,7 @@ namespace Web.Controllers
                 Description = model.Description
             };
 
-            mediaService.EditAlbum(albumDto);
+            albumService.EditAlbum(albumDto);
 
             return RedirectToAction("Albums");
         }
@@ -172,7 +191,7 @@ namespace Web.Controllers
         [HttpGet, ActionName("Remove")]
         public ActionResult RemoveAlbum(int id)
         {
-            var album = mediaService.GetAlbumById(id);
+            var album = albumService.GetAlbumById(id);
             var model = new AlbumModel() { Id = album.Id, Name = album.Name, Description = album.Description };
             return PartialView("RemoveAlbum", model);
         }
@@ -180,7 +199,7 @@ namespace Web.Controllers
         [HttpPost, ActionName("Remove")]
         public ActionResult RemoveAlbumConfirmation(int id)
         {
-            mediaService.RemoveAlbum(id);
+            albumService.RemoveAlbum(id);
             return RedirectToAction("Albums");
         }
     }

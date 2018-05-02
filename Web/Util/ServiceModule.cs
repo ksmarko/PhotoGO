@@ -12,7 +12,8 @@ namespace Web.Util
     {
         public override void Load()
         {
-            Bind<IMediaService>().To<MediaService>();
+            Bind<IAlbumService>().To<AlbumService>();
+            Bind<IImageService>().To<ImageService>();
             Bind<IUserManager>().To<UserManager>();
         }
     }

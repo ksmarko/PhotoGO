@@ -16,7 +16,7 @@
 
     @if (!ViewBag.IsSearchResult)
     {
-        <button class="btn btn-success modal-link" data-link="/Media/AddImg?albumId=@ViewBag.AlbumId">Add image</button>
+        <button class="btn btn-success modal-link" data-link="/Media/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
     }
 
     <div class="row">
@@ -29,9 +29,12 @@
                     </a>
                     <p>
                         @foreach (var tag in img.Tags)
-                        {
-                            <a href="@Url.Action("Search", "Media", new { tag = tag })">@tag</a>
-                        }
+        {
+                <a href="@Url.Action("Search", "Media", new { tag = tag })">@tag</a>
+}
+                    </p>
+                    <p>
+                        <button class="btn btn-default modal-link" data-link="/Media/RemoveImage/@img.Id">Remove</button>
                     </p>
                 </div>
             </div>

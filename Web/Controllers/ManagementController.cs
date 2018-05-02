@@ -14,12 +14,12 @@ namespace Web.Controllers
     public class ManagementController : Controller
     {
         readonly IUserManager userManager;
-        readonly IMediaService mediaService;
+        readonly IImageService imageService;
 
-        public ManagementController(IUserManager userManager, IMediaService mediaService)
+        public ManagementController(IUserManager userManager, IImageService imageService)
         {
             this.userManager = userManager;
-            this.mediaService = mediaService;
+            this.imageService = imageService;
         }
 
         [Authorize(Roles = "admin")]
@@ -53,7 +53,7 @@ namespace Web.Controllers
         [Authorize(Roles = "admin, moderator")]
         public ActionResult Media(int? page)
         {
-            var images = mediaService.GetImages();
+            var images = imageService.GetImages();
             var list = new List<ImageModel>();
 
             foreach (var img in images)
@@ -71,7 +71,7 @@ namespace Web.Controllers
         [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(int imgId)
         {
-            var tags = mediaService.GetImageById(imgId).Tags;
+            var tags = imageService.GetImageById(imgId).Tags;
             string res = "";
             foreach (var el in tags)
                 res += el.Name + " ";
@@ -84,26 +84,8 @@ namespace Web.Controllers
         [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(string tags, int imgId)
         {
-            mediaService.AddTags(imgId, tags.Split(' ').ToArray());
+            imageService.AddTags(imgId, tags.Split(' ').ToArray());
 
-            return RedirectToAction("Media");
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "admin, moderator")]
-        public ActionResult Remove(int id)
-        {
-            var el = mediaService.GetImageById(id);
-            var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags.Select(x => x.Name).ToList() };
-
-            return PartialView(img);
-        }
-
-        [HttpPost, ActionName("Remove")]
-        [Authorize(Roles = "admin, moderator")] 
-        public ActionResult RemoveConfirmed(int id)
-        {
-            mediaService.RemoveImage(id);
             return RedirectToAction("Media");
         }
     }

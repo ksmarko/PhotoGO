@@ -7,7 +7,7 @@
             <h4 class="modal-title" id="content"><strong>Add images</strong></h4>
         </div>
         <div class="modal-body">
-            @using (Html.BeginForm("AddImg", "Media", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("AddImage", "Media", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="albumId" value="@ViewBag.AlbumId"/>
@@ -31,6 +31,7 @@
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="Add" class="btn btn-success" />
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         </div>
                     </div>
                 </div>

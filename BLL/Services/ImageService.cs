@@ -11,78 +11,23 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class MediaService : IMediaService
+    public class ImageService : IImageService
     {
         IUnitOfWork Database { get; set; }
 
-        public MediaService(IUnitOfWork uow)
+        public ImageService(IUnitOfWork uow)
         {
             Database = uow;
-        }
-
-        public IEnumerable<AlbumDTO> GetAlbumsForUser(string userId)
-        {
-            var user = Database.Users.Get(userId);
-
-            if (user == null)
-                throw new ArgumentNullException();
-
-            return Mapper.Map<IEnumerable<Album>, IEnumerable<AlbumDTO>>(Database.Albums.GetAll().Where(x => x.UserId == userId));
-        }
-
-        public void AddAlbum(AlbumDTO item, string userId)
-        {
-            var user = Database.Users.Get(userId);
-
-            if (item == null || user == null)
-                throw new ArgumentNullException();
-
-            var album = new Album()
-            {
-                Name = item.Name,
-                Description = item.Description,
-                UserId = user.Id,
-                User = user,
-                Pictures = Mapper.Map<ICollection<PictureDTO>, ICollection<Picture>>(item.Pictures)
-            };
-
-            Database.Albums.Create(album);
-            Database.Save();
-        }
-
-        public void RemoveAlbum(int id)
-        {
-            var album = Database.Albums.Get(id);
-
-            if (album == null)
-                throw new ArgumentNullException();
-
-            Database.Albums.Delete(id);
-        }
-
-        public void EditAlbum(AlbumDTO item)
-        {
-            if (item == null)
-                throw new ArgumentNullException();
-
-            var album = Database.Albums.Get(item.Id);
-
-            if (album == null)
-                throw new ArgumentNullException();
-
-            album.Name = item.Name;
-            album.Description = item.Description;
-
-            Database.Albums.Update(album);
-            Database.Save();
         }
 
         public IEnumerable<PictureDTO> GetImages(int albumId)
         {
             var list = Database.Pictures.Find(x => x.AlbumId == albumId);
-            var res = new List<PictureDTO>();
+
             if (list == null)
                 throw new ArgumentNullException();
+
+            var res = new List<PictureDTO>();
 
             foreach (var el in list)
                 res.Add(new PictureDTO()
@@ -112,13 +57,13 @@ namespace BLL.Services
             };
 
             foreach (var tag in item.Tags)
-                img.Tags.Add(Database.Tags.Get(AddTag(tag)));
+                img.Tags.Add(Database.Tags.Get(GetTag(tag)));
 
             Database.Pictures.Create(img);
             Database.Save();
         }
 
-        private int AddTag(TagDTO entity)
+        private int GetTag(TagDTO entity)
         {
             var tag = Database.Tags.Find(x => x.Name == entity.Name).FirstOrDefault();
 
@@ -147,7 +92,7 @@ namespace BLL.Services
             img.Tags.Clear();
 
             foreach (var tag in tags)
-                img.Tags.Add(Database.Tags.Get(AddTag(new TagDTO { Name = tag })));
+                img.Tags.Add(Database.Tags.Get(GetTag(new TagDTO { Name = tag })));
 
             Database.Pictures.Update(img);
             Database.Save();
@@ -163,21 +108,6 @@ namespace BLL.Services
 
             img.FavouritedBy.Add(user);
             Database.Save();
-        }
-
-        public void Dispose()
-        {
-            Database.Dispose();
-        }
-
-        public AlbumDTO GetAlbumById(int id)
-        {
-            var album = Database.Albums.Get(id);
-
-            if (album == null)
-                throw new ArgumentNullException();
-
-            return Mapper.Map<Album, AlbumDTO>(album);
         }
 
         public PictureDTO GetImageById(int id)
@@ -199,6 +129,11 @@ namespace BLL.Services
         public IEnumerable<PictureDTO> GetImages()
         {
             return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(Database.Pictures.GetAll());
+        }
+
+        public void Dispose()
+        {
+            Database.Dispose();
         }
     }
 }

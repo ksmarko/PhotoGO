@@ -17,10 +17,10 @@ namespace Web.App_Start
         public static void Configure()
         {
             AutoMapperConfig.Initialize();
-            NinjectModule orderModule = new ServiceModule();
-            NinjectModule serviceModule = new ConnectionModule("DefaultConnection");
+            NinjectModule serviceModule = new ServiceModule();
+            NinjectModule connectionModule = new ConnectionModule("DefaultConnection");
 
-            var kernel = new StandardKernel(orderModule, serviceModule);
+            var kernel = new StandardKernel(connectionModule, serviceModule);
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }
     }
