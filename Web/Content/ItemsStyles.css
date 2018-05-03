@@ -10,3 +10,13 @@
     margin-left: auto !important;
     margin-right: auto !important;
 }
+
+.fa-trash:hover {
+    color: #1a1a1a;
+    text-decoration: none !important;
+}
+
+.fa-trash {
+    color: #707070;
+    text-decoration: none !important;
+}

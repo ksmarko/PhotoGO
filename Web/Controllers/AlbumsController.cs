@@ -28,8 +28,7 @@ namespace Web.Controllers
         [Authorize]
         public ActionResult Index(int? page)
         {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-            var albums = albumService.GetAlbumsForUser(user.Id);
+            var albums = albumService.GetAlbumsForUser(GetUser().Id);
             var list = new List<AlbumModel>();
             byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "Media/album-img.png");
 
@@ -62,10 +61,9 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateAlbum(AlbumModel model)
         {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-
             var album = new AlbumDTO() { Name = model.Name, Description = model.Description };
-            albumService.AddAlbum(album, user.Id);
+
+            albumService.AddAlbum(album, GetUser().Id);
 
             return RedirectToAction("Index");
         }
@@ -74,6 +72,9 @@ namespace Web.Controllers
         [HttpGet, ActionName("Edit")]
         public ActionResult EditAlbum(int id)
         {
+            if (!IsUserAlbum(id))
+                return new HttpNotFoundResult();
+
             var album = albumService.GetAlbumById(id);
 
             var model = new AlbumModel() { Id = album.Id, Name = album.Name, Description = album.Description };
@@ -100,6 +101,9 @@ namespace Web.Controllers
         [HttpGet, ActionName("Remove")]
         public ActionResult RemoveAlbum(int id)
         {
+            if (!IsUserAlbum(id))
+                return new HttpNotFoundResult();
+
             var album = albumService.GetAlbumById(id);
             var model = new AlbumModel() { Id = album.Id, Name = album.Name, Description = album.Description };
             return PartialView("RemoveAlbum", model);
@@ -111,6 +115,19 @@ namespace Web.Controllers
         {
             albumService.RemoveAlbum(id);
             return RedirectToAction("Index");
+        }
+
+        private bool IsUserAlbum(int albumId)
+        {
+            if (GetUser().Albums.Any(x => x.Id == albumId))
+                return true;
+
+            return false;
+        }
+
+        private UserDTO GetUser()
+        {
+            return userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
         }
     }
 }

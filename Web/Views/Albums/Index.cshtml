@@ -5,8 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-
 <!-- Modal window-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
 </div>
@@ -28,8 +26,8 @@
                     <div>
                         <p><h4>@album.Name</h4></p>
                         <p>
-                            <button class="btn btn-success glyphicon-edit modal-link" data-link="/Albums/Edit/@album.Id"></button>
-                            <button class="btn btn-default modal-link" data-link="/Albums/Remove/@album.Id">Remove</button>
+                            <button class="btn btn-success modal-link fa fa-edit" title="Edit" data-link="/Albums/Edit/@album.Id"></button>
+                            <button class="btn btn-link modal-link fa fa-trash btn-remove" title="Remove" data-link="/Albums/Remove/@album.Id"></button>
                         </p>
                     </div>
                 </div>

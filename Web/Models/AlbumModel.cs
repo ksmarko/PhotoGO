@@ -15,6 +15,7 @@ namespace Web.Models
         [Required(ErrorMessage = "Please enter album name")]
         public string Name { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [MaxLength(200, ErrorMessage = "Description must be no longer 200 symbols")]
         public string Description { get; set; }
     }

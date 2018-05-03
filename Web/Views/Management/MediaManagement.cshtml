@@ -1,11 +1,6 @@
 ﻿@model PagedList.IPagedList<Web.Models.ImageModel>
 @using PagedList.Mvc;
 
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-
-<link rel="stylesheet" type="text/css" href="~/Content/jquery.fancybox.css">
-<script type="text/javascript" src="~/Scripts/jquery.fancybox.js"></script>
-
 <!-- Modal window-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
 </div>
@@ -28,8 +23,9 @@
                             <a href="@Url.Action("Search", "Images", new { tag = tag })">@tag</a>
                         }
                     </p>
+
                     <p>
-                        <button class="btn btn-success glyphicon-plus modal-link" data-link="/Management/AddTags?imgId=@img.Id"></button>
+                        <button class="btn btn-success fa fa-plus modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"></button>
                         <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
                             @if (img.IsLiked)
         {<i class="fa fa-heart" style="color: #cf0020"></i> }

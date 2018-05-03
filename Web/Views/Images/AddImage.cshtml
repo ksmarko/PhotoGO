@@ -1,4 +1,4 @@
-﻿@model Web.Models.ImageModel
+﻿@model Web.Models.AddImageModel
 
 <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -14,17 +14,19 @@
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
-                        <label title="Select files" class="control-label col-md-2" />
+                        @Html.LabelFor(x => x.files, new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            <input type="file" multiple accept="image/*" name="files" class="form-control" />
-                            @Html.ValidationMessageFor(model => model.Img, "", new { @class = "text-danger" })
+                            @*<input type="file" multiple accept="image/*" name="files" class="form-control" data-val="true" data-val-required="Please select file" />*@
+                            @Html.TextBoxFor(m => m.files, new { type = "file", multiple="multiple",  accept = "image/*", @class="form-control" })
+                            @Html.ValidationMessageFor(model => model.files, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label title="Tags" class="control-label col-md-2" />
+                        @Html.LabelFor(x => x.tags, new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            <input type="text" name="tags" class="form-control" />
+                            @Html.EditorFor(model => model.tags, "", new { @class = "form-control", placeholder = "tag1 tag2 tag3" })
+                            @Html.ValidationMessageFor(model => model.tags, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
@@ -39,3 +41,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse((document).getElementsByTagName("form"));
+    });
+</script>

@@ -41,6 +41,7 @@ namespace Web.Controllers
                     Img = img.Img,
                     Likes = img.FavouritedBy.Count,
                     IsLiked = imageService.IsLikedBy(user.Id, img.Id),
+                    IsMy = IsUserImage(img.Id)? true : false,
                     Tags = img.Tags.Select(x => x.Name).ToList()
                 });
             }
@@ -49,11 +50,34 @@ namespace Web.Controllers
         }
 
         [Authorize]
+        public ActionResult Favourites(int? page)
+        {
+            var imgs = imageService.GetFavouritesForUser(GetUser().Id);
+            var list = new List<ImageModel>();
+
+            foreach (var img in imgs)
+            {
+                list.Add(new ImageModel()
+                {
+                    Id = img.Id,
+                    Img = img.Img,
+                    Likes = img.FavouritedBy.Count,
+                    IsLiked = imageService.IsLikedBy(GetUser().Id, img.Id),
+                    IsMy = IsUserImage(img.Id) ? true : false,
+                    Tags = img.Tags.Select(x => x.Name).ToList()
+                });
+            }
+
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+
+            return View(list.ToPagedList(pageNumber, pageSize));
+        }
+
+        [Authorize]
         public ActionResult Index(int albumId, int? page)
         {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-
-            if (!user.Albums.Any(x => x.Id == albumId))
+            if (!IsUserAlbum(albumId))
                 return new HttpNotFoundResult();
 
             var imgs = imageService.GetImages(albumId).ToList();
@@ -66,7 +90,8 @@ namespace Web.Controllers
                     Id = img.Id,
                     Img = img.Img,
                     Likes = img.FavouritedBy.Count,
-                    IsLiked = imageService.IsLikedBy(user.Id, img.Id),
+                    IsLiked = imageService.IsLikedBy(GetUser().Id, img.Id),
+                    IsMy = true,
                     Tags = img.Tags.Select(x => x.Name).ToList()
                 });
             }
@@ -85,19 +110,21 @@ namespace Web.Controllers
         [Authorize]
         public ActionResult AddImage(int albumId)
         {
+            if (!IsUserAlbum(albumId))
+                return new HttpNotFoundResult();
+
             ViewBag.AlbumId = albumId;
             return PartialView();
         }
 
         [HttpPost]
         [Authorize]
-        public ActionResult AddImage(HttpPostedFileBase[] files, int albumId, string tags)
+        public ActionResult AddImage(AddImageModel model, int albumId)
         {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
             byte[] array = null;
 
-            if (files.Length > 0)
-                foreach (var file in files)
+            if (model.files.Length > 0)
+                foreach (var file in model.files)
                     if (file != null)
                     {
                         string pic = System.IO.Path.GetFileName(file.FileName);
@@ -112,7 +139,7 @@ namespace Web.Controllers
                             array = ms.GetBuffer();
                         }
 
-                        foreach (var el in tags.Split(' '))
+                        foreach (var el in model.tags.Split(' '))
                             tagsDto.Add(new TagDTO() { Name = el });
 
                         imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto }, albumId);
@@ -126,6 +153,10 @@ namespace Web.Controllers
         public ActionResult RemoveImage(int id)
         {
             var el = imageService.GetImageById(id);
+
+            if (!IsUserImage(id))
+                return new HttpNotFoundResult();
+
             var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags.Select(x => x.Name).ToList() };
 
             return PartialView(img);
@@ -142,14 +173,35 @@ namespace Web.Controllers
 
         public int Like(int id)
         {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-            var img = imageService.GetImageById(id);
+            //BUG: if one user delete his image and another user like it 
+            //TODO: refresh data for all users (???)
 
-            if (img.FavouritedBy.Any(x => x.Id == user.Id))
-                imageService.DislikeImage(img.Id, user.Id);
-            else imageService.LikeImage(img.Id, user.Id);
+            imageService.LikeImage(id, GetUser().Id);
 
             return imageService.GetImageById(id).FavouritedBy.Count;
+        }
+
+        private bool IsUserImage(int imgId)
+        {
+            var el = imageService.GetImageById(imgId);
+
+            if (GetUser().Albums.Any(x => x.Id == el.Album.Id))
+                return true;
+
+            return false;
+        }
+
+        private bool IsUserAlbum(int albumId)
+        {
+            if (GetUser().Albums.Any(x => x.Id == albumId))
+                return true;
+
+            return false;
+        }
+
+        private UserDTO GetUser()
+        {
+            return userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
         }
     }
 }

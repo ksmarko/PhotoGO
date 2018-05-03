@@ -204,13 +204,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AddImageModel.cs" />
     <Compile Include="Models\AlbumModel.cs" />
     <Compile Include="Models\ImageModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\ServiceModule.cs" />
+    <Compile Include="Binding\ServiceModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -278,6 +279,7 @@
     <Content Include="Views\Images\RemoveImage.cshtml" />
     <Content Include="Views\Albums\EditAlbum.cshtml" />
     <Content Include="Views\Albums\RemoveAlbum.cshtml" />
+    <Content Include="Views\Images\Favourites.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
