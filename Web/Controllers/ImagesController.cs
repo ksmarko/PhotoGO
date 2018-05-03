@@ -101,6 +101,7 @@ namespace Web.Controllers
 
             ViewBag.AlbumId = albumId;
             ViewBag.IsSearchResult = false;
+            ViewBag.Description = GetUser().Albums.Where(x => x.Id == albumId).FirstOrDefault().Description;
             list.Reverse();
 
             return View(list.ToPagedList(pageNumber, pageSize));

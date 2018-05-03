@@ -13,12 +13,13 @@ namespace Web.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Please, enter password")]
+        [Range(6, 30, ErrorMessage = "Password must be greater than 6 and less than 30 symbols")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Please, confirm password")]
         [DataType(DataType.Password)]
-        [Compare("Password")]
+        [Compare("Password", ErrorMessage = "Passwords are different")]
         [Display(Name = "Confirm password")]
         public string ConfirmPassword { get; set; }
 

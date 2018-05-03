@@ -11,16 +11,16 @@
 
     @if (!ViewBag.IsSearchResult)
     {
-        <button class="btn btn-success modal-link" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
+        <button style="margin-top: 20px; margin-bottom:20px" class="btn btn-success modal-link" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
     }
 
     <div class="row">
         @foreach (var img in Model)
         {
             <div class="col-md-2">
-                <div class="thumbnail">
+                <div class="thumbnail" style="margin-bottom: 20px">
                     <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
-                         <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)" style="height:200px; width:200px">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)" style="height:200px; width:200px">
                     </a>
                     <p>
                         @foreach (var tag in img.Tags)
@@ -32,16 +32,16 @@
                         <p>
                             <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
                                 @if (img.IsLiked)
-            {<i class="fa fa-heart" style="color: #cf0020"></i> }
-else
-{ <i class="fa fa-heart" style="color: #000000"></i>}
+                                {<i class="fa fa-heart" style="color: #cf0020"></i> }
+                                else
+                                { <i class="fa fa-heart" style="color: #000000"></i>}
                                 <span>@img.Likes</span>
                             </button>
 
                             @if (img.IsMy)
-        {
-                    <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
-}
+                            {
+                                <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
+                            }
                         </p>
                     </div>
                 </div>

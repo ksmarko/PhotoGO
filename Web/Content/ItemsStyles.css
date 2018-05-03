@@ -20,3 +20,8 @@
     color: #707070;
     text-decoration: none !important;
 }
+
+.block-center {
+    margin: 10px auto;
+    position: relative;
+}

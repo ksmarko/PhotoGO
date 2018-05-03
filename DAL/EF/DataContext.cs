@@ -18,7 +18,7 @@ namespace DAL.EF
 
         static DataContext()
         {
-            Database.SetInitializer((new DbInitializaer()));
+            Database.SetInitializer((new DbInitializer()));
         }
 
         public DataContext(string connectionString) : base(connectionString) {}
@@ -31,7 +31,7 @@ namespace DAL.EF
         //}
     }
 
-    public class DbInitializaer : DropCreateDatabaseIfModelChanges<DataContext>
+    public class DbInitializer : DropCreateDatabaseIfModelChanges<DataContext>
     {
         protected override void Seed(DataContext context)
         {

@@ -112,7 +112,7 @@ namespace BLL.Services
         {
             var t = Database.Tags.Find(x => x.Name == tag).FirstOrDefault();
 
-            if (tag == null)
+            if (t == null)
                 throw new ArgumentNullException();
 
             return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(t.Pictures);
