@@ -9,39 +9,50 @@
 <div class="loader" id="loader" style="display:block"></div>
 <div id="bodycontent" style="display:none">
 
-    @if (!ViewBag.IsSearchResult)
+    @if (ViewBag.IsIndex)
     {
         <button style="margin-top: 20px; margin-bottom:20px" class="btn btn-success modal-link" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
     }
 
-    <div class="row">
+    <div class="row" style="margin-top:20px">
         @foreach (var img in Model)
         {
+
+            string text = "";
+            foreach (var tag in img.Tags)
+            {
+                text += "<a href=\"/Images/Search?tag=" + @tag + "\">#" + @tag + "</a> &nbsp;";
+            }
+
             <div class="col-md-2">
                 <div class="thumbnail" style="margin-bottom: 20px">
                     <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
                         <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)" style="height:200px; width:200px">
                     </a>
-                    <p>
-                        @foreach (var tag in img.Tags)
-                        {
-                            <a href="@Url.Action("Search", "Images", new { tag = tag })">@tag</a>
-                        }
-                    </p>
-                    <div style="height: 50px">
+                    <div style="margin-top:10px; margin-left:10px">
                         <p>
+                            <button type="button" class="btn btn-default" data-toggle="popover" title="Tags" data-content="@text">Show tags</button>
                             <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
                                 @if (img.IsLiked)
-                                {<i class="fa fa-heart" style="color: #cf0020"></i> }
+                                {
+                                    <i class="fa fa-heart" style="color: #cf0020"></i>
+                                }
                                 else
-                                { <i class="fa fa-heart" style="color: #000000"></i>}
+                                {
+                                    <i class="fa fa-heart" style="color: #000000"></i>
+                                }
                                 <span>@img.Likes</span>
                             </button>
 
-                            @if (img.IsMy)
+                            @if (img.IsMy && !ViewBag.IsManagement)
                             {
                                 <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
                             }
+                            @if (ViewBag.IsManagement)
+                            {
+                                <button class="btn btn-success fa fa-plus modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"></button>
+                            }
+
                         </p>
                     </div>
                 </div>
@@ -49,13 +60,21 @@
         }
     </div>
 
-    @if (!ViewBag.IsSearchResult)
+    @if (ViewBag.IsIndex)
     {
         @Html.PagedListPager(Model, page => Url.Action("Index", "Images", new { ViewBag.AlbumId, page }))
     }
-    else
+    else if (ViewBag.IsSearchResult)
     {
         @Html.PagedListPager(Model, page => Url.Action("Search", "Images", new { ViewBag.Tag, page }))
+    }
+    else if (ViewBag.IsManagement)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Manage", "Images", new { ViewBag.Tag, page }))
+    }
+    else if (ViewBag.IsFavourites)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Favourites", "Images", new { page }))
     }
 
 </div>
@@ -69,10 +88,18 @@
                 $("#myModal").modal();
             })
         });
-    });
+    }, ShowPopover());
 
     window.onload = function () {
         document.getElementById("loader").style.display = "none";
         document.getElementById("bodycontent").style.display = "block";
     };
+
+    function ShowPopover() {
+        $('[data-toggle="popover"]').popover({
+            placement: 'top',
+            trigger: 'focus',
+            html: true
+        });
+    }
 </script>

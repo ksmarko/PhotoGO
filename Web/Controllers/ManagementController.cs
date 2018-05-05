@@ -51,32 +51,6 @@ namespace Web.Controllers
         }
 
         [Authorize(Roles = "admin, moderator")]
-        public ActionResult Media(int? page)
-        {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-            var images = imageService.GetImages();
-            var list = new List<ImageModel>();
-
-            foreach (var img in images)
-                list.Add(new ImageModel()
-                {
-                    Id = img.Id,
-                    Img = img.Img,
-                    Likes = img.FavouritedBy.Count,
-                    Tags = img.Tags.Select(x => x.Name).ToList(),
-                    IsLiked = imageService.IsLikedBy(user.Id, img.Id),
-                });
-
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
-            ViewBag.Page = page;
-
-            list.Reverse();
-
-            return View("MediaManagement", list.ToPagedList(pageNumber, pageSize));
-        }
-
-        [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(int imgId)
         {
             var tags = imageService.GetImageById(imgId).Tags;
@@ -94,7 +68,7 @@ namespace Web.Controllers
         {
             imageService.AddTags(imgId, tags.Split(' ').ToArray());
 
-            return RedirectToAction("Media");
+            return Redirect("/Images/Manage");
         }
     }
 }

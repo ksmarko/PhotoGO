@@ -22,12 +22,23 @@ namespace Web.Controllers
             this.userManager = userManager;
         }
 
+        public ActionResult AutocompleteSearch(string term)
+        {
+            var images = imageService.GetImages();
+            var models = images.Where(x => x == x.Tags.Where(c => c.Name.Contains(term))).Select(x => x.Tags.Select(z => z.Name)).Distinct();
+
+            return Json(models, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Search(string tag, int? page)
         {
             var images = imageService.SearchImages(tag);
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
+            ViewBag.IsManagement = false;
+            ViewBag.IsIndex = false;
+            ViewBag.IsFavourites = false;
             ViewBag.Tag = tag;
 
             return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
@@ -39,8 +50,27 @@ namespace Web.Controllers
             var images = imageService.GetFavouritesForUser(GetUser().Id);
             int pageSize = 12;
             int pageNumber = (page ?? 1);
+            ViewBag.IsSearchResult = false;
+            ViewBag.IsManagement = false;
+            ViewBag.IsIndex = false;
+            ViewBag.IsFavourites = true;
 
-            return View(FillImagesList(images).ToPagedList(pageNumber, pageSize));
+            return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
+        }
+
+        [Authorize(Roles = "admin, moderator")]
+        public ActionResult Manage(int? page)
+        {
+            var images = imageService.GetImages();
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
+            ViewBag.Page = page;
+            ViewBag.IsSearchResult = false;
+            ViewBag.IsManagement = true;
+            ViewBag.IsIndex = false;
+            ViewBag.IsFavourites = false;
+
+            return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
         }
 
         [Authorize]
@@ -54,6 +84,9 @@ namespace Web.Controllers
             int pageNumber = (page ?? 1);
             ViewBag.AlbumId = albumId;
             ViewBag.IsSearchResult = false;
+            ViewBag.IsManagement = false;
+            ViewBag.IsIndex = true;
+            ViewBag.IsFavourites = false;
             ViewBag.Description = GetUser().Albums.Where(x => x.Id == albumId).FirstOrDefault().Description;
 
             return View(FillImagesList(images).ToPagedList(pageNumber, pageSize));
