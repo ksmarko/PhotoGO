@@ -14,6 +14,7 @@ using Web.Models;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class AlbumsController : Controller
     {
         readonly IAlbumService albumService;
@@ -25,9 +26,10 @@ namespace Web.Controllers
             this.userManager = userManager;
         }
 
-        [Authorize]
         public ActionResult Index(int? page)
         {
+            int pageSize = 12;
+            int pageNumber = (page ?? 1);
             var albums = albumService.GetAlbumsForUser(GetUser().Id);
             var list = new List<AlbumModel>();
             byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "Media/album-img.png");
@@ -41,22 +43,17 @@ namespace Web.Controllers
                     Img = album.Pictures.Count > 0 ? album.Pictures.First().Img : defaultImg
                 });
 
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
-
             list.Reverse();
 
             return View(list.ToPagedList(pageNumber, pageSize));
         }
 
-        [Authorize]
         [HttpGet, ActionName("Create")]
         public ActionResult CreateAlbum()
         {
             return PartialView("CreateAlbum");
         }
 
-        [Authorize]
         [HttpPost, ActionName("Create")]
         [ValidateAntiForgeryToken]
         public ActionResult CreateAlbum(AlbumModel model)
@@ -68,7 +65,6 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize]
         [HttpGet, ActionName("Edit")]
         public ActionResult EditAlbum(int id)
         {
@@ -81,7 +77,6 @@ namespace Web.Controllers
             return PartialView("EditAlbum", model);
         }
 
-        [Authorize]
         [HttpPost, ActionName("Edit")]
         public ActionResult EditAlbumConfirmation(AlbumModel model)
         {
@@ -97,7 +92,6 @@ namespace Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize]
         [HttpGet, ActionName("Remove")]
         public ActionResult RemoveAlbum(int id)
         {
@@ -109,7 +103,6 @@ namespace Web.Controllers
             return PartialView("RemoveAlbum", model);
         }
 
-        [Authorize]
         [HttpPost, ActionName("Remove")]
         public ActionResult RemoveAlbumConfirmation(int id)
         {

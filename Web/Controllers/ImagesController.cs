@@ -24,54 +24,23 @@ namespace Web.Controllers
 
         public ActionResult Search(string tag, int? page)
         {
-            var user = userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
-
             var images = imageService.SearchImages(tag);
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
             ViewBag.Tag = tag;
-            var list = new List<ImageModel>();
 
-            foreach (var img in images)
-            {
-                list.Add(new ImageModel()
-                {
-                    Id = img.Id,
-                    Img = img.Img,
-                    Likes = img.FavouritedBy.Count,
-                    IsLiked = imageService.IsLikedBy(user.Id, img.Id),
-                    IsMy = IsUserImage(img.Id)? true : false,
-                    Tags = img.Tags.Select(x => x.Name).ToList()
-                });
-            }
-
-            return View("Index", list.ToPagedList(pageNumber, pageSize));
+            return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
         }
 
         [Authorize]
         public ActionResult Favourites(int? page)
         {
-            var imgs = imageService.GetFavouritesForUser(GetUser().Id);
-            var list = new List<ImageModel>();
-
-            foreach (var img in imgs)
-            {
-                list.Add(new ImageModel()
-                {
-                    Id = img.Id,
-                    Img = img.Img,
-                    Likes = img.FavouritedBy.Count,
-                    IsLiked = imageService.IsLikedBy(GetUser().Id, img.Id),
-                    IsMy = IsUserImage(img.Id) ? true : false,
-                    Tags = img.Tags.Select(x => x.Name).ToList()
-                });
-            }
-
+            var images = imageService.GetFavouritesForUser(GetUser().Id);
             int pageSize = 12;
             int pageNumber = (page ?? 1);
 
-            return View(list.ToPagedList(pageNumber, pageSize));
+            return View(FillImagesList(images).ToPagedList(pageNumber, pageSize));
         }
 
         [Authorize]
@@ -80,31 +49,14 @@ namespace Web.Controllers
             if (!IsUserAlbum(albumId))
                 return new HttpNotFoundResult();
 
-            var imgs = imageService.GetImages(albumId).ToList();
-            var list = new List<ImageModel>();
-
-            foreach (var img in imgs)
-            {
-                list.Add(new ImageModel()
-                {
-                    Id = img.Id,
-                    Img = img.Img,
-                    Likes = img.FavouritedBy.Count,
-                    IsLiked = imageService.IsLikedBy(GetUser().Id, img.Id),
-                    IsMy = true,
-                    Tags = img.Tags.Select(x => x.Name).ToList()
-                });
-            }
-
+            var images = imageService.GetImages(albumId).ToList();
             int pageSize = 12;
             int pageNumber = (page ?? 1);
-
             ViewBag.AlbumId = albumId;
             ViewBag.IsSearchResult = false;
             ViewBag.Description = GetUser().Albums.Where(x => x.Id == albumId).FirstOrDefault().Description;
-            list.Reverse();
 
-            return View(list.ToPagedList(pageNumber, pageSize));
+            return View(FillImagesList(images).ToPagedList(pageNumber, pageSize));
         }
 
         [HttpGet]
@@ -158,7 +110,7 @@ namespace Web.Controllers
             if (!IsUserImage(id))
                 return new HttpNotFoundResult();
 
-            var img = new ImageModel() { Id = el.Id, Img = el.Img, Likes = el.FavouritedBy.Count, Tags = el.Tags.Select(x => x.Name).ToList() };
+            var img = new ImageModel() { Id = el.Id, Img = el.Img };
 
             return PartialView(img);
         }
@@ -169,7 +121,28 @@ namespace Web.Controllers
         {
             var albumId = imageService.GetImageById(id).Album.Id;
             imageService.RemoveImage(id);
+
             return Redirect($"/Images/Index?albumId={albumId}");
+        }
+
+        private List<ImageModel> FillImagesList(IEnumerable<PictureDTO> pictures)
+        {
+            var list = new List<ImageModel>();
+
+            foreach (var img in pictures)
+            {
+                list.Add(new ImageModel()
+                {
+                    Id = img.Id,
+                    Img = img.Img,
+                    Likes = img.FavouritedBy.Count,
+                    IsLiked = imageService.IsLikedBy(GetUser().Id, img.Id),
+                    IsMy = IsUserImage(img.Id) ? true : false,
+                    Tags = img.Tags.Select(x => x.Name).ToList()
+                });
+            }
+
+            return list;
         }
 
         public int Like(int id)

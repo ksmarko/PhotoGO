@@ -8,12 +8,12 @@ namespace Web.Models
 {
     public class RegisterModel
     {
-        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "Please enter email in format qqq@qq.com")]
+        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "Please enter email in format example@mail.com")]
         [Required(ErrorMessage = "Please, enter email")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Please, enter password")]
-        [Range(6, 30, ErrorMessage = "Password must be greater than 6 and less than 30 symbols")]
+        [RegularExpression("\\w{6,30}$", ErrorMessage = "Password must be greater than 6 and less than 30 symbols")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
