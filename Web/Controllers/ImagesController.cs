@@ -55,6 +55,8 @@ namespace Web.Controllers
             ViewBag.IsIndex = false;
             ViewBag.IsFavourites = true;
 
+            images.Reverse();
+
             return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
         }
 
@@ -89,6 +91,8 @@ namespace Web.Controllers
             ViewBag.IsFavourites = false;
             ViewBag.Description = GetUser().Albums.Where(x => x.Id == albumId).FirstOrDefault().Description;
 
+            images.Reverse();
+
             return View(FillImagesList(images).ToPagedList(pageNumber, pageSize));
         }
 
@@ -109,8 +113,8 @@ namespace Web.Controllers
         {
             byte[] array = null;
 
-            if (model.files.Length > 0)
-                foreach (var file in model.files)
+            if (model.Files.Length > 0)
+                foreach (var file in model.Files)
                     if (file != null)
                     {
                         string pic = System.IO.Path.GetFileName(file.FileName);
@@ -125,7 +129,7 @@ namespace Web.Controllers
                             array = ms.GetBuffer();
                         }
 
-                        foreach (var el in model.tags.Split(' '))
+                        foreach (var el in model.Tags.Split(' '))
                             tagsDto.Add(new TagDTO() { Name = el });
 
                         imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto }, albumId);

@@ -24,6 +24,7 @@ namespace Web.Models
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Please, enter your name")]
+        [MaxLength(50, ErrorMessage = "Name must be no longer 50 symbols")]
         public string Name { get; set; }
     }
 }

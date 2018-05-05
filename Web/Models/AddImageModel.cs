@@ -10,9 +10,9 @@ namespace Web.Models
     {
         //TODO: add size and extension validation
         [Required(ErrorMessage = "Please select file (-s)")]
-        public HttpPostedFileBase[] files { get; set; }
+        public HttpPostedFileBase[] Files { get; set; }
         
         [Required(ErrorMessage = "Please input tags")]
-        public string tags { get; set; }
+        public string Tags { get; set; }
     }
 }

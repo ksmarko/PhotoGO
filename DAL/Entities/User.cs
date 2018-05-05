@@ -12,7 +12,6 @@ namespace DAL.Entities
         [ForeignKey("ApplicationUser")]
         public string Id { get; set; }
 
-        [MaxLength(50)]
         public string Name { get; set; }
 
         public ICollection<Album> Albums { get; set; }

@@ -13,9 +13,9 @@
 <div class="loader" id="loader" style="display:none"></div>
 <div id="bodycontent" style="display:block">
 
-    <button class="btn btn-success modal-link" data-link="/Albums/Create">Create album</button>
+    <button class="btn btn-success modal-link" data-link="/Albums/Create" style="margin-top:20px">Create album</button>
 
-    <div class="row">
+    <div class="row" style="margin-top:20px">
         @foreach (var album in Model)
         {
             <div class="col-md-2">
@@ -23,10 +23,10 @@
                     <a href="@Url.Action("Index", "Images", new { albumId = album.Id })">
                         <img src="data:image;base64,@System.Convert.ToBase64String(album.Img)" style="height:200px; width:200px">
                     </a>
-                    <div>
+                    <div style="margin-top:10px; margin-left:10px">
                         <p><h4>@album.Name</h4></p>
                         <p>
-                            <button class="btn btn-success modal-link fa fa-edit" title="Edit" data-link="/Albums/Edit/@album.Id"></button>
+                            <button class="btn btn-default modal-link" title="Edit" data-link="/Albums/Edit/@album.Id"><span class="fa fa-edit"></span></button>
                             <button class="btn btn-link modal-link fa fa-trash btn-remove" title="Remove" data-link="/Albums/Remove/@album.Id"></button>
                         </p>
                     </div>

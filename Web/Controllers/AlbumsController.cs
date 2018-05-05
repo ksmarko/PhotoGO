@@ -40,7 +40,7 @@ namespace Web.Controllers
                     Id = album.Id,
                     Name = album.Name,
                     Description = album.Description,
-                    Img = album.Pictures.Count > 0 ? album.Pictures.First().Img : defaultImg
+                    Img = album.Pictures.Count > 0 ? album.Pictures.Last().Img : defaultImg
                 });
 
             list.Reverse();

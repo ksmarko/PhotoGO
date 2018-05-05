@@ -11,10 +11,20 @@
 
     @if (ViewBag.IsIndex)
     {
-        <button style="margin-top: 20px; margin-bottom:20px" class="btn btn-success modal-link" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
+        <div style="margin-top: 20px">
+            <button class="btn btn-success modal-link" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
+            @if (ViewBag.Description != null)
+            {
+                <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#desc">Show description</button>
+                <div style="margin-top: 20px; font-size: medium" id="desc" class="collapse">
+                    @ViewBag.Description
+                </div>
+            }
+            </div>
     }
 
     <div class="row" style="margin-top:20px">
+
         @foreach (var img in Model)
         {
 
@@ -50,7 +60,7 @@
                             }
                             @if (ViewBag.IsManagement)
                             {
-                                <button class="btn btn-success fa fa-plus modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"></button>
+                                <button class="btn btn-default modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"><span class="fa fa-edit"></span></button>
                             }
 
                         </p>
