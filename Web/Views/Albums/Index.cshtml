@@ -18,10 +18,10 @@
     <div class="row" style="margin-top:20px">
         @foreach (var album in Model)
         {
-            <div class="col-md-2">
+            <div class="col-md-2 col-xs-8 col-sm-4">
                 <div class="thumbnail">
-                    <a href="@Url.Action("Index", "Images", new { albumId = album.Id })">
-                        <img src="data:image;base64,@System.Convert.ToBase64String(album.Img)" style="height:200px; width:200px">
+                    <a class="thumb-header" href="@Url.Action("Index", "Images", new { albumId = album.Id })">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(album.Img)">
                     </a>
                     <div style="margin-top:10px; margin-left:10px">
                         <p><h4>@album.Name</h4></p>

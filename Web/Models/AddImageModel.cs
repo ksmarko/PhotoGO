@@ -12,7 +12,6 @@ namespace Web.Models
         [Required(ErrorMessage = "Please select file (-s)")]
         public HttpPostedFileBase[] Files { get; set; }
         
-        [Required(ErrorMessage = "Please input tags")]
         public string Tags { get; set; }
     }
 }

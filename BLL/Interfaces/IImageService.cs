@@ -17,7 +17,7 @@ namespace BLL.Interfaces
         IEnumerable<PictureDTO> GetFavouritesForUser(string id);
         bool IsLikedBy(string id, int imgId);
         PictureDTO GetImageById(int id);
-        IEnumerable<PictureDTO> SearchImages(string tag);
+        IEnumerable<PictureDTO> SearchImages(params string[] tags);
         IEnumerable<PictureDTO> GetImages();
 
         void Dispose();

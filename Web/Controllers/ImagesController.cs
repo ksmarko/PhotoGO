@@ -30,16 +30,21 @@ namespace Web.Controllers
             return Json(models, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Search(string tag, int? page)
+        public ActionResult Search(int? page, string tags)
         {
-            var images = imageService.SearchImages(tag);
+            //BUG: tags may be null if user select empty tag (#)
+            tags = System.Text.RegularExpressions.Regex.Replace(tags, @"\s+", " ").Trim();
+            var images = imageService.SearchImages(tags.Split(' '));
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
             ViewBag.IsManagement = false;
             ViewBag.IsIndex = false;
             ViewBag.IsFavourites = false;
-            ViewBag.Tag = tag;
+            ViewBag.Tag = tags;
+
+            if (images == null)
+                return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize));
 
             return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
         }
@@ -129,8 +134,9 @@ namespace Web.Controllers
                             array = ms.GetBuffer();
                         }
 
-                        foreach (var el in model.Tags.Split(' '))
-                            tagsDto.Add(new TagDTO() { Name = el });
+                        if (model.Tags != null)
+                            foreach (var el in model.Tags.Split(' '))
+                                tagsDto.Add(new TagDTO() { Name = el });
 
                         imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto }, albumId);
                     }

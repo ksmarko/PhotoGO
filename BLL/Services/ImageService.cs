@@ -108,14 +108,33 @@ namespace BLL.Services
             return Mapper.Map<Picture, PictureDTO>(img);
         }
 
-        public IEnumerable<PictureDTO> SearchImages(string tag)
+        public IEnumerable<PictureDTO> SearchImages(params string[] tags)
         {
-            var t = Database.Tags.Find(x => x.Name == tag).FirstOrDefault();
-
-            if (t == null)
+            if (tags == null)
                 throw new ArgumentNullException();
 
-            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(t.Pictures);
+            var pictures = new List<Picture>();
+
+            foreach (var tag in tags)
+            {
+                if (string.IsNullOrWhiteSpace(tag))
+                    continue;
+
+                var t = Database.Tags.Find(x => x.Name == tag).FirstOrDefault();
+
+                if (t == null)
+                {
+                    pictures.Clear();
+                    break;
+                }
+
+                if (pictures.Count <= 0)
+                    pictures = t.Pictures.ToList();
+                else
+                    pictures = (t.Pictures).Intersect(pictures).ToList();
+            }
+
+            return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(pictures);
         }
 
         public IEnumerable<PictureDTO> GetImages()
