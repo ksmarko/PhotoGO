@@ -24,6 +24,15 @@
     <link href='@Url.Content("~/Content/themes/base/all.css")' rel="stylesheet" type="text/css" />
     <script src='@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")' type="text/javascript"></script>
 
+    <link href="~/Other/base.css" rel="stylesheet" type="text/css" />
+    <link href="~/Other/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Other/custom.css" rel="stylesheet" type="text/css" />
+    <link href="~/Other/highlight.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="~/Other/base.js"></script>
+    <script type="text/javascript" src="~/Other/highlight.pack.js"></script>
+    <script type="text/javascript" src="~/Other/bootstrap-select.min.js"></script>
+
     <script src="/Scripts/likeButton.js"></script>
 </head>
 <body>
@@ -52,7 +61,17 @@
                         <a data-toggle="collapse" data-target="#demo" trigger="focus" href="#"> Search</a>
                         <form class="navbar-form collapse" id="demo" action="/Images/Search" style="width:300px">
                             <div class="input-group">
-                                <input type="text" id="search-box-tags" class="form-control" placeholder="Search" name="tags">
+                                @*<input type="text" id="search-box-tags" class="form-control" placeholder="Search" name="tags">*@
+
+                                <!--------------------------------------------------------------------------->
+                                <div id="tags-list-container" class="btn-group bootstrap-select show-tick">
+                                    <select id="tags-list" role="textbox" class="selectpicker" multiple="" name="tags" tabindex="-98">
+                                        @*<option>cat</option>
+                                        <option>mrrr</option>*@
+                                    </select>
+                                </div>
+                                <!--------------------------------------------------------------------------->
+
                                 <div class="input-group-btn">
                                     <button class="btn btn-default" type="submit">
                                         <i class="glyphicon glyphicon-search"></i>
@@ -90,19 +109,31 @@
         @RenderBody()
     </div>
 
-    <script>
-        $(function () {
-            //$("#search-box-tags").change(function () {
-            //    alert("cvbnm");
-            //});
+    <!---BUG BUG BUG BUG BUG BUG BUG BUG-->
+    <!--Do not show selected items in the list-->
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            url = '/Images/GetTags';
+            var text1 = '';
+            var text2 = '';
 
-            //var term = $("#search-box-tags").val();
-            //var availableTags = $.getJSON('/Images/Search?term=' + term, function () {
-            //    $("#search-box-tags").autocomplete({
-            //        source: availableTags
-            //    });
-            //});
+            $.get(url, function (data) {
+                $.each(data, function (key, value) {
+                    text1 += "<option>" + value + "</option>";
+                    text2 += "<li /*onclick='SetSelected()'*/ data-original-index='" + key + "' class='' ><a tabindex='0' data-tokens='null' role='option' aria-disabled='false' aria-selected='false' class=''><span class='text'>" + value + "</span><span class='glyphicon glyphicon-ok check-mark'></span></a></li>";
+                });
+                var doc = document.getElementById("tags-list");
+                var doc2 = document.getElementById("tags-list-container").getElementsByTagName("ul")[0];
+                $(doc).html(text1);
+                $(doc2).html(text2);
+            });
         });
+
+        //function SetSelected() {
+        //    var btn = $(this);
+        //    var a = document.getElementsByTagName('a')[0];
+        //    $(btn).toggleClass("selected");
+        //}
     </script>
 </body>
 </html>

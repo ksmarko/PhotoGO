@@ -120,7 +120,7 @@ namespace BLL.Services
                 if (string.IsNullOrWhiteSpace(tag))
                     continue;
 
-                var t = Database.Tags.Find(x => x.Name == tag).FirstOrDefault();
+                var t = Database.Tags.Find(x => x.Name == tag.Trim()).FirstOrDefault();
 
                 if (t == null)
                 {
@@ -135,6 +135,12 @@ namespace BLL.Services
             }
 
             return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(pictures);
+        }
+
+        public string[] GetTags()
+        {
+            var tags = Database.Tags.GetAll().Select(x => x.Name).ToArray();
+            return tags;
         }
 
         public IEnumerable<PictureDTO> GetImages()

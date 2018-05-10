@@ -272,6 +272,13 @@
     <Content Include="Media\album-img.png" />
     <Content Include="Media\HOME-poster.png" />
     <Content Include="Media\forest.jpg" />
+    <Content Include="Other\base.css" />
+    <Content Include="Other\base.js" />
+    <Content Include="Other\bootstrap-select.min.css" />
+    <Content Include="Other\bootstrap-select.min.js" />
+    <Content Include="Other\custom.css" />
+    <Content Include="Other\highlight.css" />
+    <Content Include="Other\highlight.pack.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">

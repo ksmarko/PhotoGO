@@ -22,6 +22,12 @@ namespace Web.Controllers
             this.userManager = userManager;
         }
 
+        public ActionResult GetTags()
+        {
+            var tags = imageService.GetTags();
+            return Json(tags, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult AutocompleteSearch(string term)
         {
             var images = imageService.GetImages();
@@ -30,18 +36,21 @@ namespace Web.Controllers
             return Json(models, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Search(int? page, string tags)
+        public ActionResult Search(int? page, params string [] tags)
         {
             //BUG: tags may be null if user select empty tag (#)
-            tags = System.Text.RegularExpressions.Regex.Replace(tags, @"\s+", " ").Trim();
-            var images = imageService.SearchImages(tags.Split(' '));
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
             ViewBag.IsManagement = false;
             ViewBag.IsIndex = false;
             ViewBag.IsFavourites = false;
-            ViewBag.Tag = tags;
+
+            if (tags == null)
+                return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize)); ;
+
+            var images = imageService.SearchImages(tags);
+            ViewBag.Tag = string.Join(" ", tags);
 
             if (images == null)
                 return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize));

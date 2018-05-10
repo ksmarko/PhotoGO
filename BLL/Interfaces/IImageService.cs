@@ -19,6 +19,7 @@ namespace BLL.Interfaces
         PictureDTO GetImageById(int id);
         IEnumerable<PictureDTO> SearchImages(params string[] tags);
         IEnumerable<PictureDTO> GetImages();
+        string[] GetTags();
 
         void Dispose();
     }
