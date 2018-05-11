@@ -221,6 +221,8 @@
     <Content Include="Content\ItemsStyles.css" />
     <Content Include="Content\jquery.fancybox.css" />
     <Content Include="Content\Loader.css" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\normalize.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -272,13 +274,6 @@
     <Content Include="Media\album-img.png" />
     <Content Include="Media\HOME-poster.png" />
     <Content Include="Media\forest.jpg" />
-    <Content Include="Other\base.css" />
-    <Content Include="Other\base.js" />
-    <Content Include="Other\bootstrap-select.min.css" />
-    <Content Include="Other\bootstrap-select.min.js" />
-    <Content Include="Other\custom.css" />
-    <Content Include="Other\highlight.css" />
-    <Content Include="Other\highlight.pack.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -295,8 +290,11 @@
     <Content Include="Scripts\jquery-1.12.4.min.js" />
     <Content Include="Scripts\jquery-1.12.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.custom.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.custom.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery.autocomplete.multiselect.js" />
     <Content Include="Scripts\jquery.fancybox.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

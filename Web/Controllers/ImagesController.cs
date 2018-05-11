@@ -22,23 +22,19 @@ namespace Web.Controllers
             this.userManager = userManager;
         }
 
-        public ActionResult GetTags()
+        public ActionResult Autocomplete(string term)
         {
-            var tags = imageService.GetTags();
-            return Json(tags, JsonRequestBehavior.AllowGet);
+            var items = imageService.GetTags();
+            term = term.Substring(term.LastIndexOf(' ') + 1);
+            var filteredItems = items.Where(item => item.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0 );
+
+            return Json(filteredItems, JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult AutocompleteSearch(string term)
-        {
-            var images = imageService.GetImages();
-            var models = images.Where(x => x == x.Tags.Where(c => c.Name.Contains(term))).Select(x => x.Tags.Select(z => z.Name)).Distinct();
-
-            return Json(models, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Search(int? page, params string [] tags)
+       
+        public ActionResult Search(int? page, string tags)
         {
             //BUG: tags may be null if user select empty tag (#)
+            var t = tags.Split(' ');
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
@@ -49,8 +45,9 @@ namespace Web.Controllers
             if (tags == null)
                 return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize)); ;
 
-            var images = imageService.SearchImages(tags);
-            ViewBag.Tag = string.Join(" ", tags);
+            //var images = imageService.SearchImages(t);
+            var images = imageService.GetImages();
+            ViewBag.Tag = tags;
 
             if (images == null)
                 return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize));
