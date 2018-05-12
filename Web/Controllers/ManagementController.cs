@@ -5,6 +5,7 @@ using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Web.Models;
@@ -66,8 +67,7 @@ namespace Web.Controllers
         [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(string tags, int imgId)
         {
-            imageService.AddTags(imgId, tags.Split(' ').ToArray());
-
+            imageService.AddTags(imgId, Regex.Replace(tags, @"\s+", " ").Trim().Split(' ').ToArray());
             return Redirect("/Images/Manage");
         }
     }

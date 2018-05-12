@@ -57,21 +57,22 @@ namespace BLL.Services
             };
 
             foreach (var tag in item.Tags)
-                img.Tags.Add(Database.Tags.Get(GetTag(tag)));
+                img.Tags.Add(Database.Tags.Get(GetTag(tag.Name)));
 
             Database.Pictures.Create(img);
             Database.Save();
         }
 
-        private int GetTag(TagDTO entity)
+        private int GetTag(string name)
         {
-            var tag = Database.Tags.Find(x => x.Name == entity.Name).FirstOrDefault();
+            name = name.ToLower();
+            var tag = Database.Tags.Find(x => x.Name.ToLower() == name).FirstOrDefault();
 
             if (tag == null)
-                Database.Tags.Create(new Tag() { Name = entity.Name });
+                Database.Tags.Create(new Tag() { Name = name });
 
             Database.Save();
-            return Database.Tags.Find(x => x.Name == entity.Name).FirstOrDefault().Id;
+            return Database.Tags.Find(x => x.Name == name).FirstOrDefault().Id;
         }
 
         public void RemoveImage(int id)
@@ -86,13 +87,16 @@ namespace BLL.Services
         {
             var img = Database.Pictures.Get(imgId);
 
-            if (img == null)
+            if (img == null || tags == null)
                 throw new ArgumentNullException();
 
             img.Tags.Clear();
 
             foreach (var tag in tags)
-                img.Tags.Add(Database.Tags.Get(GetTag(new TagDTO { Name = tag })));
+                if (string.IsNullOrWhiteSpace(tag))
+                    continue;
+                else
+                    img.Tags.Add(Database.Tags.Get(GetTag(tag.Trim())));
 
             Database.Pictures.Update(img);
             Database.Save();
@@ -120,9 +124,9 @@ namespace BLL.Services
                 if (string.IsNullOrWhiteSpace(tag))
                     continue;
 
-                var t = Database.Tags.Find(x => x.Name == tag.Trim()).FirstOrDefault();
+                var t = Database.Tags.Get(GetTag(tag.Trim()));
 
-                if (t == null)
+                if (t == null || t.Pictures.Count == 0) //if tag do not exist or do not have images
                 {
                     pictures.Clear();
                     break;

@@ -26,15 +26,14 @@ namespace Web.Controllers
         {
             var items = imageService.GetTags();
             term = term.Substring(term.LastIndexOf(' ') + 1);
-            var filteredItems = items.Where(item => item.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0 );
+            List<string> filteredItems = items.Where(item => item.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0 ).ToList();
+            filteredItems.Sort();
 
             return Json(filteredItems, JsonRequestBehavior.AllowGet);
         }
        
         public ActionResult Search(int? page, string tags)
         {
-            //BUG: tags may be null if user select empty tag (#)
-            tags = System.Text.RegularExpressions.Regex.Replace(tags, @"\s+", " ").Trim();
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = true;
@@ -43,8 +42,9 @@ namespace Web.Controllers
             ViewBag.IsFavourites = false;
 
             if (tags == null)
-                return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize)); ;
+                return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize));
 
+            tags = System.Text.RegularExpressions.Regex.Replace(tags, @"\s+", " ").Trim();
             var images = imageService.SearchImages(tags.Split(' '));
             ViewBag.Tag = tags;
 
@@ -139,9 +139,9 @@ namespace Web.Controllers
                             array = ms.GetBuffer();
                         }
 
-                        if (model.Tags != null)
+                        if (!string.IsNullOrWhiteSpace(model.Tags))
                             foreach (var el in model.Tags.Split(' '))
-                                tagsDto.Add(new TagDTO() { Name = el });
+                                tagsDto.Add(new TagDTO() { Name = el.Trim() });
 
                         imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto }, albumId);
                     }

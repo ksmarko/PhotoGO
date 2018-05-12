@@ -58,30 +58,30 @@
                                 </a>
                             </div>                                
                             <div style="margin-top:10px; margin-left:10px">
-                                <p>
-                                    <button type="button" class="btn btn-default" data-toggle="popover" title="Tags" data-content="@text">Tags</button>
-                                    <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
-                                        @if (img.IsLiked)
-                                        {
-                                            <i class="fa fa-heart" style="color: #cf0020"></i>
-                                        }
-                                        else
-                                        {
-                                            <i class="fa fa-heart" style="color: #000000"></i>
-                                        }
-                                        <span>@img.Likes</span>
-                                    </button>
+                                <p>                                                                                                                        @*<tr class="@(item.Level==1?"classA":item.Level == 2?"classB":"")">*@
+    <button type="button" class="btn btn-default" data-toggle="popover" title="Tags" data-content="@text" @(img.Tags.Count <= 0? "disabled" : "enabled")>Tags</button>
+    <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
+        @if (img.IsLiked)
+        {
+            <i class="fa fa-heart" style="color: #cf0020"></i>
+        }
+        else
+        {
+            <i class="fa fa-heart" style="color: #000000"></i>
+        }
+        <span>@img.Likes</span>
+    </button>
 
-                                    @if (img.IsMy && !ViewBag.IsManagement)
-                                    {
-                                        <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
-                                    }
-                                    @if (ViewBag.IsManagement)
-                                    {
-                                        <button class="btn btn-default modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"><span class="fa fa-edit"></span></button>
-                                    }
+    @if (img.IsMy && !ViewBag.IsManagement)
+    {
+        <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
+    }
+    @if (ViewBag.IsManagement)
+    {
+        <button class="btn btn-default modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"><span class="fa fa-edit"></span></button>
+    }
 
-                                </p>
+</p>
                             </div>
                         </div>
                     </div>
