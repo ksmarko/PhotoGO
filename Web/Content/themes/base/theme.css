@@ -51,20 +51,19 @@
 
 /* Interaction states
 ----------------------------------*/
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default,
-.ui-button,
-
-/* We use html here because we need a greater specificity to make sure disabled
+    .ui-state-default,
+    .ui-widget-content .ui-state-default,
+    .ui-widget-header .ui-state-default,
+    .ui-button,
+    /* We use html here because we need a greater specificity to make sure disabled
 works properly when clicked or hovered */
-html .ui-button.ui-state-disabled:hover,
-html .ui-button.ui-state-disabled:active {
-	border: 1px solid #c5c5c5;
-	background: #f6f6f6;
-	font-weight: normal;
-	color: #454545;
-}
+    html .ui-button.ui-state-disabled:hover,
+    html .ui-button.ui-state-disabled:active {
+        border: 1px solid #c5c5c5;
+        background: #ffffff; 
+        font-weight: normal;
+        color: #454545;
+    }
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited,
@@ -112,7 +111,7 @@ a.ui-button:active,
 .ui-button:active,
 .ui-button.ui-state-active:hover {
 	border: 1px solid #003eff;
-	background: #007fff;
+	background: #ffffff;
 	font-weight: normal;
 	color: #ffffff;
 }
@@ -213,7 +212,7 @@ a.ui-button:active,
 }
 .ui-state-active .ui-icon,
 .ui-button:active .ui-icon {
-	background-image: url("images/ui-icons_ffffff_256x240.png");
+    background-image: url("images/ui-icons_555555_256x240.png");
 }
 .ui-state-highlight .ui-icon,
 .ui-button .ui-state-highlight.ui-icon {

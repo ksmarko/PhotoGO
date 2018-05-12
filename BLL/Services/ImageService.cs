@@ -124,7 +124,7 @@ namespace BLL.Services
                 if (string.IsNullOrWhiteSpace(tag))
                     continue;
 
-                var t = Database.Tags.Get(GetTag(tag.Trim()));
+                var t = Database.Tags.Find(x => x.Name.ToLower() == tag.ToLower()).FirstOrDefault();
 
                 if (t == null || t.Pictures.Count == 0) //if tag do not exist or do not have images
                 {
