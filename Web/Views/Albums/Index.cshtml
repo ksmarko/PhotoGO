@@ -20,9 +20,11 @@
         {
             <div class="col-md-2 col-xs-8 col-sm-4">
                 <div class="thumbnail">
-                    <a class="thumb-header" href="@Url.Action("Index", "Images", new { albumId = album.Id })">
-                        <img src="data:image;base64,@System.Convert.ToBase64String(album.Img)">
-                    </a>
+                    <div class="img-page-cover">
+                        <a href="@Url.Action("Index", "Images", new { albumId = album.Id })">
+                            <img class="img-thumb-body" src="data:image;base64,@System.Convert.ToBase64String(album.Img)">
+                        </a>
+                    </div>
                     <div style="margin-top:10px; margin-left:10px">
                         <p><h4>@album.Name</h4></p>
                         <p>

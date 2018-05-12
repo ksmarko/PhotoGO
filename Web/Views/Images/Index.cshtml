@@ -49,10 +49,14 @@
                     }
 
                     <div class="col-md-2 col-xs-8 col-sm-4">
-                        <div class="thumbnail" style="margin-bottom: 20px">
-                            <a data-trigger="preview" class="thumb-header" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
-                                <img src="data:image;base64,@System.Convert.ToBase64String(img.Img)">
-                            </a>
+                        <div class="thumbnail" style="margin-bottom: 20px">                            
+                            <div class="img-page-cover">
+                                <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
+                                    @*<center>*@
+                                        <img class="img-thumb-body" src="data:image;base64,@System.Convert.ToBase64String(img.Img)">
+                                    @*</center>*@
+                                </a>
+                            </div>                                
                             <div style="margin-top:10px; margin-left:10px">
                                 <p>
                                     <button type="button" class="btn btn-default" data-toggle="popover" title="Tags" data-content="@text">Tags</button>
