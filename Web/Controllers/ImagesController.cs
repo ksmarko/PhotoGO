@@ -184,8 +184,8 @@ namespace Web.Controllers
                     Id = img.Id,
                     Img = img.Img,
                     Likes = img.FavouritedBy.Count,
-                    IsLiked = imageService.IsLikedBy(GetUser().Id, img.Id),
-                    IsMy = IsUserImage(img.Id) ? true : false,
+                    IsLiked = User.Identity.IsAuthenticated? imageService.IsLikedBy(GetUser().Id, img.Id) : false,
+                    IsMy = User.Identity.IsAuthenticated ? (IsUserImage(img.Id) ? true : false) : false,
                     Tags = img.Tags.Select(x => x.Name).ToList()
                 });
             }
@@ -193,6 +193,7 @@ namespace Web.Controllers
             return list;
         }
 
+        [Authorize]
         public int Like(int id)
         {
             //BUG: if one user delete his image and another user like it 

@@ -52,15 +52,15 @@
                         <div class="thumbnail" style="margin-bottom: 20px">                            
                             <div class="img-page-cover">
                                 <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
-                                    @*<center>*@
-                                        <img class="img-thumb-body" src="data:image;base64,@System.Convert.ToBase64String(img.Img)">
-                                    @*</center>*@
+                                     <img class="img-thumb-body" src="data:image;base64,@System.Convert.ToBase64String(img.Img)">
                                 </a>
                             </div>                                
                             <div style="margin-top:10px; margin-left:10px">
-                                <p>                                                                                                                        @*<tr class="@(item.Level==1?"classA":item.Level == 2?"classB":"")">*@
+                                <p>
     <button type="button" class="btn btn-default" data-toggle="popover" title="Tags" data-content="@text" @(img.Tags.Count <= 0? "disabled" : "enabled")>Tags</button>
-    <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
+    @if (User.Identity.IsAuthenticated)
+    {
+                                    <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
         @if (img.IsLiked)
         {
             <i class="fa fa-heart" style="color: #cf0020"></i>
@@ -71,6 +71,7 @@
         }
         <span>@img.Likes</span>
     </button>
+    }
 
     @if (img.IsMy && !ViewBag.IsManagement)
     {
