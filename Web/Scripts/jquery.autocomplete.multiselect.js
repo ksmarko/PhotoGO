@@ -7,6 +7,8 @@ $.widget("ui.autocomplete", $.ui.autocomplete, {
     _create: function(){
         this._super();
 
+        $("#myAutocomplete").css({ "height": 32, "margin-left": 5 });
+
         var self = this,
             o = self.options;
 
@@ -14,8 +16,7 @@ $.widget("ui.autocomplete", $.ui.autocomplete, {
             self.selectedItems = {};           
             self.multiselect = $("<div></div>")
                 .addClass("ui-autocomplete-multiselect ui-state-default ui-widget")
-                //.css("width", 230)
-                .css("height", 34)
+                .css({ "height": 34, "width": 230, "cursor": "text", "padding-left": 5, "overflow-y": "hidden"})
                 .insertBefore(self.element)
                 .append(self.element)
                 .bind("click.autocomplete", function(){

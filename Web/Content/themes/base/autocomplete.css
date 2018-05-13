@@ -9,8 +9,11 @@
  * http://api.jqueryui.com/autocomplete/#theming
  */
 .ui-autocomplete {
-	position: absolute;
-	top: 0;
-	left: 0;
-	cursor: default;
+    position: fixed;
+    top: 0;
+    left: 0;
+    cursor: default;
+    z-index: 9999 !important;
+    max-height: 300px;
+    overflow-y: scroll;
 }
