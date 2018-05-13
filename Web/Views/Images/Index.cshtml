@@ -12,10 +12,10 @@
     @if (ViewBag.IsIndex)
     {
         <div style="margin-top: 20px">
-            <button class="btn btn-success modal-link" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
+            <button class="btn btn-success modal-link btn-md-marko" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
             @if (ViewBag.Description != null)
             {
-                <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#desc">Show description</button>
+                <button type="button" class="btn btn-default btn-md-marko" data-toggle="collapse" data-target="#desc">Show description</button>
                 <div style="margin-top: 20px; font-size: medium" id="desc" class="collapse">
                     @ViewBag.Description
                 </div>

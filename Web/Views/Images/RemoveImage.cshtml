@@ -12,17 +12,17 @@
                 @Html.AntiForgeryToken()
             <div class="form-horizontal">
                 <input type="hidden" name="id" value="@Model.Id" />
+                <center>
+                    <h3>
+                        Do you wand to delete image?
+                    </h3>
 
-                <h3>
-                    Do you wand to delete image?
-                </h3>
-
-                <img src="data:image;base64,@System.Convert.ToBase64String(Model.Img)" style="height:50%; width:50%;" class="centered">
-
+                    <img src="data:image;base64,@System.Convert.ToBase64String(Model.Img)" style="height:50%; width:50%; margin: 10px">
+                </center>
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Remove" class="btn btn-default centered" />
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+                    <div class="col-md-offset-2 col-md-10" style="text-align: right; margin-top: 10px">
+                        <input type="submit" value="Remove" class="btn btn-default btn-sm-marko" />
+                        <button type="button" class="btn btn-success btn-sm-marko" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>

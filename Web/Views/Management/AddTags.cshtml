@@ -13,16 +13,16 @@
                 <input type="hidden" name="imgId" value="@ViewBag.ImgId"/>
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label title="Tags" class="control-label col-md-2"/>
+                        <label class="control-label col-md-2">Tags</label>
                         <div class="col-md-10">
                             <input type="text" name="tags" value="@Model" class="form-control"/>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Save" class="btn btn-success" />
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <div class="col-md-offset-2 col-md-10" style="text-align: right">
+                            <button type="button" class="btn btn-default btn-sm-marko" data-dismiss="modal">Cancel</button>
+                            <input type="submit" value="Save" class="btn btn-success btn-sm-marko" />
                         </div>
                     </div>
                 </div>

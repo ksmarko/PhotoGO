@@ -38,3 +38,11 @@
     position:center;
     height: 190px;
 }
+
+.btn-sm-marko {
+    width: 70px;
+}
+
+.btn-md-marko {
+    width: 130px;
+}
