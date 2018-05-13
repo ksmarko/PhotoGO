@@ -63,8 +63,7 @@ namespace BLL.Services
 
         public UserDTO GetUserById(string id)
         {
-            var appUser = Database.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
-            var domainUser = Data.Users.Get(id);
+            var appUser = Database.UserManager.FindById(id);
 
             var user = new UserDTO()
             {
@@ -73,8 +72,8 @@ namespace BLL.Services
                 UserName = appUser.UserName,
                 Name = appUser.User.Name,
                 Role = SelectRoleNameById(appUser.Roles.Where(x => x.UserId == appUser.Id).Single().RoleId),
-                Albums = Mapper.Map<ICollection<Album>, ICollection<AlbumDTO>>(domainUser.Albums), //new AlbumService(Data).GetAlbumsForUser(appUser.Id).ToList(),
-                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(domainUser.LikedPictures)
+                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(Data.Albums.Find(x => x.User.Id == id)), 
+                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(Data.Users.Get(id).LikedPictures)
             };
 
             return user;
@@ -83,7 +82,6 @@ namespace BLL.Services
         public IEnumerable<UserDTO> GetUsers()
         {
             var appUsers = Database.UserManager.Users;
-            var appRoles = Database.RoleManager.Roles;
             var list = new List<UserDTO>();
 
             foreach (var el in appUsers)
@@ -95,7 +93,8 @@ namespace BLL.Services
                     UserName = el.UserName,
                     Name = el.User.Name,
                     Role = SelectRoleNameById(el.Roles.Where(x => x.UserId == el.Id).Single().RoleId),
-                    Albums = new AlbumService(Data).GetAlbumsForUser(el.Id).ToList()
+                    Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(Data.Albums.Find(x => x.User.Id == el.Id)),
+                    LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(Data.Users.Get(el.Id).LikedPictures)
                 });
             }
 
