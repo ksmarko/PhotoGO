@@ -12,6 +12,9 @@ namespace Web.Controllers
     {
         public ActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Albums");
+
             return View();
         }
     }
