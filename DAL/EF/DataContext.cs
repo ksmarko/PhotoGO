@@ -17,10 +17,11 @@ namespace DAL.EF
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
-        //static DataContext()
-        //{
-        //    Database.SetInitializer((new DbInitializer()));
-        //}
+        static DataContext()
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+            Database.SetInitializer((new DbInitializer()));
+        }
 
         public DataContext() : base()
         {
@@ -29,8 +30,7 @@ namespace DAL.EF
 
         public DataContext(string connectionString) : base(connectionString)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
-            Database.SetInitializer((new DbInitializer()));
+            
         }
     }
 
