@@ -19,30 +19,30 @@ namespace BLL.Services
 {
     public class UserManager : IUserManager
     {
-        IUnitOfWorkIdentity Database { get; set; }
-        IUnitOfWork Data { get; set; }
+        IUnitOfWorkIdentity DatabaseIdentity { get; set; }
+        IUnitOfWork DatabaseDomain { get; set; }
 
         public UserManager(IUnitOfWorkIdentity uowi, IUnitOfWork uow)
         {
-            Database = uowi;
-            Data = uow;
+            DatabaseIdentity = uowi;
+            DatabaseDomain = uow;
         }
 
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
-            var user = await Database.UserManager.FindByEmailAsync(userDto.Email);
+            var user = await DatabaseIdentity.UserManager.FindByEmailAsync(userDto.Email);
             if (user == null)
             {
                 user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
-                var result = await Database.UserManager.CreateAsync(user, userDto.Password);
+                var result = await DatabaseIdentity.UserManager.CreateAsync(user, userDto.Password);
 
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
 
-                await Database.UserManager.AddToRoleAsync(user.Id, userDto.Role);
+                await DatabaseIdentity.UserManager.AddToRoleAsync(user.Id, userDto.Role);
                 User clientProfile = new User { Id = user.Id, Name = userDto.Name };
-                Database.ClientManager.Create(clientProfile);
-                await Database.SaveAsync();
+                DatabaseIdentity.ClientManager.Create(clientProfile);
+                await DatabaseIdentity.SaveAsync();
                 return new OperationDetails(true, "Регистрация успешно пройдена", "");
             }
             else
@@ -54,16 +54,16 @@ namespace BLL.Services
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
-            ApplicationUser user = await Database.UserManager.FindAsync(userDto.Email, userDto.Password);
+            ApplicationUser user = await DatabaseIdentity.UserManager.FindAsync(userDto.Email, userDto.Password);
 
             if (user != null)
-                claim = await Database.UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+                claim = await DatabaseIdentity.UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
             return claim;
         }
 
         public UserDTO GetUserById(string id)
         {
-            var appUser = Database.UserManager.FindById(id);
+            var appUser = DatabaseIdentity.UserManager.FindById(id);
 
             var user = new UserDTO()
             {
@@ -72,8 +72,8 @@ namespace BLL.Services
                 UserName = appUser.UserName,
                 Name = appUser.User.Name,
                 Role = SelectRoleNameById(appUser.Roles.Where(x => x.UserId == appUser.Id).Single().RoleId),
-                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(Data.Albums.Find(x => x.User.Id == id)), 
-                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(Data.Users.Get(id).LikedPictures)
+                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == id)), 
+                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(id).LikedPictures)
             };
 
             return user;
@@ -81,7 +81,7 @@ namespace BLL.Services
 
         public IEnumerable<UserDTO> GetUsers()
         {
-            var appUsers = Database.UserManager.Users;
+            var appUsers = DatabaseIdentity.UserManager.Users;
             var list = new List<UserDTO>();
 
             foreach (var el in appUsers)
@@ -93,8 +93,8 @@ namespace BLL.Services
                     UserName = el.UserName,
                     Name = el.User.Name,
                     Role = SelectRoleNameById(el.Roles.Where(x => x.UserId == el.Id).Single().RoleId),
-                    Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(Data.Albums.Find(x => x.User.Id == el.Id)),
-                    LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(Data.Users.Get(el.Id).LikedPictures)
+                    Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == el.Id)),
+                    LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(el.Id).LikedPictures)
                 });
             }
 
@@ -103,32 +103,32 @@ namespace BLL.Services
 
         public void RemoveFromRole(string userId, string oldRoleName)
         {
-            var user = Database.UserManager.FindById(userId);
-            Database.UserManager.RemoveFromRole(userId, oldRoleName);
-            Database.UserManager.Update(user);
+            var user = DatabaseIdentity.UserManager.FindById(userId);
+            DatabaseIdentity.UserManager.RemoveFromRole(userId, oldRoleName);
+            DatabaseIdentity.UserManager.Update(user);
         }
 
         public void AddToRole(string userId, string roleName)
         {
-            var user = Database.UserManager.FindById(userId);
-            Database.UserManager.AddToRole(userId, roleName);
-            Database.UserManager.Update(user);
+            var user = DatabaseIdentity.UserManager.FindById(userId);
+            DatabaseIdentity.UserManager.AddToRole(userId, roleName);
+            DatabaseIdentity.UserManager.Update(user);
         }
 
         private string SelectRoleNameById(string id)
         {
-            var appRoles = Database.RoleManager.Roles;
+            var appRoles = DatabaseIdentity.RoleManager.Roles;
             return appRoles.Where(x => x.Id == id).Single().Name;
         }
 
         public IEnumerable<string> GetRoles()
         {
-            return Database.RoleManager.Roles.Select(x => x.Name);
+            return DatabaseIdentity.RoleManager.Roles.Select(x => x.Name);
         }
 
         public void Dispose()
         {
-            Database.Dispose();
+            DatabaseIdentity.Dispose();
         }
     }
 }

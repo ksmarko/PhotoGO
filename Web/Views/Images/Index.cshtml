@@ -36,79 +36,85 @@
             }
         </div>
     }
-
-            <div class="row" style="margin-top:20px">
-
-                @foreach (var img in Model)
-                {
-
-                    string text = "";
-                    foreach (var tag in img.Tags)
-                    {
-                        text += "<a href=\"/Images/Search?tags=" + @tag + "\">#" + @tag + "</a> &nbsp;";
-                    }
-
-                    <div class="col-md-2 col-xs-8 col-sm-4">
-                        <div class="thumbnail" style="margin-bottom: 20px">                            
-                            <div class="img-page-cover">
-                                <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
-                                     <img class="img-thumb-body" src="data:image;base64,@System.Convert.ToBase64String(img.Img)">
-                                </a>
-                            </div>                                
-                            <div style="margin-top:10px; margin-left:10px">
-                                <p>
-    <button type="button" class="btn btn-default" data-toggle="popover" title="Tags" data-content="@text" @(img.Tags.Count <= 0? "disabled" : "enabled")>Tags</button>
-    @if (User.Identity.IsAuthenticated)
-    {
-                                    <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
-        @if (img.IsLiked)
-        {
-            <i class="fa fa-heart" style="color: #cf0020"></i>
-        }
-        else
-        {
-            <i class="fa fa-heart" style="color: #000000"></i>
-        }
-        <span>@img.Likes</span>
-    </button>
-    }
-
-    @if (img.IsMy && !ViewBag.IsManagement)
-    {
-        <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
-    }
     @if (ViewBag.IsManagement)
     {
-        <button class="btn btn-default modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"><span class="fa fa-edit"></span></button>
+        <div class="alert alert-success">
+            <h4>Media management</h4>
+        </div>        
     }
 
-</p>
-                            </div>
-                        </div>
+    <div class="row" style="margin-top:20px">
+
+        @foreach (var img in Model)
+        {
+
+            string text = "";
+            foreach (var tag in img.Tags)
+            {
+                text += "<a href=\"/Images/Search?tags=" + @tag + "\">#" + @tag + "</a> &nbsp;";
+            }
+
+            <div class="col-md-2 col-xs-8 col-sm-4">
+                <div class="thumbnail" style="margin-bottom: 20px">
+                    <div class="img-page-cover">
+                        <a data-trigger="preview" href="data:image;base64,@System.Convert.ToBase64String(img.Img)" data-fancybox="preview">
+                            <img class="img-thumb-body" src="data:image;base64,@System.Convert.ToBase64String(img.Img)">
+                        </a>
                     </div>
-                }
+                    <div style="margin-top:10px; margin-left:10px">
+                        <p>
+                            <button type="button" class="btn btn-default" data-toggle="popover" title="Tags" data-content="@text" @(img.Tags.Count <= 0 ? "disabled" : "enabled")>Tags</button>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <button data-link="/Images/Like/@img.Id" class="btn btn-default like-button">
+                                    @if (img.IsLiked)
+                                    {
+                                        <i class="fa fa-heart" style="color: #cf0020"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-heart" style="color: #000000"></i>
+                                    }
+                                    <span>@img.Likes</span>
+                                </button>
+                            }
+
+                            @if (img.IsMy && !ViewBag.IsManagement)
+                            {
+                                <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
+                            }
+                            @if (ViewBag.IsManagement)
+                            {
+                                <button class="btn btn-default modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"><span class="fa fa-edit"></span></button>
+                            }
+
+                        </p>
+                    </div>
+                </div>
             </div>
+        }
+    </div>
 
-            @if (ViewBag.IsIndex)
-            {
-                @Html.PagedListPager(Model, page => Url.Action("Index", "Images", new { ViewBag.AlbumId, page }))
-            }
-            else if (ViewBag.IsSearchResult)
-            {
-                @Html.PagedListPager(Model, page => Url.Action("Search", "Images", new { ViewBag.Tag, page }))
-            }
-            else if (ViewBag.IsManagement)
-            {
-                @Html.PagedListPager(Model, page => Url.Action("Manage", "Images", new { ViewBag.Tag, page }))
-            }
-            else if (ViewBag.IsFavourites)
-            {
-                @Html.PagedListPager(Model, page => Url.Action("Favourites", "Images", new { page }))
-            }
+    @if (ViewBag.IsIndex)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Index", "Images", new { ViewBag.AlbumId, page }))
+    }
+    else if (ViewBag.IsSearchResult)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Search", "Images", new { ViewBag.Tag, page }))
+    }
+    else if (ViewBag.IsManagement)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Manage", "Images", new { page }))
+    }
+    else if (ViewBag.IsFavourites)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Favourites", "Images", new { page }))
+    }
 
-        </div>
+</div>
 
-        <script type="text/javascript">
+<script type="text/javascript">
             $(document).ready(
                 ShowModal(),
                 ShowPopover()
@@ -136,4 +142,4 @@
                     html: true
                 });
             }
-        </script>
+</script>

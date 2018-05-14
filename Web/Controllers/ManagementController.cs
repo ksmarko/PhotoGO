@@ -56,18 +56,21 @@ namespace Web.Controllers
         {
             var tags = imageService.GetImageById(imgId).Tags;
             string res = "";
+
             foreach (var el in tags)
                 res += el.Name + " ";
 
             ViewBag.ImgId = imgId;
-            return PartialView("AddTags", res);
+            var model = new TagsModel() { Tags = res };
+
+            return PartialView(model);
         }
 
         [HttpPost]
         [Authorize(Roles = "admin, moderator")]
-        public ActionResult AddTags(string tags, int imgId)
+        public ActionResult AddTags(TagsModel model, int imgId)
         {
-            imageService.AddTags(imgId, Regex.Replace(tags, @"\s+", " ").Trim().Split(' ').ToArray());
+            imageService.AddTags(imgId, Regex.Replace(model.Tags, @"\s+", " ").Trim().Split(' ').ToArray());
             return Redirect("/Images/Manage");
         }
     }

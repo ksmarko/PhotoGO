@@ -51,7 +51,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("PhotoGO", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                    <span class="fa fa-camera"/>
+                    PhotoGO
+                </a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -88,7 +91,6 @@
                             <ul class="dropdown-menu" id="dropdown">
                                 <li>@Html.ActionLink("Albums", "Index", "Albums")</li>
                                 <li>@Html.ActionLink("Favourites", "Favourites", "Images")</li>
-                                <li>@Html.ActionLink("Settings", "Settings", "Profile")</li>
                             </ul>
                         </li>
                         <li>@Html.ActionLink("Log Out", "Logout", "Account")</li>
@@ -102,9 +104,9 @@
     </div>
 
     <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            var tags = '@Url.Action("Autocomplete", "Images")';
+        var tags = '@Url.Action("Autocomplete", "Images")';
 
+        document.addEventListener("DOMContentLoaded", function (event) {
             $('#myAutocomplete').autocomplete({
                 source: tags,
                 multiselect: true

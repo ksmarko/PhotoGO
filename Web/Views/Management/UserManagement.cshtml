@@ -1,15 +1,14 @@
 ﻿@model IEnumerable<Web.Models.UserModel>
 
-@{
-    ViewBag.Title = "UserManagement";
-}
-
-<h2>UserManagement</h2>
+<div class="alert alert-success">
+    <h4>User management</h4>
+</div>
 
 <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
     <table class="table">
         <tr>
-            <th>User name</th>
+            <th>Name</th>
+            <th>E-mail</th>
             <th>Role</th>
             <th>Set role</th>
             <th></th>
@@ -17,28 +16,34 @@
 
         @foreach (var item in Model)
         {
+
+            bool enabled = item.UserName == User.Identity.Name ? false : true;
+
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
             @using (Html.BeginForm("EditRoles", "Management", FormMethod.Post))
-            {
-            <td>
-                <input type="hidden" value="@item.Id" name="id" />
-                <select class="form-control" name="role">
+    {
+        <td>
+            <input type="hidden" value="@item.Id" name="id" />
+            <select class="form-control" name="role" @(enabled ? "enabled" : "disabled")>
                 @foreach (var el in ViewBag.Roles.Items)
-                {
-                    <option @(item.Role == el ? "selected" : "")>@el</option>
-                }
-                </select>
-            </td>
-            <td>
-                <button type="submit" class="btn btn-success btn-sm-marko">Save</button>
-            </td>
-            }
+        {
+            <option @(item.Role == el ? "selected" : "")>@el</option>
+}
+            </select>
+        </td>
+        <td>
+            <button type="submit" class="btn btn-success btn-sm-marko" @(enabled ? "enabled" : "disabled")>Save</button>
+        </td>
+}
         </tr>
         }
     </table>
