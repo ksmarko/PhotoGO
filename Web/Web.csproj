@@ -279,6 +279,7 @@
     <Content Include="Media\img_parallax.jpg" />
     <Content Include="Media\img_parallax2.jpg" />
     <Content Include="Media\img_parallax3.jpg" />
+    <Content Include="Media\photography-wallpaper-2.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">

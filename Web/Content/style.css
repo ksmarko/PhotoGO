@@ -1,5 +1,5 @@
 body {
-    background: url("../Media/img_parallax3.jpg") no-repeat center center fixed;
+    background: url("../Media/photography-wallpaper-2.jpg") no-repeat center center fixed;
     background-size: cover;
     font-size: 16px;
     font-family: 'Lato', sans-serif;
@@ -71,7 +71,7 @@ p.small {
 	max-width: 340px;
 	margin: 0 auto;
 	position: relative;
-	top: 80px;
+	top: 30px;
 	padding-bottom: 30px;
 	border-radius: 5px;
 	box-shadow: 0 5px 50px rgba(0,0,0,0.4);
