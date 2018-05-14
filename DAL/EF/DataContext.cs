@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using DAL.Entities;
 using DAL.Identity;
 using DAL.Identity.Entities;
+using DAL.Migrations;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DAL.EF
@@ -18,20 +19,22 @@ namespace DAL.EF
 
         static DataContext()
         {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
             Database.SetInitializer((new DbInitializer()));
         }
 
-        public DataContext(string connectionString) : base(connectionString) {}
+        public DataContext() : base()
+        {
 
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Album>().HasRequired(a => a.User).WithMany(p => p.Albums);
-        //    modelBuilder.Entity<Picture>().HasRequired(a => a.Album).WithMany(p => p.Pictures);
-        //    modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
-        //}
+        }
+
+        public DataContext(string connectionString) : base(connectionString)
+        {
+            
+        }
     }
 
-    public class DbInitializer : DropCreateDatabaseIfModelChanges<DataContext>
+    public class DbInitializer : CreateDatabaseIfNotExists<DataContext>
     {
         protected override void Seed(DataContext context)
         {
