@@ -7,17 +7,14 @@ namespace BLL.Infrastructure
 {
     public class AutoMapperConfig
     {
-        public static void Initialize()
+        public static void Configure(IMapperConfigurationExpression cfg)
         {
-            Mapper.Initialize(cfg =>
+            cfg.CreateProfile("DALtoBLL", prf =>
             {
-                cfg.CreateMap<Album, AlbumDTO>();
-
-            cfg.CreateMap<Picture, PictureDTO>();
-
-                cfg.CreateMap<User, UserDTO>();
-
-                cfg.CreateMap<Tag, TagDTO>();
+                prf.CreateMap<Album, AlbumDTO>();
+                prf.CreateMap<Picture, PictureDTO>();
+                prf.CreateMap<User, UserDTO>();
+                prf.CreateMap<Tag, TagDTO>();
             });
         }
     }

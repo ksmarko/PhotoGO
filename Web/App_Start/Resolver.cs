@@ -1,4 +1,5 @@
-﻿using BLL.Infrastructure;
+﻿using AutoMapper;
+using BLL.Infrastructure;
 using Microsoft.Owin;
 using Ninject;
 using Ninject.Modules;
@@ -16,7 +17,12 @@ namespace Web.App_Start
     {
         public static void Configure()
         {
-            AutoMapperConfig.Initialize();
+            Mapper.Initialize(cfg =>
+            {
+                BLL.Infrastructure.AutoMapperConfig.Configure(cfg);
+                Web.Binding.AutoMapperConfig.Configure(cfg);
+            });
+
             NinjectModule serviceModule = new ServiceModule();
             NinjectModule connectionModule = new ConnectionModule("DefaultConnection");
 
