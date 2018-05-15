@@ -5,10 +5,9 @@ namespace BLL.Interfaces
 {
     public interface IAlbumService
     {
-        IEnumerable<AlbumDTO> GetAlbumsForUser(string userId);
         AlbumDTO GetAlbumById(int id);
 
-        void AddAlbum(AlbumDTO item, string userId);
+        void AddAlbum(AlbumDTO item);
         void RemoveAlbum(int id);
         void EditAlbum(AlbumDTO item);
 

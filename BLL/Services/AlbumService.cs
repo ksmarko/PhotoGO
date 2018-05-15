@@ -1,33 +1,28 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
     public class AlbumService : IAlbumService
     {
+        /// <summary>
+        /// Represents an entry point for domain repositories
+        /// </summary>
         IUnitOfWork Database { get; set; }
 
+        /// <summary>
+        /// Service constructor
+        /// </summary>
+        /// <param name="uow"></param>
         public AlbumService(IUnitOfWork uow)
         {
             Database = uow;
-        }
-
-        public IEnumerable<AlbumDTO> GetAlbumsForUser(string userId)
-        {
-            var user = Database.Users.Get(userId);
-
-            if (user == null)
-                throw new ArgumentNullException();
-
-            return Mapper.Map<IEnumerable<Album>, IEnumerable<AlbumDTO>>(Database.Albums.GetAll().Where(x => x.UserId == userId));
         }
 
         public AlbumDTO GetAlbumById(int id)
@@ -36,13 +31,13 @@ namespace BLL.Services
 
             if (album == null)
                 throw new ArgumentNullException();
-
+            
             return Mapper.Map<Album, AlbumDTO>(album);
         }
 
-        public void AddAlbum(AlbumDTO item, string userId)
+        public void AddAlbum(AlbumDTO item)
         {
-            var user = Database.Users.Get(userId);
+            var user = Database.Users.Get(item.UserId);
 
             if (item == null || user == null)
                 throw new ArgumentNullException();

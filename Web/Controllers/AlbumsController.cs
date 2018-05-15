@@ -30,7 +30,7 @@ namespace Web.Controllers
         {
             int pageSize = 12;
             int pageNumber = (page ?? 1);
-            var albums = albumService.GetAlbumsForUser(GetUser().Id);
+            var albums = GetUser().Albums;
             var list = new List<AlbumModel>();
             byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "favicon.ico");
 
@@ -58,9 +58,9 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateAlbum(AlbumModel model)
         {
-            var album = new AlbumDTO() { Name = model.Name, Description = model.Description };
+            var album = new AlbumDTO() { Name = model.Name, Description = model.Description, UserId = GetUser().Id };
 
-            albumService.AddAlbum(album, GetUser().Id);
+            albumService.AddAlbum(album);
 
             return RedirectToAction("Index");
         }

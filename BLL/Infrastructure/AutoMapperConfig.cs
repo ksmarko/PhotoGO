@@ -1,6 +1,7 @@
 ﻿using BLL.DTO;
 using DAL.Entities;
 using AutoMapper;
+using System.Collections.Generic;
 
 namespace BLL.Infrastructure
 {
@@ -11,8 +12,11 @@ namespace BLL.Infrastructure
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Album, AlbumDTO>();
-                cfg.CreateMap<Picture, PictureDTO>();
+
+            cfg.CreateMap<Picture, PictureDTO>();
+
                 cfg.CreateMap<User, UserDTO>();
+
                 cfg.CreateMap<Tag, TagDTO>();
             });
         }
