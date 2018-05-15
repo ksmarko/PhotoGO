@@ -2,9 +2,7 @@
 using BLL.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Interfaces
@@ -17,7 +15,7 @@ namespace BLL.Interfaces
         UserDTO GetUserById(string id);
         IEnumerable<UserDTO> GetUsers();
         IEnumerable<string> GetRoles();
-        void RemoveFromRole(string userId, string oldRoleName);
-        void AddToRole(string userId, string roleName);
+
+        void EditRole(string userId, string newRoleName);
     }
 }

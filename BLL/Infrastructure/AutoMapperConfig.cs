@@ -1,6 +1,5 @@
 ﻿using BLL.DTO;
 using DAL.Entities;
-
 using AutoMapper;
 
 namespace BLL.Infrastructure

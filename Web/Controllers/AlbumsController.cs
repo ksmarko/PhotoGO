@@ -32,7 +32,7 @@ namespace Web.Controllers
             int pageNumber = (page ?? 1);
             var albums = albumService.GetAlbumsForUser(GetUser().Id);
             var list = new List<AlbumModel>();
-            byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "Media/album-img.png");
+            byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "favicon.ico");
 
             foreach (var album in albums)
                 list.Add(new AlbumModel()

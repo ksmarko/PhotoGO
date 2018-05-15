@@ -71,7 +71,7 @@ namespace BLL.Services
                 Email = appUser.Email,
                 UserName = appUser.UserName,
                 Name = appUser.User.Name,
-                Role = SelectRoleNameById(appUser.Roles.Where(x => x.UserId == appUser.Id).Single().RoleId),
+                Role = GetRoleForUser(appUser.Id),
                 Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == id)), 
                 LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(id).LikedPictures)
             };
@@ -92,8 +92,8 @@ namespace BLL.Services
                     Email = el.Email,
                     UserName = el.UserName,
                     Name = el.User.Name,
-                    Role = SelectRoleNameById(el.Roles.Where(x => x.UserId == el.Id).Single().RoleId),
-                    Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == el.Id)),
+                    Role = GetRoleForUser(el.Id),
+                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == el.Id)),
                     LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(el.Id).LikedPictures)
                 });
             }
@@ -101,24 +101,27 @@ namespace BLL.Services
             return list;
         }
 
-        public void RemoveFromRole(string userId, string oldRoleName)
+        public void EditRole(string userId, string newRoleName)
         {
             var user = DatabaseIdentity.UserManager.FindById(userId);
-            DatabaseIdentity.UserManager.RemoveFromRole(userId, oldRoleName);
-            DatabaseIdentity.UserManager.Update(user);
+            var oldRole = GetRoleForUser(userId);
+
+            if (oldRole != newRoleName)
+            {
+                DatabaseIdentity.UserManager.RemoveFromRole(userId, oldRole);
+                DatabaseIdentity.UserManager.AddToRole(userId, newRoleName);
+
+                DatabaseIdentity.UserManager.Update(user);
+            }
         }
 
-        public void AddToRole(string userId, string roleName)
+        private string GetRoleForUser(string id)
         {
-            var user = DatabaseIdentity.UserManager.FindById(userId);
-            DatabaseIdentity.UserManager.AddToRole(userId, roleName);
-            DatabaseIdentity.UserManager.Update(user);
-        }
+            var user = DatabaseIdentity.UserManager.FindById(id);
+            var roleId = user.Roles.Where(x => x.UserId == user.Id).Single().RoleId;
+            var role = DatabaseIdentity.RoleManager.Roles.Where(x => x.Id == roleId).Single().Name;
 
-        private string SelectRoleNameById(string id)
-        {
-            var appRoles = DatabaseIdentity.RoleManager.Roles;
-            return appRoles.Where(x => x.Id == id).Single().Name;
+            return role;
         }
 
         public IEnumerable<string> GetRoles()
@@ -129,6 +132,7 @@ namespace BLL.Services
         public void Dispose()
         {
             DatabaseIdentity.Dispose();
+            DatabaseDomain.Dispose();
         }
     }
 }

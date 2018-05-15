@@ -38,14 +38,7 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var oldUser = userManager.GetUserById(id);
-                var oldRoleName = oldUser.Role;
-
-                if (oldRoleName != role)
-                {
-                    userManager.RemoveFromRole(id, oldRoleName);
-                    userManager.AddToRole(id, role);
-                }
+                userManager.EditRole(id, role);
                 return RedirectToAction("Users");
             }
             return View();
@@ -55,10 +48,7 @@ namespace Web.Controllers
         public ActionResult AddTags(int imgId)
         {
             var tags = imageService.GetImageById(imgId).Tags;
-            string res = "";
-
-            foreach (var el in tags)
-                res += el.Name + " ";
+            string res = string.Join(" ", tags.Select(x => x.Name));
 
             ViewBag.ImgId = imgId;
             var model = new TagsModel() { Tags = res };

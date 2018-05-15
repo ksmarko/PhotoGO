@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BLL.DTO
 {
@@ -13,11 +9,6 @@ namespace BLL.DTO
         public string Description { get; set; }
         public string UserId { get; set; }
         public ICollection<PictureDTO> Pictures { get; set; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
 
         public AlbumDTO()
         {
