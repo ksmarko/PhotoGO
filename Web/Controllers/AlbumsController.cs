@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web.Models;
@@ -20,6 +21,18 @@ namespace Web.Controllers
         readonly IAlbumService albumService;
         readonly IUserManager userManager;
 
+        private UserDTO user;
+
+        UserDTO CurrentUser
+        {
+            get
+            {
+                if (user == null)
+                    user = userManager.GetUserByName(User.Identity.Name);
+                return user;
+            }
+        }
+
         public AlbumsController (IAlbumService albumService, IUserManager userManager)
         {
             this.albumService = albumService;
@@ -30,7 +43,7 @@ namespace Web.Controllers
         {
             int pageSize = 12;
             int pageNumber = (page ?? 1);
-            var albums = GetUser().Albums;
+            var albums = CurrentUser.Albums;
             byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "favicon.ico");
 
             var list = Mapper.Map<IEnumerable<AlbumDTO>, ICollection<AlbumModel>>(albums.Reverse());
@@ -39,26 +52,26 @@ namespace Web.Controllers
             return View(list.ToPagedList(pageNumber, pageSize));
         }
 
-        [HttpGet, ActionName("Create")]
-        public ActionResult CreateAlbum()
+        [HttpGet]
+        public ActionResult Create()
         {
-            return PartialView("CreateAlbum");
+            return PartialView();
         }
 
-        [HttpPost, ActionName("Create")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateAlbum(AlbumModel model)
+        public ActionResult Create(AlbumModel model)
         {
             var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
-            album.UserId = GetUser().Id;
+            album.UserId = CurrentUser.Id;
 
             albumService.AddAlbum(album);
 
             return RedirectToAction("Index");
         }
 
-        [HttpGet, ActionName("Edit")]
-        public ActionResult EditAlbum(int id)
+        [HttpGet]
+        public ActionResult Edit(int id)
         {
             if (!IsUserAlbum(id))
                 return new HttpNotFoundResult();
@@ -66,11 +79,11 @@ namespace Web.Controllers
             var album = albumService.GetAlbumById(id);
             var model = Mapper.Map<AlbumDTO, AlbumModel>(album);
 
-            return PartialView("EditAlbum", model);
+            return PartialView(model);
         }
 
-        [HttpPost, ActionName("Edit")]
-        public ActionResult EditAlbumConfirmation(AlbumModel model)
+        [HttpPost]
+        public ActionResult Edit(AlbumModel model)
         {
             var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
 
@@ -88,7 +101,7 @@ namespace Web.Controllers
             var album = albumService.GetAlbumById(id);
             var model = Mapper.Map<AlbumDTO, AlbumModel>(album);
 
-            return PartialView("RemoveAlbum", model);
+            return PartialView(model);
         } 
 
         [HttpPost, ActionName("Remove")]
@@ -100,15 +113,10 @@ namespace Web.Controllers
 
         private bool IsUserAlbum(int albumId)
         {
-            if (GetUser().Albums.Any(x => x.Id == albumId))
+            if (CurrentUser.Albums.Any(x => x.Id == albumId))
                 return true;
 
             return false;
-        }
-
-        private UserDTO GetUser()
-        {
-            return userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace BLL.Interfaces
         Task<OperationDetails> Create(UserDTO userDto);
         Task<ClaimsIdentity> Authenticate(UserDTO userDto);
 
-        UserDTO GetUserById(string id);
+        UserDTO GetUserByName(string name);
         IEnumerable<UserDTO> GetUsers();
         IEnumerable<string> GetRoles();
 

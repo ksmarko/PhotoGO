@@ -61,9 +61,9 @@ namespace BLL.Services
             return claim;
         }
 
-        public UserDTO GetUserById(string id)
+        public UserDTO GetUserByName(string name)
         {
-            var appUser = DatabaseIdentity.UserManager.FindById(id);
+            var appUser = DatabaseIdentity.UserManager.FindByName(name);
 
             var user = new UserDTO()
             {
@@ -72,8 +72,8 @@ namespace BLL.Services
                 UserName = appUser.UserName,
                 Name = appUser.User.Name,
                 Role = GetRoleForUser(appUser.Id),
-                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == id)), 
-                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(id).LikedPictures)
+                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == appUser.Id)), 
+                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(appUser.Id).LikedPictures)
             };
 
             return user;
