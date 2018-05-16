@@ -1,27 +1,22 @@
-﻿using AutoMapper;
-using PhotoGO.BLL.DTO;
-using PhotoGO.BLL.Interfaces;
-using PagedList;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
+﻿using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
+using System.Collections.Generic;
+using AutoMapper;
+using PhotoGO.BLL.DTO;
 using PhotoGO.WEB.Models;
+using PhotoGO.BLL.Interfaces;
+using PhotoGO.WEB.Helpers;
 
 namespace PhotoGO.WEB.Controllers
 {
     [Authorize]
     public class AlbumsController : Controller
     {
+        #region Fields
         readonly IAlbumService albumService;
         readonly IUserManager userManager;
-
-        private UserDTO user;
+        UserDTO user;
 
         UserDTO CurrentUser
         {
@@ -32,26 +27,30 @@ namespace PhotoGO.WEB.Controllers
                 return user;
             }
         }
+        #endregion
 
+        #region Ctor
         public AlbumsController (IAlbumService albumService, IUserManager userManager)
         {
             this.albumService = albumService;
             this.userManager = userManager;
         }
+        #endregion
 
+        #region Main
         public ActionResult Index(int? page)
         {
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
             var albums = CurrentUser.Albums;
             byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "favicon.ico");
 
             var list = Mapper.Map<IEnumerable<AlbumDTO>, ICollection<AlbumModel>>(albums.Reverse());
             list.Where(x => x.Img.Length <= 0).ToList().ForEach(x => x.Img = defaultImg);
 
-            return View(list.ToPagedList(pageNumber, pageSize));
+            return View(CreatePagedList.From(list, page));
         }
+        #endregion
 
+        #region CreateAlbum
         [HttpGet]
         public ActionResult Create()
         {
@@ -66,13 +65,16 @@ namespace PhotoGO.WEB.Controllers
             {
                 var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
                 album.UserId = CurrentUser.Id;
+
                 albumService.AddAlbum(album);
 
                 return RedirectToAction("Index");
             }
             return PartialView();
         }
+        #endregion
 
+        #region EditAlbum
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -97,7 +99,9 @@ namespace PhotoGO.WEB.Controllers
             }
             return PartialView(model);
         }
+        #endregion
 
+        #region RemoveAlbum
         [HttpGet, ActionName("Remove")]
         public ActionResult RemoveAlbum(int id)
         {
@@ -116,7 +120,9 @@ namespace PhotoGO.WEB.Controllers
             albumService.RemoveAlbum(id);
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region Private
         private bool IsUserAlbum(int albumId)
         {
             if (CurrentUser.Albums.Any(x => x.Id == albumId))
@@ -124,5 +130,6 @@ namespace PhotoGO.WEB.Controllers
 
             return false;
         }
+        #endregion
     }
 }

@@ -205,6 +205,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CreatePagedList.cs" />
     <Compile Include="Models\AddImageModel.cs" />
     <Compile Include="Models\AlbumModel.cs" />
     <Compile Include="Models\ImageModel.cs" />
