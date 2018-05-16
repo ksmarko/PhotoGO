@@ -62,12 +62,15 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(AlbumModel model)
         {
-            var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
-            album.UserId = CurrentUser.Id;
+            if (ModelState.IsValid)
+            {
+                var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
+                album.UserId = CurrentUser.Id;
+                albumService.AddAlbum(album);
 
-            albumService.AddAlbum(album);
-
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            return PartialView();
         }
 
         [HttpGet]
@@ -85,11 +88,14 @@ namespace Web.Controllers
         [HttpPost]
         public ActionResult Edit(AlbumModel model)
         {
-            var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
+            if (ModelState.IsValid)
+            {
+                var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
+                albumService.EditAlbum(album);
 
-            albumService.EditAlbum(album);
-
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            return PartialView(model);
         }
 
         [HttpGet, ActionName("Remove")]

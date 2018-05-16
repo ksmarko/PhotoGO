@@ -11,15 +11,8 @@ namespace BLL.Services
 {
     public class AlbumService : IAlbumService
     {
-        /// <summary>
-        /// Represents an entry point for domain repositories
-        /// </summary>
         IUnitOfWork Database { get; set; }
 
-        /// <summary>
-        /// Service constructor
-        /// </summary>
-        /// <param name="uow"></param>
         public AlbumService(IUnitOfWork uow)
         {
             Database = uow;
@@ -29,18 +22,18 @@ namespace BLL.Services
         {
             var album = Database.Albums.Get(id);
 
-            if (album == null)
-                throw new ArgumentNullException();
-            
             return Mapper.Map<Album, AlbumDTO>(album);
         }
 
-        public void AddAlbum(AlbumDTO item)
+        public bool AddAlbum(AlbumDTO item)
         {
+            if (item == null)
+                return false;
+
             var user = Database.Users.Get(item.UserId);
 
-            if (item == null || user == null)
-                throw new ArgumentNullException();
+            if (user == null)
+                return false;
 
             var album = new Album()
             {
@@ -52,34 +45,35 @@ namespace BLL.Services
             };
 
             Database.Albums.Create(album);
-            Database.Save();
+            return true;
         }
 
-        public void RemoveAlbum(int id)
+        public bool RemoveAlbum(int id)
         {
             var album = Database.Albums.Get(id);
 
             if (album == null)
-                throw new ArgumentNullException();
+                return false;
 
             Database.Albums.Delete(id);
+            return true;
         }
 
-        public void EditAlbum(AlbumDTO item)
+        public bool EditAlbum(AlbumDTO item)
         {
             if (item == null)
-                throw new ArgumentNullException();
+                return false;
 
             var album = Database.Albums.Get(item.Id);
 
             if (album == null)
-                throw new ArgumentNullException();
+                return false;
 
             album.Name = item.Name;
             album.Description = item.Description;
 
             Database.Albums.Update(album);
-            Database.Save();
+            return true;
         }
 
         public void Dispose()
