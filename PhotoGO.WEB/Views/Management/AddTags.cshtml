@@ -1,0 +1,40 @@
+﻿@model PhotoGO.WEB.Models.TagsModel
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="content"><strong>Add tags</strong></h4>
+        </div>
+        <div class="modal-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="imgId" value="@ViewBag.ImgId" />
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Tags, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Tags, new { htmlAttributes = new { @class = "form-control", placeholder = "tag1 tag2 tag3", value="@Model.Tags" } })
+                            @Html.ValidationMessageFor(model => model.Tags, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10" style="text-align: right">
+                            <button type="button" class="btn btn-default btn-sm-marko" data-dismiss="modal">Cancel</button>
+                            <input type="submit" value="Save" class="btn btn-success btn-sm-marko" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse((document).getElementsByTagName("form"));
+    });
+</script>

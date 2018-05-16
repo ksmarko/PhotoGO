@@ -1,0 +1,46 @@
+﻿@model PhotoGO.WEB.Models.RegisterModel
+
+<link rel="stylesheet" href="~/Content/animate.css">
+<link rel="stylesheet" href="~/Content/style.css">
+
+<div class="container">
+
+    <div class="login-box animated fadeInUp">
+        <div class="box-header">
+            <h2>Sign In</h2>
+        </div>
+        @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger", style = "margin-bottom: 0px" })
+        <br />
+        @Html.LabelFor(model => model.Name)
+        <br />
+        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "Name", style = "margin-bottom: 5px" } })
+        <br />
+        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        <br />
+        @Html.LabelFor(model => model.Email)
+        <br />
+        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { placeholder = "example@mail.com", style = "margin-bottom: 5px" } })
+        <br />
+        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        <br />
+        @Html.LabelFor(model => model.Password)
+        <br />
+        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { placeholder = "Password", style = "margin-bottom: 5px" } })
+        <br />
+        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        <br />
+        @Html.LabelFor(model => model.ConfirmPassword)
+        <br />
+        @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { placeholder = "Password", style = "margin-bottom: 5px" } })
+        <br />
+        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+        <br />
+        <button type="submit">Sign In</button>
+        <br />
+}
+    </div>
+</div>
