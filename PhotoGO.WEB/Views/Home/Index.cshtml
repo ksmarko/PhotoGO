@@ -1,0 +1,85 @@
+﻿<link rel="stylesheet" type="text/css" href="~/Content/indexpage.css" />
+
+
+
+<div class="bgimg-1" style="height: 700px">
+    <div style="color: #777; background-color:white; text-align:center; padding:50px 80px; text-align: justify;">
+        <h3 style="text-align:center;">Welcome to the PhotoGO</h3>
+        <p>
+            PhotoGO is a simple web application that helps you to store your moments. Just create album, add photos and enjoy! You also can search images by tags (do not forget to add tags to your own photos) and favourite them. Hope this service will be heplful for you. YOLO :3
+        </p>
+    </div>
+    <div class="caption">
+        <span class="border sp-register" style="cursor: pointer">REGISTER</span>
+        <span class="border sp-login" style="cursor: pointer">LOGIN</span>
+    </div>
+</div>
+
+<div style="color: #777;background-color:white;text-align:center;padding:50px 80px;text-align: justify;">
+    <h3 style="text-align:center;">Photography - is more than life</h3>
+    <p>
+        <blockquote>
+    <p>“Photography for me is not looking, it’s feeling. If you can’t feel what you’re looking at, then you’re never going to get others to feel anything when they look at your pictures.”</p>
+    <footer>Don McCullin</footer>
+    </blockquote>
+    </p>
+    <p>
+        <blockquote>
+    <p>“It’s one thing to make a picture of what a person looks like, it’s another thing to make a portrait of who they are.”</p>
+    <footer>Paul Caponigro</footer>
+    </blockquote>
+    </p>
+    <p>
+        <blockquote>
+    <p>“To me, photography is an art of observation. It’s about finding something interesting in an ordinary place… I’ve found it has little to do with the things you see and everything to do with the way you see them.”</p>
+    <footer>Elliott Erwitt</footer>
+    </blockquote>
+    </p>
+    <p>
+        <blockquote>
+    <p>“If the photographer is interested in the people in front of his lens, and if he is compassionate, it’s already a lot. The instrument is not the camera but the photographer.”</p>
+    <footer>Eve Arnold</footer>
+    </blockquote>
+    </p>
+    <p>
+        <blockquote>
+    <p>“When I say I want to photograph someone, what it really means is that I’d like to know them. Anyone I know I photograph.”</p>
+    <footer>Annie Leibovitz</footer>
+    </blockquote>
+    </p>
+</div>
+
+<div style="position:relative;">
+    <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
+        <p></p>
+    </div>
+</div>
+
+<div class="bgimg-3">
+    <div class="caption">
+        <span class="border" style="background-color:transparent;font-size:25px;color: #f7f7f7;">ENJOY</span>
+    </div>
+</div>
+
+<div style="position:relative;">
+    <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify; height: 120px">
+        <div class="caption">
+            <span class="border sp-register" style="cursor: pointer">REGISTER</span>
+            <span class="border sp-login" style="cursor: pointer">LOGIN</span>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".body-content").css({ "padding-left": 0, "padding-right": 0 });
+
+        $(".sp-login").click(function () {
+            window.location.href = "@Url.Action("Login", "Account")";
+        });
+
+        $(".sp-register").click(function () {
+            window.location.href = "@Url.Action("Register", "Account")";
+        });
+    });
+</script>
