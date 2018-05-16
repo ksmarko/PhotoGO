@@ -1,29 +1,31 @@
-﻿using AutoMapper;
-using PhotoGO.BLL.DTO;
-using PhotoGO.BLL.Interfaces;
-using PagedList;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using AutoMapper;
+using PhotoGO.BLL.DTO;
 using PhotoGO.WEB.Models;
+using PhotoGO.BLL.Interfaces;
 
 namespace PhotoGO.WEB.Controllers
 {
     public class ManagementController : Controller
     {
+        #region Fields
         readonly IUserManager userManager;
         readonly IImageService imageService;
+        #endregion
 
+        #region Ctor
         public ManagementController(IUserManager userManager, IImageService imageService)
         {
             this.userManager = userManager;
             this.imageService = imageService;
         }
+        #endregion
 
+        #region UserManagement
         [Authorize(Roles = "admin")]
         public ActionResult Users()
         {
@@ -38,13 +40,13 @@ namespace PhotoGO.WEB.Controllers
         public async Task<ActionResult> EditRoles(string id, string role)
         {
             if (ModelState.IsValid)
-            {
                 await userManager.EditRole(id, role);
-                return RedirectToAction("Users");
-            }
-            return View();
-        }
 
+            return RedirectToAction("Users");
+        }
+        #endregion
+
+        #region AddTags
         [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(int imgId)
         {
@@ -61,8 +63,11 @@ namespace PhotoGO.WEB.Controllers
         [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(TagsModel model, int imgId)
         {
-            imageService.AddTags(imgId, Regex.Replace(model.Tags, @"\s+", " ").Trim().Split(' ').ToArray());
+            if (ModelState.IsValid)
+                imageService.AddTags(imgId, Regex.Replace(model.Tags, @"\s+", " ").Trim().Split(' ').ToArray());
+
             return Redirect("/Images/Manage");
         }
+        #endregion
     }
 }

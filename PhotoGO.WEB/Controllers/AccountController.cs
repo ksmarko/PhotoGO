@@ -2,11 +2,11 @@
 using System.Web.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using PhotoGO.BLL.DTO;
-using PhotoGO.BLL.Infrastructure;
-using PhotoGO.BLL.Interfaces;
 using Microsoft.Owin.Security;
+using PhotoGO.BLL.DTO;
 using PhotoGO.WEB.Models;
+using PhotoGO.BLL.Interfaces;
+using PhotoGO.BLL.Infrastructure;
 
 namespace PhotoGO.WEB.Controllers
 {

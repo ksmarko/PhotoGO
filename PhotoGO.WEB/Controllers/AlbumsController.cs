@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using AutoMapper;
 using PhotoGO.BLL.DTO;
 using PhotoGO.WEB.Models;
-using PhotoGO.BLL.Interfaces;
 using PhotoGO.WEB.Helpers;
+using PhotoGO.BLL.Interfaces;
 
 namespace PhotoGO.WEB.Controllers
 {

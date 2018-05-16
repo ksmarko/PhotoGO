@@ -9,7 +9,6 @@ using PhotoGO.WEB.Models;
 using PhotoGO.WEB.Helpers;
 using PhotoGO.BLL.Interfaces;
 using AutoMapper;
-using Web.Helpers;
 
 namespace PhotoGO.WEB.Controllers
 {
