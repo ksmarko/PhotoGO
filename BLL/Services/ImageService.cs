@@ -3,11 +3,8 @@ using BLL.DTO;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -173,6 +170,7 @@ namespace BLL.Services
             Database.Dispose();
         }
 
+        #region Private methods
         private int GetTag(string name)
         {
             name = name.ToLower();
@@ -184,5 +182,6 @@ namespace BLL.Services
             Database.Save();
             return Database.Tags.Find(x => x.Name == name).FirstOrDefault().Id;
         }
+        #endregion
     }
 }

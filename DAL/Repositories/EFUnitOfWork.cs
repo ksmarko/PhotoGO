@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using DAL.EF;
 using DAL.Entities;
 using DAL.Interfaces;
@@ -64,6 +63,7 @@ namespace DAL.Repositories
             db.SaveChanges();
         }
 
+        #region Dispose
         private bool disposed = false;
 
         public virtual void Dispose(bool disposing)
@@ -83,5 +83,6 @@ namespace DAL.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+        #endregion
     }
 }

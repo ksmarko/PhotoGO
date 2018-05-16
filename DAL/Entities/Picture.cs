@@ -7,10 +7,14 @@ namespace DAL.Entities
     {
         [Key]
         public int Id { get; set; }
+
         public byte[] Img { get; set; }
+
         public int AlbumId { get; set; }
         public virtual Album Album { get; set; }
+
         public virtual ICollection<User> FavouritedBy { get; set; }
+
         public virtual ICollection<Tag> Tags { get; set; }
 
         public Picture()

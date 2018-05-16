@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.EF;
+﻿using DAL.EF;
 using DAL.Entities;
-using DAL.Identity.Entities;
 using DAL.Identity.Interfaces;
 
 namespace DAL.Identity.Repositories
@@ -13,6 +7,7 @@ namespace DAL.Identity.Repositories
     public class ClientManager : IClientManager
     {
         public DataContext Database { get; set; }
+
         public ClientManager(DataContext db)
         {
             Database = db;

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
 using DAL.Entities;
-using DAL.Repositories;
 
 namespace DAL.Interfaces
 {

@@ -3,9 +3,6 @@ using DAL.Identity.Entities;
 using DAL.Identity.Interfaces;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DAL.Identity.Repositories
@@ -51,6 +48,8 @@ namespace DAL.Identity.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #region Dispose
         private bool disposed = false;
 
         public virtual void Dispose(bool disposing)
@@ -66,5 +65,6 @@ namespace DAL.Identity.Repositories
                 this.disposed = true;
             }
         }
+        #endregion
     }
 }

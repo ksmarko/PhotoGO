@@ -1,7 +1,6 @@
 ﻿using BLL.DTO;
 using DAL.Entities;
 using AutoMapper;
-using System.Collections.Generic;
 
 namespace BLL.Infrastructure
 {

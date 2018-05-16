@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Reflection.Emit;
+﻿using System.Data.Entity;
 using DAL.Entities;
-using DAL.Identity;
 using DAL.Identity.Entities;
 using DAL.Migrations;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -23,15 +19,9 @@ namespace DAL.EF
             Database.SetInitializer((new DbInitializer()));
         }
 
-        public DataContext() : base()
-        {
+        public DataContext() : base() { }
 
-        }
-
-        public DataContext(string connectionString) : base(connectionString)
-        {
-            
-        }
+        public DataContext(string connectionString) : base(connectionString) { }
     }
 
     public class DbInitializer : CreateDatabaseIfNotExists<DataContext>
