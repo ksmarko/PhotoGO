@@ -45,6 +45,7 @@ namespace BLL.Services
             };
 
             Database.Albums.Create(album);
+            Database.Save();
             return true;
         }
 
@@ -56,6 +57,7 @@ namespace BLL.Services
                 return false;
 
             Database.Albums.Delete(id);
+            Database.Save();
             return true;
         }
 
@@ -73,6 +75,7 @@ namespace BLL.Services
             album.Description = item.Description;
 
             Database.Albums.Update(album);
+            Database.Save();
             return true;
         }
 

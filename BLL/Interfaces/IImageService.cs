@@ -7,17 +7,15 @@ namespace BLL.Interfaces
     {
         IEnumerable<PictureDTO> GetImages();
         IEnumerable<PictureDTO> GetImages(int albumId);
-        IEnumerable<PictureDTO> GetFavouritesForUser(string id);
-        PictureDTO GetImageById(int id);
-
         IEnumerable<PictureDTO> SearchImages(params string[] tags);
-
-        void AddImage(PictureDTO image, int albumId);
-        void RemoveImage(int id);
-        void LikeImage(int id, string userId);
+        PictureDTO GetImageById(int id);
+        
+        bool AddImage(PictureDTO image);
+        bool RemoveImage(int id);
+        bool LikeImage(int id, string userId);
         bool IsLikedBy(string id, int imgId);
 
-        void AddTags(int imgId, params string[] tags);
+        bool AddTags(int imgId, params string[] tags);
         string[] GetTags();
 
         void Dispose();

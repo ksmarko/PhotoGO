@@ -6,7 +6,7 @@ namespace BLL.DTO
     {
         public int Id { get; set; }
         public byte[] Img { get; set; }
-        public AlbumDTO Album { get; set; }
+        public int AlbumId { get; set; }
         public ICollection<UserDTO> FavouritedBy { get; set; }
         public ICollection<TagDTO> Tags { get; set; }
 

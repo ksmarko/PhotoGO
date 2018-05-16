@@ -57,7 +57,7 @@ namespace Web.Controllers
         [Authorize]
         public ActionResult Favourites(int? page)
         {
-            var images = imageService.GetFavouritesForUser(GetUser().Id);
+            var images = GetUser().LikedPictures;
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.IsSearchResult = false;
@@ -143,7 +143,7 @@ namespace Web.Controllers
                             foreach (var el in model.Tags.Split(' '))
                                 tagsDto.Add(new TagDTO() { Name = el.Trim() });
 
-                        imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto }, albumId);
+                        imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto, AlbumId = albumId });
                     }
 
             return Redirect($"/Images/Index?albumId={albumId}");
@@ -167,7 +167,7 @@ namespace Web.Controllers
         [HttpPost, ActionName("RemoveImage")]
         public ActionResult RemoveImageConfirmed(int id)
         {
-            var albumId = imageService.GetImageById(id).Album.Id;
+            var albumId = imageService.GetImageById(id).AlbumId;
             imageService.RemoveImage(id);
 
             return Redirect($"/Images/Index?albumId={albumId}");
@@ -208,7 +208,7 @@ namespace Web.Controllers
         {
             var el = imageService.GetImageById(imgId);
 
-            if (GetUser().Albums.Any(x => x.Id == el.Album.Id))
+            if (GetUser().Albums.Any(x => x.Id == el.AlbumId))
                 return true;
 
             return false;
