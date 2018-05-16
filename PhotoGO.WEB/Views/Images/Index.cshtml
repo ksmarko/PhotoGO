@@ -9,7 +9,7 @@
 <div class="loader" id="loader" style="display:block"></div>
 <div id="bodycontent" style="display:none">
 
-    @if (ViewBag.IsIndex)
+    @if (ViewData["PageRole"].ToString() == "Index")
     {
         <div style="margin-top: 20px">
             <button class="btn btn-success modal-link btn-md-marko" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
@@ -22,7 +22,7 @@
             }
         </div>
     }
-    @if (ViewBag.IsSearchResult)
+    @if (ViewData["PageRole"].ToString() == "Search")
     {
         <div style="margin-top: 20px">
             <h3>
@@ -36,7 +36,7 @@
             }
         </div>
     }
-    @if (ViewBag.IsManagement)
+    @if (ViewData["PageRole"].ToString() == "Management")
     {
         <div class="alert alert-success">
             <h4>Media management</h4>
@@ -79,11 +79,11 @@
                                 </button>
                             }
 
-                            @if (img.IsMy && !ViewBag.IsManagement)
+                            @if (img.IsMy && ViewData["PageRole"].ToString() != "Management")
                             {
                                 <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
                             }
-                            @if (ViewBag.IsManagement)
+                            @if (ViewData["PageRole"].ToString() == "Management")
                             {
                                 <button class="btn btn-default modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"><span class="fa fa-edit"></span></button>
                             }
@@ -95,19 +95,19 @@
         }
     </div>
 
-    @if (ViewBag.IsIndex)
+    @if (ViewData["PageRole"].ToString() == "Index")
     {
         @Html.PagedListPager(Model, page => Url.Action("Index", "Images", new { ViewBag.AlbumId, page }))
     }
-    else if (ViewBag.IsSearchResult)
+    else if (ViewData["PageRole"].ToString() == "Search")
     {
         @Html.PagedListPager(Model, page => Url.Action("Search", "Images", new { ViewBag.Tag, page }))
     }
-    else if (ViewBag.IsManagement)
+    else if (ViewData["PageRole"].ToString() == "Management")
     {
         @Html.PagedListPager(Model, page => Url.Action("Manage", "Images", new { page }))
     }
-    else if (ViewBag.IsFavourites)
+    else if (ViewData["PageRole"].ToString() == "Favourites")
     {
         <div id="fav" style="display: none"/>
         @Html.PagedListPager(Model, page => Url.Action("Favourites", "Images", new { page }))

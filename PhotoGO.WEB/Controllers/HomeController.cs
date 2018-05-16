@@ -1,15 +1,10 @@
-﻿using PhotoGO.BLL.Interfaces;
-using Microsoft.Owin.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace PhotoGO.WEB.Controllers
 {
     public class HomeController : Controller
     {
+        #region Main
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -17,5 +12,6 @@ namespace PhotoGO.WEB.Controllers
 
             return View();
         }
+        #endregion
     }
 }

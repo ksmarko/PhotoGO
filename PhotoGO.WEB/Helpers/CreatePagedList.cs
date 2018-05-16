@@ -13,5 +13,12 @@ namespace PhotoGO.WEB.Helpers
 
             return list.ToPagedList(pageNumber, pageSize);
         }
+
+        public static IEnumerable<T> Empty<T>() where T : class
+        {
+            List<T> list = new List<T>();
+
+            return list.ToPagedList(1, pageSize);
+        }
     }
 }

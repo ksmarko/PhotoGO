@@ -1,26 +1,46 @@
-﻿using PhotoGO.BLL.DTO;
-using PhotoGO.BLL.Interfaces;
-using PagedList;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using PhotoGO.BLL.DTO;
 using PhotoGO.WEB.Models;
+using PhotoGO.WEB.Helpers;
+using PhotoGO.BLL.Interfaces;
+using AutoMapper;
+using Web.Helpers;
 
 namespace PhotoGO.WEB.Controllers
 {
     public class ImagesController : Controller
     {
+        #region Fields
         readonly IImageService imageService;
         readonly IUserManager userManager;
 
+        UserDTO user;
+
+        UserDTO CurrentUser
+        {
+            get
+            {
+                if (user == null)
+                    user = userManager.GetUserByName(User.Identity.Name);
+                return user;
+            }
+        }
+        #endregion
+
+        #region Ctor
         public ImagesController(IImageService imageService, IUserManager userManager)
         {
             this.imageService = imageService;
             this.userManager = userManager;
         }
+        #endregion
 
+        #region Search
         public ActionResult Autocomplete(string term)
         {
             var items = imageService.GetTags();
@@ -33,40 +53,31 @@ namespace PhotoGO.WEB.Controllers
        
         public ActionResult Search(int? page, string tags)
         {
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
-            ViewBag.IsSearchResult = true;
-            ViewBag.IsManagement = false;
-            ViewBag.IsIndex = false;
-            ViewBag.IsFavourites = false;
-
             if (tags == null)
-                return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize));
+                return View("Index", CreatePagedList.Empty<ImageModel>());
 
-            tags = System.Text.RegularExpressions.Regex.Replace(tags, @"\s+", " ").Trim();
+            tags = Regex.Replace(tags, @"\s+", " ").Trim();
             var images = imageService.SearchImages(tags.Split(' '));
+
             ViewBag.Tag = tags;
+            SetPageRole(PageRole.Search);
 
             if (images == null)
-                return View("Index", new List<ImageModel> { }.ToPagedList(pageNumber, pageSize));
+                return View("Index", CreatePagedList.Empty<ImageModel>());
 
-            return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
+            return View("Index", CreatePagedList.From(FillImagesList(images), page));
         }
+        #endregion
 
+        #region Pages
         [Authorize]
         public ActionResult Favourites(int? page)
         {
-            var images = GetUser().LikedPictures;
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
-            ViewBag.IsSearchResult = false;
-            ViewBag.IsManagement = false;
-            ViewBag.IsIndex = false;
-            ViewBag.IsFavourites = true;
-
+            var images = CurrentUser.LikedPictures;
             images.Reverse();
+            SetPageRole(PageRole.Favourites);
 
-            return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
+            return View("Index", CreatePagedList.From(FillImagesList(images), page));
         }
 
         [Authorize(Roles = "admin, moderator")]
@@ -74,15 +85,9 @@ namespace PhotoGO.WEB.Controllers
         {
             var images = imageService.GetImages();
             images.Reverse();
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
-            ViewBag.Page = page;
-            ViewBag.IsSearchResult = false;
-            ViewBag.IsManagement = true;
-            ViewBag.IsIndex = false;
-            ViewBag.IsFavourites = false;
+            SetPageRole(PageRole.Management);
 
-            return View("Index", FillImagesList(images).ToPagedList(pageNumber, pageSize));
+            return View("Index", CreatePagedList.From(FillImagesList(images), page));
         }
 
         [Authorize]
@@ -92,20 +97,18 @@ namespace PhotoGO.WEB.Controllers
                 return new HttpNotFoundResult();
 
             var images = imageService.GetImages(albumId).ToList();
-            int pageSize = 12;
-            int pageNumber = (page ?? 1);
+
             ViewBag.AlbumId = albumId;
-            ViewBag.IsSearchResult = false;
-            ViewBag.IsManagement = false;
-            ViewBag.IsIndex = true;
-            ViewBag.IsFavourites = false;
-            ViewBag.Description = GetUser().Albums.Where(x => x.Id == albumId).FirstOrDefault().Description;
+            SetPageRole(PageRole.Index);
+            ViewBag.Description = CurrentUser.Albums.Where(x => x.Id == albumId).FirstOrDefault().Description;
 
             images.Reverse();
 
-            return View(FillImagesList(images).ToPagedList(pageNumber, pageSize));
+            return View(CreatePagedList.From(FillImagesList(images), page));
         }
+        #endregion
 
+        #region AddImage
         [HttpGet]
         [Authorize]
         public ActionResult AddImage(int albumId)
@@ -114,6 +117,7 @@ namespace PhotoGO.WEB.Controllers
                 return new HttpNotFoundResult();
 
             ViewBag.AlbumId = albumId;
+
             return PartialView();
         }
 
@@ -144,7 +148,9 @@ namespace PhotoGO.WEB.Controllers
 
             return Redirect($"/Images/Index?albumId={albumId}");
         }
+        #endregion
 
+        #region RemoveImage
         [HttpGet]
         [Authorize]
         public ActionResult RemoveImage(int id)
@@ -154,7 +160,7 @@ namespace PhotoGO.WEB.Controllers
             if (!IsUserImage(id))
                 return new HttpNotFoundResult();
 
-            var img = new ImageModel() { Id = el.Id, Img = el.Img };
+            var img = Mapper.Map<PictureDTO, ImageModel>(el);
 
             return PartialView(img);
         }
@@ -168,43 +174,34 @@ namespace PhotoGO.WEB.Controllers
 
             return Redirect($"/Images/Index?albumId={albumId}");
         }
+        #endregion
 
-        private List<ImageModel> FillImagesList(IEnumerable<PictureDTO> pictures)
-        {
-            var list = new List<ImageModel>();
-
-            foreach (var img in pictures)
-            {
-                list.Add(new ImageModel()
-                {
-                    Id = img.Id,
-                    Img = img.Img,
-                    Likes = img.FavouritedBy.Count,
-                    IsLiked = User.Identity.IsAuthenticated? imageService.IsLikedBy(GetUser().Id, img.Id) : false,
-                    IsMy = User.Identity.IsAuthenticated ? (IsUserImage(img.Id) ? true : false) : false,
-                    Tags = img.Tags.Select(x => x.Name).ToList()
-                });
-            }
-
-            return list;
-        }
-
+        #region LikeImage
         [Authorize]
         public int Like(int id)
         {
-            //BUG: if one user delete his image and another user like it 
-            //TODO: refresh data for all users (???)
+            imageService.LikeImage(id, CurrentUser.Id);
+            var img = imageService.GetImageById(id);
 
-            imageService.LikeImage(id, GetUser().Id);
-
-            return imageService.GetImageById(id).FavouritedBy.Count;
+            return img == null? 0 : img.FavouritedBy.Count;
         }
+        #endregion
 
+        #region Private
+        private List<ImageModel> FillImagesList(IEnumerable<PictureDTO> pictures)
+        {
+            var list = Mapper.Map<IEnumerable<PictureDTO>, IEnumerable<ImageModel>>(pictures).ToList();
+            list.ForEach(x => x.IsLiked = User.Identity.IsAuthenticated ? imageService.IsLikedBy(CurrentUser.Id, x.Id) : false);
+            list.ForEach(x => x.IsMy = User.Identity.IsAuthenticated ? (IsUserImage(x.Id) ? true : false) : false);
+
+            return list;
+        }
+        
         private bool IsUserImage(int imgId)
         {
             var el = imageService.GetImageById(imgId);
 
-            if (GetUser().Albums.Any(x => x.Id == el.AlbumId))
+            if (CurrentUser.Albums.Any(x => x.Id == el.AlbumId))
                 return true;
 
             return false;
@@ -212,15 +209,16 @@ namespace PhotoGO.WEB.Controllers
 
         private bool IsUserAlbum(int albumId)
         {
-            if (GetUser().Albums.Any(x => x.Id == albumId))
+            if (CurrentUser.Albums.Any(x => x.Id == albumId))
                 return true;
 
             return false;
         }
 
-        private UserDTO GetUser()
+        private void SetPageRole(PageRole role)
         {
-            return userManager.GetUsers().Where(x => x.UserName == User.Identity.Name).FirstOrDefault();
+            ViewData["PageRole"] = role.ToString();
         }
+        #endregion
     }
 }
