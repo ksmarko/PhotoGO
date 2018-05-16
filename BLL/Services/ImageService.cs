@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using BLL.DTO;
 using BLL.Interfaces;
-using DAL.Entities;
-using DAL.Interfaces;
+using PhotoGO.DAL.Entities;
+using PhotoGO.DAL.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 

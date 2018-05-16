@@ -1,5 +1,5 @@
 ﻿using BLL.DTO;
-using DAL.Entities;
+using PhotoGO.DAL.Entities;
 using AutoMapper;
 
 namespace BLL.Infrastructure

@@ -6,10 +6,10 @@ using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
-using DAL.Entities;
-using DAL.Identity.Entities;
-using DAL.Identity.Interfaces;
-using DAL.Interfaces;
+using PhotoGO.DAL.Entities;
+using PhotoGO.DAL.Identity.Entities;
+using PhotoGO.DAL.Identity.Interfaces;
+using PhotoGO.DAL.Interfaces;
 using Microsoft.AspNet.Identity;
 
 namespace BLL.Services

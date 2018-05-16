@@ -81,9 +81,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DAL\DAL.csproj">
+    <ProjectReference Include="..\PhotoGO.DAL\PhotoGO.DAL.csproj">
       <Project>{c714ee46-c801-4acd-9f43-c08d918306aa}</Project>
-      <Name>DAL</Name>
+      <Name>PhotoGO.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

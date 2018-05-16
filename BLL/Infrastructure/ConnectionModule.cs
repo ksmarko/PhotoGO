@@ -1,7 +1,7 @@
-﻿using DAL.Identity.Interfaces;
-using DAL.Identity.Repositories;
-using DAL.Interfaces;
-using DAL.Repositories;
+﻿using PhotoGO.DAL.Identity.Interfaces;
+using PhotoGO.DAL.Identity.Repositories;
+using PhotoGO.DAL.Interfaces;
+using PhotoGO.DAL.Repositories;
 using Ninject.Modules;
 
 namespace BLL.Infrastructure
