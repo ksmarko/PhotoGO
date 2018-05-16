@@ -31,6 +31,7 @@ namespace BLL.Services
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
             var user = await DatabaseIdentity.UserManager.FindByEmailAsync(userDto.Email);
+
             if (user == null)
             {
                 user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
@@ -43,12 +44,10 @@ namespace BLL.Services
                 User clientProfile = new User { Id = user.Id, Name = userDto.Name };
                 DatabaseIdentity.ClientManager.Create(clientProfile);
                 await DatabaseIdentity.SaveAsync();
-                return new OperationDetails(true, "Регистрация успешно пройдена", "");
+                return new OperationDetails(true, "Success register", "");
             }
             else
-            {
-                return new OperationDetails(false, "Пользователь с таким логином уже существует", "Email");
-            }
+                return new OperationDetails(false, "User with this login is already exist", "Email");
         }
 
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
@@ -72,7 +71,7 @@ namespace BLL.Services
                 UserName = appUser.UserName,
                 Name = appUser.User.Name,
                 Role = GetRoleForUser(appUser.Id),
-                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == appUser.Id)), 
+                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == appUser.Id)),
                 LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(appUser.Id).LikedPictures)
             };
 

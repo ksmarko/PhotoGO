@@ -9,13 +9,10 @@ namespace BLL.Infrastructure
     {
         public static void Configure(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateProfile("DALtoBLL", prf =>
-            {
-                prf.CreateMap<Album, AlbumDTO>();
-                prf.CreateMap<Picture, PictureDTO>();
-                prf.CreateMap<User, UserDTO>();
-                prf.CreateMap<Tag, TagDTO>();
-            });
+            cfg.CreateMap<Album, AlbumDTO>();
+            cfg.CreateMap<Picture, PictureDTO>();
+            cfg.CreateMap<User, UserDTO>();
+            cfg.CreateMap<Tag, TagDTO>();
         }
     }
 }
