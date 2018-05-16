@@ -1,19 +1,16 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
 using DAL.Entities;
-using DAL.Identity;
 using DAL.Identity.Entities;
 using DAL.Identity.Interfaces;
 using DAL.Interfaces;
 using Microsoft.AspNet.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -63,19 +60,7 @@ namespace BLL.Services
         public UserDTO GetUserByName(string name)
         {
             var appUser = DatabaseIdentity.UserManager.FindByName(name);
-
-            var user = new UserDTO()
-            {
-                Id = appUser.Id,
-                Email = appUser.Email,
-                UserName = appUser.UserName,
-                Name = appUser.User.Name,
-                Role = GetRoleForUser(appUser.Id),
-                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == appUser.Id)),
-                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(appUser.Id).LikedPictures)
-            };
-
-            return user;
+            return CreateUser(appUser);
         }
 
         public IEnumerable<UserDTO> GetUsers()
@@ -83,44 +68,24 @@ namespace BLL.Services
             var appUsers = DatabaseIdentity.UserManager.Users;
             var list = new List<UserDTO>();
 
-            foreach (var el in appUsers)
-            {
-                list.Add(new UserDTO()
-                {
-                    Id = el.Id,
-                    Email = el.Email,
-                    UserName = el.UserName,
-                    Name = el.User.Name,
-                    Role = GetRoleForUser(el.Id),
-                    Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == el.Id)),
-                    LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(el.Id).LikedPictures)
-                });
-            }
+            foreach (var appUser in appUsers)
+                list.Add(CreateUser(appUser));
 
             return list;
         }
 
-        public void EditRole(string userId, string newRoleName)
+        public async Task EditRole(string userId, string newRoleName)
         {
-            var user = DatabaseIdentity.UserManager.FindById(userId);
+            var user = await DatabaseIdentity.UserManager.FindByIdAsync(userId);
             var oldRole = GetRoleForUser(userId);
 
             if (oldRole != newRoleName)
             {
-                DatabaseIdentity.UserManager.RemoveFromRole(userId, oldRole);
-                DatabaseIdentity.UserManager.AddToRole(userId, newRoleName);
+                await DatabaseIdentity.UserManager.RemoveFromRoleAsync(userId, oldRole);
+                await DatabaseIdentity.UserManager.AddToRoleAsync(userId, newRoleName);
 
-                DatabaseIdentity.UserManager.Update(user);
+                await DatabaseIdentity.UserManager.UpdateAsync(user);
             }
-        }
-
-        private string GetRoleForUser(string id)
-        {
-            var user = DatabaseIdentity.UserManager.FindById(id);
-            var roleId = user.Roles.Where(x => x.UserId == user.Id).Single().RoleId;
-            var role = DatabaseIdentity.RoleManager.Roles.Where(x => x.Id == roleId).Single().Name;
-
-            return role;
         }
 
         public IEnumerable<string> GetRoles()
@@ -133,5 +98,31 @@ namespace BLL.Services
             DatabaseIdentity.Dispose();
             DatabaseDomain.Dispose();
         }
+
+        #region Private methods
+
+        private UserDTO CreateUser(ApplicationUser user)
+        {
+            return new UserDTO()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                Name = user.User.Name,
+                Role = GetRoleForUser(user.Id),
+                Albums = Mapper.Map<IEnumerable<Album>, ICollection<AlbumDTO>>(DatabaseDomain.Albums.Find(x => x.User.Id == user.Id)),
+                LikedPictures = Mapper.Map<ICollection<Picture>, ICollection<PictureDTO>>(DatabaseDomain.Users.Get(user.Id).LikedPictures)
+            };
+        }
+
+        private string GetRoleForUser(string id)
+        {
+            var user = DatabaseIdentity.UserManager.FindById(id);
+            var roleId = user.Roles.Where(x => x.UserId == user.Id).Single().RoleId;
+            var role = DatabaseIdentity.RoleManager.Roles.Where(x => x.Id == roleId).Single().Name;
+
+            return role;
+        }
+        #endregion
     }
 }

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Web.Models;
 
@@ -74,6 +73,7 @@ namespace Web.Controllers
         public ActionResult Manage(int? page)
         {
             var images = imageService.GetImages();
+            images.Reverse();
             int pageSize = 12;
             int pageNumber = (page ?? 1);
             ViewBag.Page = page;
@@ -127,11 +127,7 @@ namespace Web.Controllers
                 foreach (var file in model.Files)
                     if (file != null)
                     {
-                        string pic = System.IO.Path.GetFileName(file.FileName);
-                        string path = System.IO.Path.Combine(Server.MapPath("~/Media"), pic);
                         var tagsDto = new List<TagDTO>();
-
-                        file.SaveAs(path);
 
                         using (MemoryStream ms = new MemoryStream())
                         {

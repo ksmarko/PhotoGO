@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web.Models;
@@ -34,11 +35,11 @@ namespace Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public virtual ActionResult EditRoles(string id, string role)
+        public async Task<ActionResult> EditRoles(string id, string role)
         {
             if (ModelState.IsValid)
             {
-                userManager.EditRole(id, role);
+                await userManager.EditRole(id, role);
                 return RedirectToAction("Users");
             }
             return View();

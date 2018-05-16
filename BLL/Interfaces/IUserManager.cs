@@ -14,8 +14,8 @@ namespace BLL.Interfaces
 
         UserDTO GetUserByName(string name);
         IEnumerable<UserDTO> GetUsers();
-        IEnumerable<string> GetRoles();
 
-        void EditRole(string userId, string newRoleName);
+        IEnumerable<string> GetRoles();
+        Task EditRole(string userId, string newRoleName);
     }
 }
