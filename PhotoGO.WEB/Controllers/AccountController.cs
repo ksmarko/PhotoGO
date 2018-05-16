@@ -1,11 +1,12 @@
-﻿using PhotoGO.BLL.DTO;
+﻿using System.Web;
+using System.Web.Mvc;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using PhotoGO.BLL.DTO;
 using PhotoGO.BLL.Infrastructure;
 using PhotoGO.BLL.Interfaces;
 using Microsoft.Owin.Security;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
+
 using PhotoGO.WEB.Models;
 
 namespace PhotoGO.WEB.Controllers
@@ -21,6 +22,13 @@ namespace PhotoGO.WEB.Controllers
 
         public AccountController(IUserManager userManager) => this.userManager = userManager;
 
+        public ActionResult Logout()
+        {
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
+
+        #region Login
         public ActionResult Login()
         {
             return View();
@@ -47,13 +55,9 @@ namespace PhotoGO.WEB.Controllers
             }
             return View(model);
         }
-
-        public ActionResult Logout()
-        {
-            AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
-        }
-
+        #endregion
+        
+        #region Register
         public ActionResult Register()
         {
             return View();
@@ -84,5 +88,6 @@ namespace PhotoGO.WEB.Controllers
             }
             return View(model);
         }
+        #endregion
     }
 }
