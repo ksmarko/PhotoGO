@@ -1,9 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using PhotoGO.BLL.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using PhotoGO.WEB.Models;
 
 namespace PhotoGO.WEB.Binding

@@ -1,10 +1,6 @@
-﻿using PhotoGO.BLL.Interfaces;
+﻿using Ninject.Modules;
+using PhotoGO.BLL.Interfaces;
 using PhotoGO.BLL.Services;
-using Ninject.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace PhotoGO.WEB.Binding
 {

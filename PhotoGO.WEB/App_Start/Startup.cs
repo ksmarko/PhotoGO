@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Owin;
 using Microsoft.Owin;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
-using Owin;
 
 [assembly: OwinStartup(typeof(PhotoGO.WEB.App_Start.Startup))]
 
