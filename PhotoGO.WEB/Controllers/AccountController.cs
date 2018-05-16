@@ -6,27 +6,32 @@ using PhotoGO.BLL.DTO;
 using PhotoGO.BLL.Infrastructure;
 using PhotoGO.BLL.Interfaces;
 using Microsoft.Owin.Security;
-
 using PhotoGO.WEB.Models;
 
 namespace PhotoGO.WEB.Controllers
 {
     public class AccountController : Controller
     {
+        #region Fields
         readonly IUserManager userManager;
 
         private IAuthenticationManager AuthenticationManager
         {
             get => HttpContext.GetOwinContext().Authentication;
         }
+        #endregion
 
+        #region Ctor
         public AccountController(IUserManager userManager) => this.userManager = userManager;
+        #endregion
 
+        #region Logout
         public ActionResult Logout()
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
+        #endregion
 
         #region Login
         public ActionResult Login()
