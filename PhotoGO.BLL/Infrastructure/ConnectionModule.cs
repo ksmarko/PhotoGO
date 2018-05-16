@@ -4,7 +4,7 @@ using PhotoGO.DAL.Interfaces;
 using PhotoGO.DAL.Repositories;
 using Ninject.Modules;
 
-namespace BLL.Infrastructure
+namespace PhotoGO.BLL.Infrastructure
 {
     public class ConnectionModule : NinjectModule
     {

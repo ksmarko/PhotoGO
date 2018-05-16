@@ -1,8 +1,8 @@
-﻿using BLL.DTO;
+﻿using PhotoGO.BLL.DTO;
 using PhotoGO.DAL.Entities;
 using AutoMapper;
 
-namespace BLL.Infrastructure
+namespace PhotoGO.BLL.Infrastructure
 {
     public class AutoMapperConfig
     {

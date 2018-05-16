@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
-using BLL.DTO;
-using BLL.Interfaces;
+using PhotoGO.BLL.DTO;
+using PhotoGO.BLL.Interfaces;
 using PhotoGO.DAL.Entities;
 using PhotoGO.DAL.Interfaces;
 
-namespace BLL.Services
+namespace PhotoGO.BLL.Services
 {
     public class AlbumService : IAlbumService
     {

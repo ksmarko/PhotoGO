@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BLL.DTO;
-using BLL.Interfaces;
+using PhotoGO.BLL.DTO;
+using PhotoGO.BLL.Interfaces;
 using PagedList;
 using System;
 using System.Collections.Generic;

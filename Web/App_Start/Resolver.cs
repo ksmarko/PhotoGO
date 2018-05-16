@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BLL.Infrastructure;
+using PhotoGO.BLL.Infrastructure;
 using Microsoft.Owin;
 using Ninject;
 using Ninject.Modules;
@@ -19,7 +19,7 @@ namespace Web.App_Start
         {
             Mapper.Initialize(cfg =>
             {
-                BLL.Infrastructure.AutoMapperConfig.Configure(cfg);
+                PhotoGO.BLL.Infrastructure.AutoMapperConfig.Configure(cfg);
                 Web.Binding.AutoMapperConfig.Configure(cfg);
             });
 

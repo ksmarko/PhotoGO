@@ -1,4 +1,4 @@
-﻿namespace BLL.Infrastructure
+﻿namespace PhotoGO.BLL.Infrastructure
 {
     public class OperationDetails
     {

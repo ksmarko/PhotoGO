@@ -1,4 +1,4 @@
-﻿using BLL.Interfaces;
+﻿using PhotoGO.BLL.Interfaces;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;

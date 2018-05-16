@@ -1,7 +1,7 @@
-﻿using BLL.DTO;
+﻿using PhotoGO.BLL.DTO;
 using System.Collections.Generic;
 
-namespace BLL.Interfaces
+namespace PhotoGO.BLL.Interfaces
 {
     public interface IImageService
     {

@@ -1,6 +1,6 @@
-﻿using BLL.DTO;
+﻿using PhotoGO.BLL.DTO;
 
-namespace BLL.Interfaces
+namespace PhotoGO.BLL.Interfaces
 {
     public interface IAlbumService
     {

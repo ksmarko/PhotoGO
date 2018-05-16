@@ -1,11 +1,11 @@
-﻿using BLL.DTO;
-using BLL.Infrastructure;
+﻿using PhotoGO.BLL.DTO;
+using PhotoGO.BLL.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace BLL.Interfaces
+namespace PhotoGO.BLL.Interfaces
 {
     public interface IUserManager : IDisposable
     {

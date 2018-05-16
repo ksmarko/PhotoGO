@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using BLL.DTO;
-using BLL.Infrastructure;
-using BLL.Interfaces;
+using PhotoGO.BLL.DTO;
+using PhotoGO.BLL.Infrastructure;
+using PhotoGO.BLL.Interfaces;
 using PhotoGO.DAL.Entities;
 using PhotoGO.DAL.Identity.Entities;
 using PhotoGO.DAL.Identity.Interfaces;
 using PhotoGO.DAL.Interfaces;
 using Microsoft.AspNet.Identity;
 
-namespace BLL.Services
+namespace PhotoGO.BLL.Services
 {
     public class UserManager : IUserManager
     {

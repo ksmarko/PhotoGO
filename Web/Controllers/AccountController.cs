@@ -1,6 +1,6 @@
-﻿using BLL.DTO;
-using BLL.Infrastructure;
-using BLL.Interfaces;
+﻿using PhotoGO.BLL.DTO;
+using PhotoGO.BLL.Infrastructure;
+using PhotoGO.BLL.Interfaces;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System;

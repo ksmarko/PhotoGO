@@ -1,4 +1,4 @@
-﻿using BLL.Infrastructure;
+﻿using PhotoGO.BLL.Infrastructure;
 using Ninject;
 using Ninject.Modules;
 using Ninject.Web.Mvc;

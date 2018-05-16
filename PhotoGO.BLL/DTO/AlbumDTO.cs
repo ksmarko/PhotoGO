@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BLL.DTO
+namespace PhotoGO.BLL.DTO
 {
     public class AlbumDTO
     {
