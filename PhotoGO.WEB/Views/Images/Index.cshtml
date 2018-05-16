@@ -109,6 +109,7 @@
     }
     else if (ViewBag.IsFavourites)
     {
+        <div id="fav" style="display: none"/>
         @Html.PagedListPager(Model, page => Url.Action("Favourites", "Images", new { page }))
     }
 

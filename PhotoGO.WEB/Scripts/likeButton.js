@@ -8,10 +8,14 @@
                 var color;
 
                 if (before < data) {
-                    color = '#cf0020'
+                    color = '#cf0020';
                 }
                 else {
-                    color = '#000000';                    
+                    color = '#000000';
+
+                    if (document.getElementById("fav") !== null)
+                        $(btn).parentsUntil(".col-md-2").remove();
+                    
                 }
 
                 $(counter).fadeOut(function () {
@@ -19,7 +23,7 @@
                     $(this).text(data);
                     $(this).fadeIn();
                 });
-            })            
+            });            
         });
     }
 });

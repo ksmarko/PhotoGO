@@ -1,11 +1,7 @@
 ﻿using PhotoGO.BLL.DTO;
 using PhotoGO.BLL.Infrastructure;
 using PhotoGO.BLL.Interfaces;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -38,17 +34,14 @@ namespace PhotoGO.WEB.Controllers
             {
                 UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
                 ClaimsIdentity claim = await userManager.Authenticate(userDto);
+
                 if (claim == null)
-                {
                     ModelState.AddModelError("", "Invalid login or password");
-                }
                 else
                 {
                     AuthenticationManager.SignOut();
-                    AuthenticationManager.SignIn(new AuthenticationProperties
-                    {
-                        IsPersistent = true
-                    }, claim);
+                    AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, claim);
+
                     return RedirectToAction("Index", "Home");
                 }
             }
