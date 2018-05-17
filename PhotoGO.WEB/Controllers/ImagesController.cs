@@ -83,10 +83,9 @@ namespace PhotoGO.WEB.Controllers
         public ActionResult Manage(int? page)
         {
             var images = imageService.GetImages();
-            images.Reverse();
             SetPageRole(PageRole.Management);
 
-            return View("Index", CreatePagedList.From(FillImagesList(images), page));
+            return View("Index", CreatePagedList.From(FillImagesList(images.Reverse()), page));
         }
 
         [Authorize]
