@@ -7,15 +7,30 @@ using PhotoGO.DAL.Interfaces;
 
 namespace PhotoGO.BLL.Services
 {
+    /// <summary>
+    /// Service for work with albums
+    /// </summary>
     public class AlbumService : IAlbumService
     {
+        /// <summary>
+        /// Represents domain database
+        /// </summary>
         IUnitOfWork Database { get; set; }
 
+        /// <summary>
+        /// Creates service
+        /// </summary>
+        /// <param name="uow">UnitOfWork</param>
         public AlbumService(IUnitOfWork uow)
         {
             Database = uow;
         }
 
+        /// <summary>
+        /// Search album in database by id
+        /// </summary>
+        /// <param name="id">Album id</param>
+        /// <returns>Returns album if it exist or null if doesn't</returns>
         public AlbumDTO GetAlbumById(int id)
         {
             var album = Database.Albums.Get(id);
@@ -23,6 +38,11 @@ namespace PhotoGO.BLL.Services
             return Mapper.Map<Album, AlbumDTO>(album);
         }
 
+        /// <summary>
+        /// Creates new album
+        /// </summary>
+        /// <param name="item">Album</param>
+        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
         public bool AddAlbum(AlbumDTO item)
         {
             if (item == null)
@@ -47,6 +67,11 @@ namespace PhotoGO.BLL.Services
             return true;
         }
 
+        /// <summary>
+        /// Removes album and its images from database
+        /// </summary>
+        /// <param name="id">Album id</param>
+        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
         public bool RemoveAlbum(int id)
         {
             var album = Database.Albums.Get(id);
@@ -59,6 +84,11 @@ namespace PhotoGO.BLL.Services
             return true;
         }
 
+        /// <summary>
+        /// Shanges album name and/or description
+        /// </summary>
+        /// <param name="item">Album with new data</param>
+        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
         public bool EditAlbum(AlbumDTO item)
         {
             if (item == null)

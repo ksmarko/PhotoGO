@@ -4,6 +4,10 @@ using AutoMapper;
 
 namespace PhotoGO.BLL.Infrastructure
 {
+    /// <summary>
+    /// AutoMapper configuration
+    /// </summary>
+    /// <remarks>Mapps entities between DAL and BLL</remarks>
     public class AutoMapperConfig
     {
         public static void Configure(IMapperConfigurationExpression cfg)

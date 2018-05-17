@@ -14,17 +14,37 @@ using Microsoft.AspNet.Identity;
 
 namespace PhotoGO.BLL.Services
 {
+    /// <summary>
+    /// Service for work with users
+    /// </summary>
     public class UserManager : IUserManager
     {
+        /// <summary>
+        /// Represents database for identity
+        /// </summary>
         IUnitOfWorkIdentity DatabaseIdentity { get; set; }
+
+        /// <summary>
+        /// Represents domain database
+        /// </summary>
         IUnitOfWork DatabaseDomain { get; set; }
 
+        /// <summary>
+        /// Creates service
+        /// </summary>
+        /// <param name="uowi">Identity UnitOfWork</param>
+        /// <param name="uow">UnitOfWork</param>
         public UserManager(IUnitOfWorkIdentity uowi, IUnitOfWork uow)
         {
             DatabaseIdentity = uowi;
             DatabaseDomain = uow;
         }
 
+        /// <summary>
+        /// Creates user
+        /// </summary>
+        /// <param name="userDto">User to create</param>
+        /// <returns>Returns operation details</returns>
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
             var user = await DatabaseIdentity.UserManager.FindByEmailAsync(userDto.Email);
@@ -47,6 +67,11 @@ namespace PhotoGO.BLL.Services
                 return new OperationDetails(false, "User with this login is already exist", "Email");
         }
 
+        /// <summary>
+        /// Authenticates user
+        /// </summary>
+        /// <param name="userDto">User</param>
+        /// <returns>Returns claims identity</returns>
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
         {
             ClaimsIdentity claim = null;
@@ -57,23 +82,38 @@ namespace PhotoGO.BLL.Services
             return claim;
         }
 
+        /// <summary>
+        /// Gets user by its name
+        /// </summary>
+        /// <param name="name">User name</param>
+        /// <returns>Returns user</returns>
         public UserDTO GetUserByName(string name)
         {
             var appUser = DatabaseIdentity.UserManager.FindByName(name);
-            return CreateUser(appUser);
+            return CreateUserDTO(appUser);
         }
 
+        /// <summary>
+        /// Gets all users
+        /// </summary>
+        /// <returns>Returns list of users</returns>
         public IEnumerable<UserDTO> GetUsers()
         {
             var appUsers = DatabaseIdentity.UserManager.Users;
             var list = new List<UserDTO>();
 
             foreach (var appUser in appUsers)
-                list.Add(CreateUser(appUser));
+                list.Add(CreateUserDTO(appUser));
 
             return list;
         }
 
+        /// <summary>
+        /// Edit user roles
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="newRoleName">Name of new role</param>
+        /// <returns></returns>
         public async Task EditRole(string userId, string newRoleName)
         {
             var user = await DatabaseIdentity.UserManager.FindByIdAsync(userId);
@@ -88,6 +128,10 @@ namespace PhotoGO.BLL.Services
             }
         }
 
+        /// <summary>
+        /// Gets all roles
+        /// </summary>
+        /// <returns>Returns list of roles</returns>
         public IEnumerable<string> GetRoles()
         {
             return DatabaseIdentity.RoleManager.Roles.Select(x => x.Name);
@@ -100,8 +144,7 @@ namespace PhotoGO.BLL.Services
         }
 
         #region Private methods
-
-        private UserDTO CreateUser(ApplicationUser user)
+        private UserDTO CreateUserDTO(ApplicationUser user)
         {
             return new UserDTO()
             {

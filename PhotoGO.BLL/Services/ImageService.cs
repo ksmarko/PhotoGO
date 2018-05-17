@@ -8,23 +8,37 @@ using System.Linq;
 
 namespace PhotoGO.BLL.Services
 {
+    /// <summary>
+    /// Service for work with Images and tags
+    /// </summary>
     public class ImageService : IImageService
     {
+        /// <summary>
+        /// Represents domain database
+        /// </summary>
         IUnitOfWork Database { get; set; }
 
+        /// <summary>
+        /// Creates service
+        /// </summary>
+        /// <param name="uow">UnitOfWork</param>
         public ImageService(IUnitOfWork uow)
         {
             Database = uow;
         }
 
+        /// <summary>
+        /// Gets images from album
+        /// </summary>
+        /// <param name="albumId">album id</param>
+        /// <returns>Returns list of images</returns>
         public IEnumerable<PictureDTO> GetImages(int albumId)
         {
             var list = Database.Pictures.Find(x => x.AlbumId == albumId);
+            var res = new List<PictureDTO>();
 
             if (list == null)
-                return null;
-
-            var res = new List<PictureDTO>();
+                return res;            
 
             foreach (var el in list)
                 res.Add(new PictureDTO()
@@ -39,6 +53,11 @@ namespace PhotoGO.BLL.Services
             return res;
         }
 
+        /// <summary>
+        /// Adds image into album
+        /// </summary>
+        /// <param name="item">Image</param>
+        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
         public bool AddImage(PictureDTO item)
         {
             if (item == null)
@@ -63,7 +82,12 @@ namespace PhotoGO.BLL.Services
             Database.Save();
             return true;
         }
-        
+
+        /// <summary>
+        /// Removes image from album
+        /// </summary>
+        /// <param name="id">Image id</param>
+        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
         public bool RemoveImage(int id)
         {
             var img = Database.Pictures.Get(id);
@@ -75,6 +99,12 @@ namespace PhotoGO.BLL.Services
             return true;
         }
 
+        /// <summary>
+        /// Adds tags to the image
+        /// </summary>
+        /// <param name="imgId">Image id</param>
+        /// <param name="tags">Set of tags</param>
+        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
         public bool AddTags(int imgId, params string[] tags)
         {
             var img = Database.Pictures.Get(imgId);
@@ -95,12 +125,22 @@ namespace PhotoGO.BLL.Services
             return true;
         }
 
+        /// <summary>
+        /// Gets image by its id
+        /// </summary>
+        /// <param name="id">Image id</param>
+        /// <returns>Returns image if it exist or null if doesn't</returns>
         public PictureDTO GetImageById(int id)
         {
             var img = Database.Pictures.Get(id);            
             return Mapper.Map<Picture, PictureDTO>(img);
         }
 
+        /// <summary>
+        /// Search images by tags
+        /// </summary>
+        /// <param name="tags">set of tags</param>
+        /// <returns>Returns list of images with specified tags</returns>
         public IEnumerable<PictureDTO> SearchImages(params string[] tags)
         {
             var pictures = new List<Picture>();
@@ -115,7 +155,8 @@ namespace PhotoGO.BLL.Services
 
                 var t = Database.Tags.Find(x => x.Name.ToLower() == tag.ToLower()).FirstOrDefault();
 
-                if (t == null || t.Pictures.Count == 0) //if tag do not exist or do not have images
+                //if tag do not exist or do not have images
+                if (t == null || t.Pictures.Count == 0) 
                 {
                     pictures.Clear();
                     break;
@@ -130,17 +171,31 @@ namespace PhotoGO.BLL.Services
             return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(pictures);
         }
 
+        /// <summary>
+        /// Gets all tags
+        /// </summary>
+        /// <returns>Returns array of tags</returns>
         public string[] GetTags()
         {
             var tags = Database.Tags.GetAll().Select(x => x.Name).ToArray();
             return tags;
         }
 
+        /// <summary>
+        /// Gets all images
+        /// </summary>
+        /// <returns>Returns list of images</returns>
         public IEnumerable<PictureDTO> GetImages()
         {
             return Mapper.Map<IEnumerable<Picture>, IEnumerable<PictureDTO>>(Database.Pictures.GetAll());
         }
 
+        /// <summary>
+        /// If image is liked by user
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <param name="imgId">Image id</param>
+        /// <returns>Returns true if image is liked by user and false if isn't</returns>
         public bool IsLikedBy(string id, int imgId)
         {
             if (Database.Users.Get(id).LikedPictures.Any(x => x.Id == imgId))
@@ -149,6 +204,12 @@ namespace PhotoGO.BLL.Services
             return false;
         }
 
+        /// <summary>
+        /// Likes or dislikes image by user
+        /// </summary>
+        /// <param name="id">Image id</param>
+        /// <param name="userId">User id</param>
+        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
         public bool LikeImage(int id, string userId)
         {
             var img = Database.Pictures.Get(id);

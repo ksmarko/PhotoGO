@@ -1,5 +1,8 @@
 ﻿namespace PhotoGO.BLL.Infrastructure
 {
+    /// <summary>
+    /// Represents results for operations with users
+    /// </summary>
     public class OperationDetails
     {
         public OperationDetails(bool succedeed, string message, string prop)

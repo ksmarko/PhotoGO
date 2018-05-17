@@ -6,6 +6,9 @@ using Ninject.Modules;
 
 namespace PhotoGO.BLL.Infrastructure
 {
+    /// <summary>
+    /// Ninject module for UnitOfWork binding 
+    /// </summary>
     public class ConnectionModule : NinjectModule
     {
         private string connectionString;
