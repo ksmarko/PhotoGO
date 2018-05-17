@@ -40,14 +40,12 @@ $.widget("ui.autocomplete", $.ui.autocomplete, {
                         prev.remove();
                     }
                 },
-                // TODO: Implement outline of container
                 "focus.autocomplete blur.autocomplete": function(){
                     self.multiselect.toggleClass("ui-state-active");
                 },
                 "keypress.autocomplete change.autocomplete focus.autocomplete blur.autocomplete": autoSize
             }).trigger("change");
 
-            // TODO: There's a better way?
             o.select = o.select || function(e, ui) {
                 $("<div></div>")
                     .addClass("ui-autocomplete-multiselect-item")

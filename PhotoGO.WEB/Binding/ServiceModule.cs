@@ -4,6 +4,9 @@ using PhotoGO.BLL.Services;
 
 namespace PhotoGO.WEB.Binding
 {
+    /// <summary>
+    /// Binding for BLL services
+    /// </summary>
     public class ServiceModule : NinjectModule
     {
         public override void Load()

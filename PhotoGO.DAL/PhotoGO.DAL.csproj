@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EF\DataContext.cs" />
+    <Compile Include="EF\DbInitializer.cs" />
     <Compile Include="Entities\Album.cs" />
     <Compile Include="Entities\Picture.cs" />
     <Compile Include="Entities\Tag.cs" />

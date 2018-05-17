@@ -10,9 +10,6 @@ namespace PhotoGO.DAL.Migrations
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(DataContext context)
-        {
-
-        }
+        protected override void Seed(DataContext context) { }
     }
 }

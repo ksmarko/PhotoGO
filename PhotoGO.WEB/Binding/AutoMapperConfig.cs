@@ -5,6 +5,10 @@ using PhotoGO.WEB.Models;
 
 namespace PhotoGO.WEB.Binding
 {
+    /// <summary>
+    /// AutoMapper configuration
+    /// </summary>
+    /// <remarks>Mapps entities between BLL and PL</remarks>
     public class AutoMapperConfig
     {
         public static void Configure(IMapperConfigurationExpression cfg)
