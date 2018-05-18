@@ -18,14 +18,16 @@ namespace PhotoGO.WEB.Controllers
         #region Fields
         readonly IAlbumService albumService;
         readonly IUserManager userManager;
+
         UserDTO user;
 
-        UserDTO CurrentUser
+        public UserDTO CurrentUser
         {
             get
             {
                 if (user == null)
                     user = userManager.GetUserByName(User.Identity.Name);
+
                 return user;
             }
         }
@@ -38,10 +40,10 @@ namespace PhotoGO.WEB.Controllers
             this.userManager = userManager;
         }
         #endregion
-
+        
         #region Main
         public ActionResult Index(int? page)
-        {
+        { 
             var albums = CurrentUser.Albums;
             var list = Mapper.Map<IEnumerable<AlbumDTO>, ICollection<AlbumModel>>(albums.Reverse());
             FileHelper.SetDefaultImage(ref list);

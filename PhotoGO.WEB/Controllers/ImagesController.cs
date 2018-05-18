@@ -9,6 +9,7 @@ using PhotoGO.WEB.Models;
 using PhotoGO.WEB.Helpers;
 using PhotoGO.BLL.Interfaces;
 using AutoMapper;
+using PhotoGO.BLL.Exceptions;
 
 namespace PhotoGO.WEB.Controllers
 {
@@ -142,7 +143,14 @@ namespace PhotoGO.WEB.Controllers
                             foreach (var el in model.Tags.Split(' '))
                                 tagsDto.Add(new TagDTO() { Name = el.Trim() });
 
-                        imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto, AlbumId = albumId });
+                        try
+                        {
+                            imageService.AddImage(new PictureDTO() { Img = array, Tags = tagsDto, AlbumId = albumId });
+                        }
+                        catch (TargetNotFoundException)
+                        {
+                            return new HttpNotFoundResult();
+                        }
                     }
 
             return Redirect($"/Images/Index?albumId={albumId}");
@@ -154,24 +162,37 @@ namespace PhotoGO.WEB.Controllers
         [Authorize]
         public ActionResult RemoveImage(int id)
         {
-            var el = imageService.GetImageById(id);
-
             if (!IsUserImage(id))
                 return new HttpNotFoundResult();
 
-            var img = Mapper.Map<PictureDTO, ImageModel>(el);
+            try
+            {
+                var el = imageService.GetImageById(id);
+                var img = Mapper.Map<PictureDTO, ImageModel>(el);
 
-            return PartialView(img);
+                return PartialView(img);
+            }
+            catch (TargetNotFoundException)
+            {
+                return new HttpNotFoundResult();
+            }
         }
 
         [Authorize]
         [HttpPost, ActionName("RemoveImage")]
         public ActionResult RemoveImageConfirmed(int id)
         {
-            var albumId = imageService.GetImageById(id).AlbumId;
-            imageService.RemoveImage(id);
+            try
+            {
+                var albumId = imageService.GetImageById(id).AlbumId;
+                imageService.RemoveImage(id);
 
-            return Redirect($"/Images/Index?albumId={albumId}");
+                return Redirect($"/Images/Index?albumId={albumId}");
+            }
+            catch (TargetNotFoundException)
+            {
+                return new HttpNotFoundResult();
+            }            
         }
         #endregion
 
@@ -179,10 +200,17 @@ namespace PhotoGO.WEB.Controllers
         [Authorize]
         public int Like(int id)
         {
-            imageService.LikeImage(id, CurrentUser.Id);
-            var img = imageService.GetImageById(id);
+            try
+            {
+                imageService.LikeImage(id, CurrentUser.Id);
+                var img = imageService.GetImageById(id);
 
-            return img == null? 0 : img.FavouritedBy.Count;
+                return img == null ? 0 : img.FavouritedBy.Count;
+            }
+            catch (TargetNotFoundException)
+            {
+                return 0;
+            }
         }
         #endregion
 
@@ -198,10 +226,15 @@ namespace PhotoGO.WEB.Controllers
         
         private bool IsUserImage(int imgId)
         {
-            var el = imageService.GetImageById(imgId);
+            try
+            {
+                var el = imageService.GetImageById(imgId);
 
-            if (CurrentUser.Albums.Any(x => x.Id == el.AlbumId))
-                return true;
+                if (CurrentUser.Albums.Any(x => x.Id == el.AlbumId))
+                    return true;
+            }
+            catch (TargetNotFoundException)
+            { }
 
             return false;
         }

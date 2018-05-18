@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /Web/Media
+*.mdf
+PhotoGO.WEB/App_Data/PhotoGO.mdf

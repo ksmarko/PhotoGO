@@ -7,6 +7,7 @@ using AutoMapper;
 using PhotoGO.BLL.DTO;
 using PhotoGO.WEB.Models;
 using PhotoGO.BLL.Interfaces;
+using PhotoGO.BLL.Exceptions;
 
 namespace PhotoGO.WEB.Controllers
 {
@@ -40,7 +41,16 @@ namespace PhotoGO.WEB.Controllers
         public async Task<ActionResult> EditRoles(string id, string role)
         {
             if (ModelState.IsValid)
-                await userManager.EditRole(id, role);
+            {
+                try
+                {
+                    await userManager.EditRole(id, role);
+                }
+                catch (UserNotFoundException e)
+                {
+                    return new HttpNotFoundResult();
+                }
+            }
 
             return RedirectToAction("Users");
         }
@@ -50,12 +60,18 @@ namespace PhotoGO.WEB.Controllers
         [Authorize(Roles = "admin, moderator")]
         public ActionResult AddTags(int imgId)
         {
-            var tags = imageService.GetImageById(imgId).Tags;
-            string res = string.Join(" ", tags.Select(x => x.Name));
-
-            ViewBag.ImgId = imgId;
-            var model = new TagsModel() { Tags = res };
-
+            var model = new TagsModel();
+            try
+            {
+                var tags = imageService.GetImageById(imgId).Tags;
+                string res = string.Join(" ", tags.Select(x => x.Name));
+                ViewBag.ImgId = imgId;
+                model.Tags = res;
+            }
+            catch (TargetNotFoundException e)
+            {
+                return new HttpNotFoundResult();
+            }
             return PartialView(model);
         }
 
@@ -64,7 +80,14 @@ namespace PhotoGO.WEB.Controllers
         public ActionResult AddTags(TagsModel model, int imgId)
         {
             if (ModelState.IsValid)
-                imageService.AddTags(imgId, Regex.Replace(model.Tags, @"\s+", " ").Trim().Split(' ').ToArray());
+                try
+                {
+                    imageService.AddTags(imgId, Regex.Replace(model.Tags, @"\s+", " ").Trim().Split(' ').ToArray());
+                }
+                catch (TargetNotFoundException)
+                {
+                    return new HttpNotFoundResult();
+                }
 
             return Redirect("/Images/Manage");
         }

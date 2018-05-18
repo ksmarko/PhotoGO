@@ -96,7 +96,7 @@ namespace PhotoGO.BLL.Services
         /// <returns>Returns user</returns>
         public UserDTO GetUserByName(string name)
         {
-            var appUser = DatabaseIdentity.UserManager.FindByName(name);
+            ApplicationUser appUser = DatabaseIdentity.UserManager.FindByName(name);
 
             if (appUser == null)
                 throw new UserNotFoundException();
