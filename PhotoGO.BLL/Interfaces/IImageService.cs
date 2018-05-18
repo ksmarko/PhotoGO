@@ -4,6 +4,9 @@ using PhotoGO.BLL.DTO;
 
 namespace PhotoGO.BLL.Interfaces
 {
+    /// <summary>
+    /// Service for work with Images and tags
+    /// </summary>
     public interface IImageService : IDisposable
     {
         /// <summary>

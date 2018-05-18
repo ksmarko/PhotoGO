@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace PhotoGO.BLL.Interfaces
 {
+    /// <summary>
+    /// Service for work with users
+    /// </summary>
     public interface IUserManager : IDisposable
     {
         /// <summary>
