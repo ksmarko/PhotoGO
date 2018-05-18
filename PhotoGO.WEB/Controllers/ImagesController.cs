@@ -45,6 +45,7 @@ namespace PhotoGO.WEB.Controllers
             var items = imageService.GetTags();
             term = term.Substring(term.LastIndexOf(' ') + 1);
             List<string> filteredItems = items.Where(item => item.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0 ).ToList();
+            filteredItems.RemoveAll(x => string.IsNullOrEmpty(x.Trim()));
             filteredItems.Sort();
 
             return Json(filteredItems, JsonRequestBehavior.AllowGet);

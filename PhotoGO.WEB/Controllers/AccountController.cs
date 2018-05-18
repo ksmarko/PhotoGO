@@ -79,8 +79,8 @@ namespace PhotoGO.WEB.Controllers
                     Email = model.Email,
                     Password = model.Password,
                     Name = model.Name,
-                    Role = "user"
                 };
+
                 OperationDetails operationDetails = await userManager.Create(userDto);
                 if (operationDetails.Succedeed)
                 {

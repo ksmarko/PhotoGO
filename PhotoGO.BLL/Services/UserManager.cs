@@ -57,7 +57,7 @@ namespace PhotoGO.BLL.Services
                 if (result.Errors.Count() > 0)
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
 
-                await DatabaseIdentity.UserManager.AddToRoleAsync(user.Id, userDto.Role);
+                await DatabaseIdentity.UserManager.AddToRoleAsync(user.Id, "user");
                 User clientProfile = new User { Id = user.Id, Name = userDto.Name };
                 DatabaseIdentity.ClientManager.Create(clientProfile);
                 await DatabaseIdentity.SaveAsync();
