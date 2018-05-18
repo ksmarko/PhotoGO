@@ -30,6 +30,7 @@ namespace PhotoGO.BLL.Interfaces
         /// Gets user by its name
         /// </summary>
         /// <param name="name">User name</param>
+        /// <exception cref="UserNotFoundException">When User not found</exception>
         /// <returns>Returns user</returns>
         UserDTO GetUserByName(string name);
 
@@ -50,6 +51,7 @@ namespace PhotoGO.BLL.Interfaces
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="newRoleName">Name of new role</param>
+        /// <exception cref="UserNotFoundException">When user not found</exception>
         /// <returns></returns>
         Task EditRole(string userId, string newRoleName);
     }

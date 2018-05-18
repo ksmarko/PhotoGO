@@ -11,6 +11,8 @@ using PhotoGO.DAL.Identity.Entities;
 using PhotoGO.DAL.Identity.Interfaces;
 using PhotoGO.DAL.Interfaces;
 using Microsoft.AspNet.Identity;
+using System;
+using PhotoGO.BLL.Exceptions;
 
 namespace PhotoGO.BLL.Services
 {
@@ -34,8 +36,12 @@ namespace PhotoGO.BLL.Services
         /// </summary>
         /// <param name="uowi">Identity UnitOfWork</param>
         /// <param name="uow">UnitOfWork</param>
+        /// <exception cref="ArgumentNullException"/>
         public UserManager(IUnitOfWorkIdentity uowi, IUnitOfWork uow)
         {
+            if (uow == null || uowi == null)
+                throw new ArgumentNullException();
+
             DatabaseIdentity = uowi;
             DatabaseDomain = uow;
         }
@@ -86,10 +92,15 @@ namespace PhotoGO.BLL.Services
         /// Gets user by its name
         /// </summary>
         /// <param name="name">User name</param>
+        /// <exception cref="UserNotFoundException">When User not found</exception>
         /// <returns>Returns user</returns>
         public UserDTO GetUserByName(string name)
         {
             var appUser = DatabaseIdentity.UserManager.FindByName(name);
+
+            if (appUser == null)
+                throw new UserNotFoundException();
+
             return CreateUserDTO(appUser);
         }
 
@@ -102,8 +113,9 @@ namespace PhotoGO.BLL.Services
             var appUsers = DatabaseIdentity.UserManager.Users;
             var list = new List<UserDTO>();
 
-            foreach (var appUser in appUsers)
-                list.Add(CreateUserDTO(appUser));
+            if (appUsers != null)
+                foreach (var appUser in appUsers)
+                    list.Add(CreateUserDTO(appUser));
 
             return list;
         }
@@ -113,10 +125,15 @@ namespace PhotoGO.BLL.Services
         /// </summary>
         /// <param name="userId">User id</param>
         /// <param name="newRoleName">Name of new role</param>
+        /// <exception cref="UserNotFoundException">When user not found</exception>
         /// <returns></returns>
         public async Task EditRole(string userId, string newRoleName)
         {
             var user = await DatabaseIdentity.UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new UserNotFoundException();
+
             var oldRole = GetRoleForUser(userId);
 
             if (oldRole != newRoleName)

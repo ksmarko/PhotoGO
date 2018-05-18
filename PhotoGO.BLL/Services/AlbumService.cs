@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using PhotoGO.BLL.DTO;
+using PhotoGO.BLL.Enums;
+using PhotoGO.BLL.Exceptions;
 using PhotoGO.BLL.Interfaces;
 using PhotoGO.DAL.Entities;
 using PhotoGO.DAL.Interfaces;
@@ -20,20 +23,24 @@ namespace PhotoGO.BLL.Services
         /// <summary>
         /// Creates service
         /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <param name="uow">UnitOfWork</param>
         public AlbumService(IUnitOfWork uow)
         {
-            Database = uow;
+            Database = uow ?? throw new ArgumentNullException();
         }
 
         /// <summary>
         /// Search album in database by id
         /// </summary>
         /// <param name="id">Album id</param>
-        /// <returns>Returns album if it exist or null if doesn't</returns>
+        /// <exception cref="TargetNotFoundException">When album not found</exception>
         public AlbumDTO GetAlbumById(int id)
         {
             var album = Database.Albums.Get(id);
+
+            if (album == null)
+                throw new TargetNotFoundException(Target.Album);
 
             return Mapper.Map<Album, AlbumDTO>(album);
         }
@@ -42,16 +49,17 @@ namespace PhotoGO.BLL.Services
         /// Creates new album
         /// </summary>
         /// <param name="item">Album</param>
-        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
-        public bool AddAlbum(AlbumDTO item)
+        /// <exception cref="ArgumentNullException">When input item is null</exception>
+        /// <exception cref="UserNotFoundException">When user not found</exception>
+        public void AddAlbum(AlbumDTO item)
         {
             if (item == null)
-                return false;
+                throw new ArgumentNullException();
 
             var user = Database.Users.Get(item.UserId);
 
             if (user == null)
-                return false;
+                throw new UserNotFoundException();
 
             var album = new Album()
             {
@@ -64,47 +72,44 @@ namespace PhotoGO.BLL.Services
 
             Database.Albums.Create(album);
             Database.Save();
-            return true;
         }
 
         /// <summary>
         /// Removes album and its images from database
         /// </summary>
         /// <param name="id">Album id</param>
-        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
-        public bool RemoveAlbum(int id)
+        /// <exception cref="TargetNotFoundException">When album not found</exception>
+        public void RemoveAlbum(int id)
         {
             var album = Database.Albums.Get(id);
 
             if (album == null)
-                return false;
+                throw new TargetNotFoundException(Target.Album);
 
             Database.Albums.Delete(id);
             Database.Save();
-            return true;
         }
 
         /// <summary>
         /// Shanges album name and/or description
         /// </summary>
         /// <param name="item">Album with new data</param>
-        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
-        public bool EditAlbum(AlbumDTO item)
+        /// <exception cref="TargetNotFoundException">When album not found</exception>
+        public void EditAlbum(AlbumDTO item)
         {
             if (item == null)
-                return false;
+                throw new ArgumentNullException();
 
             var album = Database.Albums.Get(item.Id);
 
             if (album == null)
-                return false;
+                throw new TargetNotFoundException(Target.Album);
 
             album.Name = item.Name;
             album.Description = item.Description;
 
             Database.Albums.Update(album);
             Database.Save();
-            return true;
         }
 
         public void Dispose()

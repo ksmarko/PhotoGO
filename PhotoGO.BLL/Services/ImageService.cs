@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using PhotoGO.BLL.DTO;
+using PhotoGO.BLL.Enums;
+using PhotoGO.BLL.Exceptions;
 using PhotoGO.BLL.Interfaces;
 using PhotoGO.DAL.Entities;
 using PhotoGO.DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,16 +24,17 @@ namespace PhotoGO.BLL.Services
         /// <summary>
         /// Creates service
         /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <param name="uow">UnitOfWork</param>
         public ImageService(IUnitOfWork uow)
         {
-            Database = uow;
+            Database = uow ?? throw new ArgumentNullException();
         }
 
         /// <summary>
         /// Gets images from album
         /// </summary>
-        /// <param name="albumId">album id</param>
+        /// <param name="albumId">Album id</param>
         /// <returns>Returns list of images</returns>
         public IEnumerable<PictureDTO> GetImages(int albumId)
         {
@@ -57,16 +61,17 @@ namespace PhotoGO.BLL.Services
         /// Adds image into album
         /// </summary>
         /// <param name="item">Image</param>
-        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
-        public bool AddImage(PictureDTO item)
+        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="TargetNotFoundException">When album not found</exception>
+        public void AddImage(PictureDTO item)
         {
             if (item == null)
-                return false;
+                throw new ArgumentNullException();
 
             var album = Database.Albums.Get(item.AlbumId);
 
             if (album == null)
-                return false;
+                throw new TargetNotFoundException(Target.Album);
 
             var img = new Picture()
             {
@@ -80,23 +85,22 @@ namespace PhotoGO.BLL.Services
 
             Database.Pictures.Create(img);
             Database.Save();
-            return true;
         }
 
         /// <summary>
         /// Removes image from album
         /// </summary>
         /// <param name="id">Image id</param>
-        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
-        public bool RemoveImage(int id)
+        /// <exception cref="TargetNotFoundException">When image not found</exception>
+        public void RemoveImage(int id)
         {
             var img = Database.Pictures.Get(id);
 
             if (img == null)
-                return false;
+                throw new TargetNotFoundException(Target.Image);
 
             Database.Pictures.Delete(id);
-            return true;
+            Database.Save();
         }
 
         /// <summary>
@@ -104,13 +108,17 @@ namespace PhotoGO.BLL.Services
         /// </summary>
         /// <param name="imgId">Image id</param>
         /// <param name="tags">Set of tags</param>
-        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
-        public bool AddTags(int imgId, params string[] tags)
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="TargetNotFoundException">When image not found</exception>
+        public void AddTags(int imgId, params string[] tags)
         {
+            if (tags == null)
+                throw new ArgumentNullException();
+
             var img = Database.Pictures.Get(imgId);
 
-            if (img == null || tags == null)
-                return false;
+            if (img == null)
+                throw new TargetNotFoundException(Target.Image);
 
             img.Tags.Clear();
 
@@ -122,24 +130,23 @@ namespace PhotoGO.BLL.Services
 
             Database.Pictures.Update(img);
             Database.Save();
-            return true;
         }
 
         /// <summary>
         /// Gets image by its id
         /// </summary>
         /// <param name="id">Image id</param>
-        /// <returns>Returns image if it exist or null if doesn't</returns>
+        /// <exception cref="TargetNotFoundException">When image not found</exception>
         public PictureDTO GetImageById(int id)
         {
             var img = Database.Pictures.Get(id);            
-            return Mapper.Map<Picture, PictureDTO>(img);
+            return Mapper.Map<Picture, PictureDTO>(img) ?? throw new TargetNotFoundException(Target.Image);
         }
 
         /// <summary>
         /// Search images by tags
         /// </summary>
-        /// <param name="tags">set of tags</param>
+        /// <param name="tags">Set of tags</param>
         /// <returns>Returns list of images with specified tags</returns>
         public IEnumerable<PictureDTO> SearchImages(params string[] tags)
         {
@@ -177,8 +184,7 @@ namespace PhotoGO.BLL.Services
         /// <returns>Returns array of tags</returns>
         public string[] GetTags()
         {
-            var tags = Database.Tags.GetAll().Select(x => x.Name).ToArray();
-            return tags;
+            return Database.Tags.GetAll().Select(x => x.Name).ToArray();
         }
 
         /// <summary>
@@ -195,10 +201,16 @@ namespace PhotoGO.BLL.Services
         /// </summary>
         /// <param name="id">User id</param>
         /// <param name="imgId">Image id</param>
+        /// <exception cref="UserNotFoundException">When user not found</exception>
         /// <returns>Returns true if image is liked by user and false if isn't</returns>
         public bool IsLikedBy(string id, int imgId)
         {
-            if (Database.Users.Get(id).LikedPictures.Any(x => x.Id == imgId))
+            var user = Database.Users.Get(id);
+
+            if (user == null)
+                throw new UserNotFoundException();
+
+            if (user.LikedPictures.Any(x => x.Id == imgId))
                 return true;
 
             return false;
@@ -209,21 +221,24 @@ namespace PhotoGO.BLL.Services
         /// </summary>
         /// <param name="id">Image id</param>
         /// <param name="userId">User id</param>
-        /// <returns>Returns true if operation successfully completed and false if doesn't</returns>
-        public bool LikeImage(int id, string userId)
+        /// <exception cref="UserNotFoundException">When user not found</exception>
+        /// <exception cref="TargetNotFoundException">When image not found</exception>
+        public void LikeImage(int id, string userId)
         {
             var img = Database.Pictures.Get(id);
             var user = Database.Users.Get(userId);
 
-            if (img == null | user == null)
-                return false;
+            if (img == null)
+                throw new TargetNotFoundException(Target.Image);
 
+            if (user == null)
+                throw new UserNotFoundException();
+            
             if (img.FavouritedBy.Any(x => x.Id == user.Id))
                 img.FavouritedBy.Remove(user);
             else img.FavouritedBy.Add(user);
 
             Database.Save();
-            return true;
         }
 
         public void Dispose()

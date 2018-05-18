@@ -65,6 +65,9 @@
     <Compile Include="DTO\PictureDTO.cs" />
     <Compile Include="DTO\TagDTO.cs" />
     <Compile Include="DTO\UserDTO.cs" />
+    <Compile Include="Enums\Target.cs" />
+    <Compile Include="Exceptions\TargetNotFoundException.cs" />
+    <Compile Include="Exceptions\UserNotFoundException.cs" />
     <Compile Include="Infrastructure\AutoMapperConfig.cs" />
     <Compile Include="Infrastructure\ConnectionModule.cs" />
     <Compile Include="Infrastructure\OperationDetails.cs" />

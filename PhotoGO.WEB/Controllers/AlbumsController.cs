@@ -7,6 +7,8 @@ using PhotoGO.BLL.DTO;
 using PhotoGO.WEB.Models;
 using PhotoGO.WEB.Helpers;
 using PhotoGO.BLL.Interfaces;
+using PhotoGO.BLL.Exceptions;
+using System.IO;
 
 namespace PhotoGO.WEB.Controllers
 {
@@ -41,10 +43,8 @@ namespace PhotoGO.WEB.Controllers
         public ActionResult Index(int? page)
         {
             var albums = CurrentUser.Albums;
-            byte[] defaultImg = System.IO.File.ReadAllBytes(AppContext.BaseDirectory + "favicon.ico");
-
             var list = Mapper.Map<IEnumerable<AlbumDTO>, ICollection<AlbumModel>>(albums.Reverse());
-            list.Where(x => x.Img.Length <= 0).ToList().ForEach(x => x.Img = defaultImg);
+            FileHelper.SetDefaultImage(ref list);
 
             return View(CreatePagedList.From(list, page));
         }
@@ -63,14 +63,25 @@ namespace PhotoGO.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
-                album.UserId = CurrentUser.Id;
+                try
+                {
+                    var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
+                    album.UserId = CurrentUser.Id;
 
-                albumService.AddAlbum(album);
+                    albumService.AddAlbum(album);
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
+                catch (ArgumentNullException e)
+                {
+                    ModelState.AddModelError("Error", e.Message);
+                }
+                catch (UserNotFoundException e)
+                {
+                    ModelState.AddModelError("Error", e.Message);
+                }
             }
-            return PartialView();
+            return PartialView(model);
         }
         #endregion
 
@@ -81,10 +92,19 @@ namespace PhotoGO.WEB.Controllers
             if (!IsUserAlbum(id))
                 return new HttpNotFoundResult();
 
-            var album = albumService.GetAlbumById(id);
-            var model = Mapper.Map<AlbumDTO, AlbumModel>(album);
+            try
+            {
+                var album = albumService.GetAlbumById(id);
+                var model = Mapper.Map<AlbumDTO, AlbumModel>(album);
 
-            return PartialView(model);
+                return PartialView(model);
+            }
+            catch (TargetNotFoundException e)
+            {
+                ModelState.AddModelError("Error", e.Message);
+            }
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -92,10 +112,22 @@ namespace PhotoGO.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
-                albumService.EditAlbum(album);
+                try
+                {
+                    var album = Mapper.Map<AlbumModel, AlbumDTO>(model);
+                    albumService.EditAlbum(album);
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
+                catch (ArgumentNullException e)
+                {
+                    ModelState.AddModelError("Error", e.Message);
+                }
+                catch (TargetNotFoundException e)
+                {
+                    ModelState.AddModelError("Error", e.Message);
+                }
+
             }
             return PartialView(model);
         }
@@ -108,16 +140,34 @@ namespace PhotoGO.WEB.Controllers
             if (!IsUserAlbum(id))
                 return new HttpNotFoundResult();
 
-            var album = albumService.GetAlbumById(id);
-            var model = Mapper.Map<AlbumDTO, AlbumModel>(album);
+            try
+            {
+                var album = albumService.GetAlbumById(id);
+                var model = Mapper.Map<AlbumDTO, AlbumModel>(album);
 
-            return PartialView(model);
+                return PartialView(model);
+            }
+            catch (TargetNotFoundException e)
+            {
+                ModelState.AddModelError("Error", e.Message);
+            }
+
+            return PartialView(id);
         } 
 
         [HttpPost, ActionName("Remove")]
         public ActionResult RemoveAlbumConfirmation(int id)
         {
-            albumService.RemoveAlbum(id);
+            try
+            {
+                albumService.RemoveAlbum(id);
+            }
+            catch (TargetNotFoundException e)
+            {
+                ModelState.AddModelError("Error", e.Message);
+                return PartialView(id);
+            }
+            
             return RedirectToAction("Index");
         }
         #endregion
