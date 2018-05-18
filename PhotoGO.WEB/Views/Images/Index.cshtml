@@ -1,5 +1,10 @@
 ﻿@model PagedList.IPagedList<PhotoGO.WEB.Models.ImageModel>
 @using PagedList.Mvc;
+@using PhotoGO.WEB.Helpers;
+
+@{ 
+    PageRole pageRole = ViewBag.PageRole;
+}
 
 <!-- Modal window-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
@@ -9,7 +14,7 @@
 <div class="loader" id="loader" style="display:block"></div>
 <div id="bodycontent" style="display:none">
 
-    @if (ViewData["PageRole"].ToString() == "Index")
+    @if (pageRole == PageRole.Index)
     {
         <div style="margin-top: 20px">
             <button class="btn btn-success modal-link btn-md-marko" data-link="/Images/AddImage?albumId=@ViewBag.AlbumId">Add image</button>
@@ -22,7 +27,7 @@
             }
         </div>
     }
-    @if (ViewData["PageRole"].ToString() == "Search")
+    @if (pageRole == PageRole.Search)
     {
         <div style="margin-top: 20px">
             <h3>
@@ -36,7 +41,7 @@
             }
         </div>
     }
-    @if (ViewData["PageRole"].ToString() == "Management")
+    @if (pageRole == PageRole.Management)
     {
         <div class="alert alert-success">
             <h4>Media management</h4>
@@ -79,11 +84,11 @@
                                 </button>
                             }
 
-                            @if (img.IsMy && ViewData["PageRole"].ToString() != "Management")
+                            @if (img.IsMy && pageRole != PageRole.Management)
                             {
                                 <button class="btn btn-link modal-link fa fa-trash" title="Remove" data-link="/Images/RemoveImage/@img.Id"></button>
                             }
-                            @if (ViewData["PageRole"].ToString() == "Management")
+                            @if (pageRole == PageRole.Management)
                             {
                                 <button class="btn btn-default modal-link" data-link="/Management/AddTags?imgId=@img.Id" title="Edit tags"><span class="fa fa-edit"></span></button>
                             }
@@ -95,19 +100,19 @@
         }
     </div>
 
-    @if (ViewData["PageRole"].ToString() == "Index")
+    @if (pageRole == PageRole.Index)
     {
         @Html.PagedListPager(Model, page => Url.Action("Index", "Images", new { ViewBag.AlbumId, page }))
     }
-    else if (ViewData["PageRole"].ToString() == "Search")
+    else if (pageRole == PageRole.Search)
     {
         @Html.PagedListPager(Model, page => Url.Action("Search", "Images", new { ViewBag.Tag, page }))
     }
-    else if (ViewData["PageRole"].ToString() == "Management")
+    else if (pageRole == PageRole.Management)
     {
         @Html.PagedListPager(Model, page => Url.Action("Manage", "Images", new { page }))
     }
-    else if (ViewData["PageRole"].ToString() == "Favourites")
+    else if (pageRole == PageRole.Favourites)
     {
         <div id="fav" style="display: none"/>
         @Html.PagedListPager(Model, page => Url.Action("Favourites", "Images", new { page }))

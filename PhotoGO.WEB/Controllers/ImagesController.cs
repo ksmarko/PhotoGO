@@ -216,7 +216,7 @@ namespace PhotoGO.WEB.Controllers
 
         private void SetPageRole(PageRole role)
         {
-            ViewData["PageRole"] = role.ToString();
+            ViewBag.PageRole = role;
         }
         #endregion
     }
