@@ -1,5 +1,6 @@
 # PhotoGO
-MVC application for portfolio. Temp URL: http://ksmarko-001-site1.gtempurl.com
+Photo album. 
+MVC application.
 
 Admin account:
   E-mail: admin@gmail.com
